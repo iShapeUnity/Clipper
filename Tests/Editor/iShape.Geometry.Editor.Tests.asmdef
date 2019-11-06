@@ -1,7 +1,9 @@
 {
     "name": "iShape.Clipper.Editor.Tests",
     "references": [
-        "iShape.Clipper.Runtime"
+        "iShape.Clipper.Runtime",
+        "iShape.Geometry.Runtime",
+        "iShape.Support.Runtime"
     ],
     "optionalUnityReferences": [
         "TestAssemblies"

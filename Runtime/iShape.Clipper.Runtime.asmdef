@@ -1,4 +1,8 @@
 {
-    "name": "iShape.Clipper.Runtime",
-    "excludePlatforms": []
+	"name": "iShape.Clipper.Runtime",
+	"excludePlatforms": [],
+	"references": [
+		"iShape.Geometry.Runtime",
+		"iShape.Support.Runtime"
+	]
 }
