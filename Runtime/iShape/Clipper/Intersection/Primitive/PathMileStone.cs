@@ -1,11 +1,10 @@
 namespace iShape.Clipper.Intersection.Primitive {
-    
-    internal struct PathMileStone {
-        
+    public struct PathMileStone {
+
         internal static PathMileStone zero = new PathMileStone(0, 0);
 
-        internal readonly int index;
-        internal readonly long offset;
+        public readonly int index;
+        public readonly long offset;
 
         internal PathMileStone(int index, long offset = 0) {
             this.index = index;
@@ -34,6 +33,20 @@ namespace iShape.Clipper.Intersection.Primitive {
 
         public static bool operator!= (PathMileStone left, PathMileStone right) {
             return left.index != right.index || left.offset != right.offset;
+        }
+        
+        private bool Equals(PathMileStone other) {
+            return index == other.index && offset == other.offset;
+        }
+
+        public override bool Equals(object obj) {
+            return obj is PathMileStone other && Equals(other);
+        }
+
+        public override int GetHashCode() {
+            unchecked {
+                return (index * 397) ^ offset.GetHashCode();
+            }
         }
     }
 }

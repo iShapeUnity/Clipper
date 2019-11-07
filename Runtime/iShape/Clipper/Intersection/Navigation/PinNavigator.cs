@@ -4,16 +4,16 @@ using iShape.Geometry;
 using Unity.Collections;
 
 namespace iShape.Clipper.Intersection.Navigation {
-  internal struct PinNavigator {
+    public struct PinNavigator {
         
         // for s in slavePath { nodeArray[s] }  iterate all pins in counter clockwise order by slave path
         private readonly NativeArray<int> slavePath;
 
         // pinPathArray[nodeArray[i].index] return PinPath for this pin
-        private readonly NativeArray<PinPath> pinPathArray;
+        public readonly NativeArray<PinPath> pinPathArray;
         
         // supply array for nodeArray[i].index return PinPoint for this pin
-        private readonly NativeArray<PinPoint> pinPointArray;
+        public readonly NativeArray<PinPoint> pinPointArray;
 
         // keep info about each pin node, also for n in nodeArray iterate all pins in clockwise order by master path
         private NativeArray<PinNode> nodeArray;

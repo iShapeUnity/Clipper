@@ -2,7 +2,7 @@ using iShape.Clipper.Util;
 using iShape.Geometry;
 
 namespace iShape.Clipper.Intersection.Primitive {
-    internal struct PinPoint {
+    public struct PinPoint {
         internal struct Def {
             internal readonly IntVector pt;
             internal readonly IntVector ms0;
@@ -31,7 +31,7 @@ namespace iShape.Clipper.Intersection.Primitive {
             }
         }
 
-        internal enum PinType : int {
+        public enum PinType : int {
             inside = 1,
             in_out = 2,
             in_null = 3,
@@ -45,10 +45,10 @@ namespace iShape.Clipper.Intersection.Primitive {
             null_out = -4
         }
 
-        internal IntVector point;
+        public IntVector point;
         internal readonly PinType type; // 1 - in, -1 - out, 2 in-out, -2 out-in
-        internal PathMileStone masterMileStone;
-        internal PathMileStone slaveMileStone;
+        public PathMileStone masterMileStone;
+        public PathMileStone slaveMileStone;
 
         internal PinPoint(IntVector point, PinType type, PathMileStone masterMileStone, PathMileStone slaveMileStone) {
             this.point = point;

@@ -5,8 +5,8 @@ namespace iShape.Clipper.Intersection {
     
     internal struct AdjacencyMatrix {
         
-        internal readonly DynamicArray<int> masterIndices;
-        internal readonly DynamicArray<int> slaveIndices;
+        internal DynamicArray<int> masterIndices;
+        internal DynamicArray<int> slaveIndices;
 
         internal AdjacencyMatrix(int size, Allocator allocator) {
             slaveIndices = new DynamicArray<int>(size, allocator);

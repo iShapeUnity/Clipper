@@ -6,10 +6,8 @@ using Unity.Collections;
 using UnityEngine;
 
 namespace iShape.Clipper.Intersection {
-    
-    internal struct Intersector {
-        
-        internal static PinNavigator FindPins(NativeArray<IntVector> iMaster, NativeArray<IntVector> iSlave, IntGeom iGeom, PinPoint.PinType exclusionPinType) {
+    public struct Intersector {
+        public static PinNavigator FindPins(NativeArray<IntVector> iMaster, NativeArray<IntVector> iSlave, IntGeom iGeom, PinPoint.PinType exclusionPinType) {
             var posMatrix = CreatePossibilityMatrix(iMaster, iSlave, Allocator.Temp);
 
             var masterIndices = posMatrix.masterIndices.ToArray(Allocator.Temp);

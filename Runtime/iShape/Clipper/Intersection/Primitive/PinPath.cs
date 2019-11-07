@@ -1,9 +1,9 @@
 using Unity.Collections;
 
 namespace iShape.Clipper.Intersection.Primitive {
-    internal struct PinPath {
-        internal PinPoint v0;
-        internal PinPoint v1;
+    public struct PinPath {
+        public PinPoint v0;
+        public PinPoint v1;
 
         internal PinPath(PinPoint v0, PinPoint v1, PinPoint.PinType type) {
             this.v0 = new PinPoint(v0, type);
@@ -27,7 +27,7 @@ namespace iShape.Clipper.Intersection.Primitive {
         }
 
 
-        internal NativeArray<PinHandler> Extract(int index, int pathCount, Allocator allocator) {
+        public NativeArray<PinHandler> Extract(int index, int pathCount, Allocator allocator) {
             int n = pathCount;
 
             var firstHandler = new PinHandler(v0.masterMileStone, index, 1, 0, v0.type);
