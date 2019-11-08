@@ -1,7 +1,9 @@
 using iShape.Clipper.Intersection;
 using iShape.Clipper.Intersection.Primitive;
+using iShape.Clipper.Shape;
 using iShape.Geometry;
 using NUnit.Framework;
+using Tests.Clipper.Data;
 using Unity.Collections;
 using UnityEngine;
 
@@ -13,50 +15,31 @@ namespace Tests.Clipper {
 
         [Test]
         public void Test_00() {
-            var master = new[] {
-                new Vector2(-10, 10),
-                new Vector2(10, 10),
-                new Vector2(10, -10),
-                new Vector2(-10, -10)
-            };
+            var data = SubtractTestData.data[0];
 
-            var iMaster = new NativeArray<IntVector>(iGeom.Int(master), Allocator.Temp);
+            var master = new NativeArray<IntVector>(iGeom.Int(data[0]), Allocator.Temp);
+            var slave = new NativeArray<IntVector>(iGeom.Int(data[1]), Allocator.Temp);
 
-            var slave = new[] {
-                new Vector2(0, 0),
-                new Vector2(5, 10),
-                new Vector2(-5, 10)
-            };
-            var iSlave = new NativeArray<IntVector>(iGeom.Int(slave), Allocator.Temp);
+            var solution = master.Subtract(slave, iGeom, Allocator.Temp);
 
-            var result = Intersector.FindPins(iMaster, iSlave, iGeom, PinPoint.PinType.nil);
+            Assert.AreEqual(solution.nature, SubtractSolution.Nature.overlap);
+            Assert.AreEqual(solution.pathList.Count, 1);
 
-            Assert.AreEqual(result.pinPathArray.Length, 1);
-            Assert.AreEqual(result.pinPointArray.Length, 0);
+            var path = solution.pathList.GetPath(0, Allocator.Temp).ToArray();
+            var sample = iGeom.Int(new[] {
+                new Vector2(5, -10f),
+                new Vector2(5, 0f),
+                new Vector2(-5, 0f),
+                new Vector2(-5, -10f),
+                new Vector2(-10, -10f),
+                new Vector2(-10, 10f),
+                new Vector2(10, 10f),
+                new Vector2(10, -10f)
+            });
 
-            var path = result.pinPathArray[0];
+            Assert.AreEqual(path, sample);
 
-            var z = iGeom.Int(new Vector2(-10, 10));
-
-            Assert.AreEqual(path.v0.masterMileStone.index, 0);
-            Assert.AreEqual(path.v0.masterMileStone.offset, z.SqrDistance(path.v0.point));
-
-            Assert.AreEqual(path.v1.masterMileStone.index, 0);
-            Assert.AreEqual(path.v1.masterMileStone.offset, z.SqrDistance(path.v1.point));
-
-
-            Assert.AreEqual(path.v0.slaveMileStone.index, 2);
-            Assert.AreEqual(path.v0.slaveMileStone.offset, 0);
-
-            Assert.AreEqual(path.v1.slaveMileStone.index, 1);
-            Assert.AreEqual(path.v1.slaveMileStone.offset, 0);
-
-
-            Assert.AreEqual(path.v0.point, iGeom.Int(new Vector2(-5, 10)));
-            Assert.AreEqual(path.v1.point, iGeom.Int(new Vector2(5, 10)));
-
-            iMaster.Dispose();
-            iSlave.Dispose();
+            solution.Dispose();
         }
     }
 

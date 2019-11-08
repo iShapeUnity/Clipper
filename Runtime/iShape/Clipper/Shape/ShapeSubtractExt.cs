@@ -9,7 +9,7 @@ namespace iShape.Clipper.Shape {
 
     public static class ShapeSubtractExt {
 
-        internal static SubtractSolution Subtract(this NativeArray<IntVector> master, NativeArray<IntVector> slave,
+        public static SubtractSolution Subtract(this NativeArray<IntVector> master, NativeArray<IntVector> slave,
             IntGeom iGeom, Allocator allocator) {
             var navigator = Intersector.FindPins(master, slave, iGeom, PinPoint.PinType.in_out);
 
@@ -170,7 +170,7 @@ namespace iShape.Clipper.Shape {
                 cursor = navigator.NextSub();
             }
 
-            var nature = pathList.layouts.Count > 0
+            var nature = pathList.Count > 0
                 ? SubtractSolution.Nature.overlap
                 : SubtractSolution.Nature.notOverlap;
             var solution = new SubtractSolution(pathList, nature);

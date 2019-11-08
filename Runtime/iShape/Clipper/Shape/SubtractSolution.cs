@@ -17,5 +17,9 @@ namespace iShape.Clipper.Shape {
             this.pathList = pathList;
             this.nature = nature;
         }
+
+        public void Dispose() {
+            this.pathList.Dispose();
+        }
     }
 }
