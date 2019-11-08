@@ -5,7 +5,7 @@ namespace iShape.Clipper.Shape {
     public static class ShapeUnionExt {
         
         internal static int Union(this NativeArray<IntVector> dest, NativeArray<IntVector> sr) {
-            return 0
+            return 0;
         }
     }
 }

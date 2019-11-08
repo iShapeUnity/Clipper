@@ -1,4 +1,7 @@
+using iShape.Geometry;
+
 namespace iShape.Clipper.Shape {
+
     public struct SubtractSolution {
         public enum Nature {
             notOverlap,
@@ -15,3 +18,4 @@ namespace iShape.Clipper.Shape {
             this.nature = nature;
         }
     }
+}

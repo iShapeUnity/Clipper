@@ -1,5 +1,5 @@
 using iShape.Clipper.Intersection.Navigation;
-using iShape.Support;
+using iShape.Collections;
 using Unity.Collections;
 
 namespace iShape.Clipper.Intersection.Primitive {

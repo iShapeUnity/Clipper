@@ -1,7 +1,7 @@
 using iShape.Clipper.Intersection.Primitive;
 using iShape.Clipper.Util;
 using iShape.Geometry;
-using iShape.Support;
+using iShape.Collections;
 using Unity.Collections;
 
 namespace iShape.Clipper.Intersection {
