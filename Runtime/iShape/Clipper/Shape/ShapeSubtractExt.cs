@@ -8,7 +8,7 @@ using Unity.Collections;
 namespace iShape.Clipper.Shape {
 
     public static class ShapeSubtractExt {
-        
+
         internal static SubtractSolution Subtract(this NativeArray<IntVector> master, NativeArray<IntVector> slave,
             IntGeom iGeom, Allocator allocator) {
             var navigator = Intersector.FindPins(master, slave, iGeom, PinPoint.PinType.in_out);
@@ -23,7 +23,6 @@ namespace iShape.Clipper.Shape {
             if (cursor.isEmpty) {
                 return new SubtractSolution(pathList, SubtractSolution.Nature.notOverlap);
             }
-
 
             int masterCount = master.Length;
             int masterLastIndex = masterCount - 1;
@@ -50,8 +49,7 @@ namespace iShape.Clipper.Shape {
 
                     if (!isOutInStart) {
                         outSlaveEnd = navigator.SlaveEndStone(outCursor);
-                    }
-                    else {
+                    } else {
                         // possible if we start with out-in
                         outSlaveEnd = navigator.SlaveStartStone(outCursor);
                     }
@@ -64,8 +62,7 @@ namespace iShape.Clipper.Shape {
                     if (inSlaveStart.index + 1 < slaveCount) {
                         isInSlaveNotOverflow = true;
                         inSlaveIndex = inSlaveStart.index + 1;
-                    }
-                    else {
+                    } else {
                         isInSlaveNotOverflow = false;
                         inSlaveIndex = 0;
                     }
@@ -76,13 +73,11 @@ namespace iShape.Clipper.Shape {
                     if (outSlaveEnd.offset != 0) {
                         isOutSlaveNotOverflow = true;
                         outSlaveIndex = outSlaveEnd.index;
-                    }
-                    else {
+                    } else {
                         if (outSlaveEnd.index != 0) {
                             isOutSlaveNotOverflow = true;
                             outSlaveIndex = outSlaveEnd.index - 1;
-                        }
-                        else {
+                        } else {
                             isOutSlaveNotOverflow = false;
                             outSlaveIndex = slaveCount - 1;
                         }
@@ -99,8 +94,7 @@ namespace iShape.Clipper.Shape {
                             var sliceB = slave.Slice(0, outSlaveIndex + 1);
                             path.Add(sliceB);
                         }
-                    }
-                    else {
+                    } else {
                         // a < b
                         if (isInSlaveNotOverflow && isOutSlaveNotOverflow && inSlaveIndex <= outSlaveIndex) {
                             var slice = slave.Slice(inSlaveIndex, outSlaveIndex - inSlaveIndex + 1);
@@ -130,25 +124,21 @@ namespace iShape.Clipper.Shape {
                     if (outMasterEnd.index + 1 < masterCount) {
                         outMasterIndex = outMasterEnd.index + 1;
                         isOutMasterNotOverflow = true;
-                    }
-                    else {
+                    } else {
                         outMasterIndex = 0;
                         isOutMasterNotOverflow = false;
                     }
-
 
                     bool isInMasterNotOverflow;
                     int inMasterIndex;
                     if (inMasterStart.offset != 0) {
                         inMasterIndex = inMasterStart.index;
                         isInMasterNotOverflow = true;
-                    }
-                    else {
+                    } else {
                         if (inMasterStart.index != 0) {
                             inMasterIndex = inMasterStart.index - 1;
                             isInMasterNotOverflow = true;
-                        }
-                        else {
+                        } else {
                             inMasterIndex = masterCount - 1;
                             isInMasterNotOverflow = false;
                         }
@@ -166,8 +156,7 @@ namespace iShape.Clipper.Shape {
                             var sliceB = master.Slice(0, inMasterIndex + 1);
                             path.Add(sliceB);
                         }
-                    }
-                    else {
+                    } else {
                         // a < b
                         if (isInMasterNotOverflow && isOutMasterNotOverflow && outMasterIndex <= inMasterIndex) {
                             var slice = master.Slice(outMasterIndex, inMasterIndex - outMasterIndex + 1);
