@@ -9,12 +9,12 @@ namespace iShape.Clipper.Shape {
     
     public static class ShapeUnionExt {
         
-        internal static UnionSolution Union(
+        public static UnionSolution Union(
             this NativeArray<IntVector> master, NativeArray<IntVector> slave, IntGeom iGeom, Allocator allocator
         ) {
             var navigator = Intersector.FindPins(master, slave, iGeom, PinPoint.PinType.out_in);
 
-            var pathList = new PlainPathList();
+            var pathList = new PlainPathList(0, allocator);
             if (navigator.isEqual) {
                 pathList.Add(master, true);
                 return new UnionSolution(pathList, UnionSolution.Nature.overlap);
