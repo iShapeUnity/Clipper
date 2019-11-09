@@ -62,13 +62,14 @@ namespace iShape.Clipper.Intersection.Primitive {
             this.CleanDoubles(exclusionPinType);
 
             if (handlerArray.Count == 0) {
-                return new PinNavigator(
+                var navigator =new PinNavigator(
                     new NativeArray<int>(0, allocator),
                     new NativeArray<PinPath>(0, allocator),
                     new NativeArray<PinPoint>(0, allocator),
                     new NativeArray<PinNode>(0, allocator),
                     hasContacts
                 );
+                return navigator;
             }
 
             var slavePath = this.BuildSlavePath();

@@ -245,7 +245,7 @@ namespace iShape.Clipper.Intersection {
             builder.Dispose();
             
             if (result.pathType == PinPathBuilder.Result.PathType.equal) {
-                return new PinNavigator();
+                return new PinNavigator(true);
             }
 
             // combine pin points and paths

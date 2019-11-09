@@ -70,6 +70,10 @@ namespace iShape.Clipper.Intersection {
                 i = j;
             } while (i < n);
 
+            if (n == master.Length && mergedEdges.Count == 1 && mergedEdges[0].v0.point == mergedEdges[0].v1.point) {
+                return new Result(Result.PathType.equal, new NativeArray<PinPath>(0, allocator));
+            }
+            
             if (mergedEdges.Count > 1) {
                 var first = mergedEdges[0];
                 var last = mergedEdges[mergedEdges.Count - 1];

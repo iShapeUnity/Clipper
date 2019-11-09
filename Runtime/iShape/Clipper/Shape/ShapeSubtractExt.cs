@@ -30,10 +30,11 @@ namespace iShape.Clipper.Shape {
             int slaveCount = slave.Length;
             int slaveLastIndex = slaveCount - 1;
 
+            var path = new DynamicArray<IntVector>(0, Allocator.Temp);
+            
             while (cursor.isNotEmpty) {
                 navigator.Mark(cursor);
 
-                var path = new DynamicArray<IntVector>(0, Allocator.Temp);
                 var start = cursor;
 
                 do {
@@ -166,9 +167,13 @@ namespace iShape.Clipper.Shape {
                 } while (cursor != start);
 
                 pathList.Add(path.slice, true);
+                
+                path.RemoveAll();
 
                 cursor = navigator.NextSub();
             }
+            
+            path.Dispose();
 
             var nature = pathList.Count > 0
                 ? SubtractSolution.Nature.overlap

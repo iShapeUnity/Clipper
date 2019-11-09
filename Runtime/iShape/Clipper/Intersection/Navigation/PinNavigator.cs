@@ -1,4 +1,3 @@
-using System.Drawing;
 using iShape.Clipper.Intersection.Primitive;
 using iShape.Geometry;
 using Unity.Collections;
@@ -30,13 +29,13 @@ namespace iShape.Clipper.Intersection.Navigation {
             this.hasContacts = hasContacts;
         }
         
-        internal PinNavigator(bool hasContacts) {
+        internal PinNavigator(bool isEqual) {
             this.slavePath = new NativeArray<int>(0, Allocator.Temp);
             this.pinPathArray = new NativeArray<PinPath>(0, Allocator.Temp);
             this.pinPointArray = new NativeArray<PinPoint>(0, Allocator.Temp);
             this.nodeArray = new NativeArray<PinNode>(0, Allocator.Temp);
-            this.isEqual = true;
-            this.hasContacts = hasContacts;
+            this.isEqual = isEqual;
+            this.hasContacts = true;
         }
 
         internal Cursor Next(Cursor cursor) {
