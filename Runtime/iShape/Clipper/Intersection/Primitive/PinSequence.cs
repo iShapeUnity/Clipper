@@ -94,43 +94,120 @@ namespace iShape.Clipper.Intersection.Primitive {
 
             return new PinNavigator(slavePath, pinPathArray, pinPointArray, nodes, hasContacts);
         }
-
-
+        
         internal void Dispose() {
             pinPathArray.Dispose();
             pinPointArray.Dispose();
             handlerArray.Dispose();
         }
 
-
         private void SortMaster() {
-            // this array is mostly sorted
+            int n = handlerArray.Count;
+            int r = 2;
+            int rank = 1;
 
-            var n = handlerArray.Count;
+            while(r <= n) {
+                rank = r;
+                r <<= 1;
+            }
+            rank -= 1;
 
-            bool isNotSorted;
-            var m = n;
+            int jEnd = rank;
 
-            do {
-                isNotSorted = false;
-                var a = handlerArray[0];
-                int i = 1;
-                while (i < m) {
-                    var b = handlerArray[i];
-                    if (PathMileStone.Compare(a.masterSortFactor, b.masterSortFactor)) {
-                        handlerArray[i - 1] = b;
-                        isNotSorted = true;
-                    } else {
-                        handlerArray[i - 1] = a;
-                        a = b;
-                    }
+            int jStart = ((jEnd + 1) >> 1) - 1;
 
-                    i += 1;
+            while(jStart >= 0) {
+                int k = jStart;
+                while(k < jEnd) {
+                    int j = k;
+
+                    var a = handlerArray[j];
+                    bool fallDown;
+                    do {
+                        fallDown = false;
+
+                        int j0 = (j << 1) + 1;
+                        int j1 = j0 + 1;
+
+
+                        if(j1 < n) {
+                            var a0 = handlerArray[j0];
+                            var a1 = handlerArray[j1];
+
+                            if(a.masterSortFactor < a0.masterSortFactor || a.masterSortFactor < a1.masterSortFactor) {
+                                if(a0.masterSortFactor > a1.masterSortFactor) {
+                                    handlerArray[j0] = a;
+                                    handlerArray[j] = a0;
+                                    j = j0;
+                                } else {
+                                    handlerArray[j1] = a;
+                                    handlerArray[j] = a1;
+                                    j = j1;
+                                }
+                                fallDown = j < rank;
+
+                            }
+                        } else if(j0 < n) {
+                            var ax = handlerArray[j];
+                            var a0 = handlerArray[j0];
+                            if(ax.masterSortFactor < a0.masterSortFactor) {
+                                handlerArray[j0] = ax;
+                                handlerArray[j] = a0;
+                            }
+                        }
+
+                    } while(fallDown);
+                    ++k;
                 }
 
-                m -= 1;
-                handlerArray[m] = a;
-            } while (isNotSorted);
+                jEnd = jStart;
+                jStart = ((jEnd + 1) >> 1) - 1;
+            }
+
+            while(n > 0) {
+                int m = n - 1;
+
+                var a = handlerArray[m];
+                handlerArray[m] = handlerArray[0];
+                handlerArray[0] = a;
+
+                int j = 0;
+                bool fallDown;
+                do {
+                    fallDown = false;
+
+                    int j0 = (j << 1) + 1;
+                    int j1 = j0 + 1;
+
+                    if(j1 < m) {
+                        var a0 = handlerArray[j0];
+                        var a1 = handlerArray[j1];
+                        fallDown = a.masterSortFactor < a0.masterSortFactor || a.masterSortFactor < a1.masterSortFactor;
+
+                        if(fallDown) {
+                            if(a0.masterSortFactor > a1.masterSortFactor) {
+                                handlerArray[j0] = a;
+                                handlerArray[j] = a0;
+                                j = j0;
+                            } else {
+                                handlerArray[j1] = a;
+                                handlerArray[j] = a1;
+                                j = j1;
+                            }
+                        }
+                    } else if(j0 < m) {
+                        var ax = handlerArray[j];
+                        var a0 = handlerArray[j0];
+                        if(ax.masterSortFactor < a0.masterSortFactor) {
+                            handlerArray[j0] = ax;
+                            handlerArray[j] = a0;
+                        }
+                    }
+
+                } while(fallDown);
+
+                n = m;
+            }
         }
 
 
@@ -240,7 +317,7 @@ namespace iShape.Clipper.Intersection.Primitive {
                 var i = 1;
                 while (i < m) {
                     var b = iStones[i];
-                    if (PathMileStone.Compare(a.stone, b.stone)) {
+                    if (a.stone > b.stone) {
                         iStones[i - 1] = b;
                         isNotSorted = true;
                     } else {

@@ -108,7 +108,7 @@ namespace iShape.Clipper.Intersection {
                 var i = 1;
                 while (i < m) {
                     var b = pinEdges[i];
-                    if (PathMileStone.Compare(a.v0.masterMileStone, b.v0.masterMileStone)) {
+                    if (a.v0.masterMileStone > b.v0.masterMileStone) {
                         pinEdges[i - 1] = b;
                         isNotSorted = true;
                     }
@@ -180,14 +180,14 @@ namespace iShape.Clipper.Intersection {
             return 0;
         }
 
-        private PinPoint.PinType GetStartDisposition(PinPoint vertex, NativeArray<IntVector> master, NativeArray<IntVector> slave, int iterposition) {
+        private PinPoint.PinType GetStartDisposition(PinPoint vertex, NativeArray<IntVector> master, NativeArray<IntVector> slave, int interposition) {
             var corner = BuildMasterCorner(vertex, master, iGeom);
 
             int si = vertex.slaveMileStone.index;
             int sn = slave.Length;
             IntVector s;
 
-            if (iterposition == -1) {
+            if (interposition == -1) {
                 s = slave[(si + 1) % sn];
             }
             else {
@@ -203,7 +203,7 @@ namespace iShape.Clipper.Intersection {
                 int mn = master.Length;
                 IntVector m;
 
-                if (iterposition == -1) {
+                if (interposition == -1) {
                     m = master[(mi + 1) % mn];
                 }
                 else {
@@ -212,7 +212,7 @@ namespace iShape.Clipper.Intersection {
 
                 bool isBetween = slaveCorner.IsBetween(m, true);
 
-                if (iterposition == 1) {
+                if (interposition == 1) {
                     type = isBetween ? PinPoint.PinType.in_null : PinPoint.PinType.out_null;
                 }
                 else {
@@ -222,7 +222,7 @@ namespace iShape.Clipper.Intersection {
             else {
                 bool isBetween = corner.IsBetween(s, true);
 
-                if (iterposition == 1) {
+                if (interposition == 1) {
                     type = isBetween ? PinPoint.PinType.in_null : PinPoint.PinType.out_null;
                 }
                 else {
@@ -234,12 +234,12 @@ namespace iShape.Clipper.Intersection {
         }
 
 
-        private PinPoint.PinType GetEndDisposition(PinPoint vertex, NativeArray<IntVector> master, NativeArray<IntVector> slave, int iterposition) {
+        private PinPoint.PinType GetEndDisposition(PinPoint vertex, NativeArray<IntVector> master, NativeArray<IntVector> slave, int interposition) {
             int i = vertex.slaveMileStone.index;
             int n = slave.Length;
             IntVector s;
 
-            if (iterposition != 1) {
+            if (interposition != 1) {
                 s = vertex.slaveMileStone.offset != 0 ? slave[i] : slave[(i - 1 + n) % n];
             }
             else {
@@ -256,7 +256,7 @@ namespace iShape.Clipper.Intersection {
 
             PinPoint.PinType type;
 
-            if (iterposition == 1) {
+            if (interposition == 1) {
                 type = isBetween ? PinPoint.PinType.null_out : PinPoint.PinType.null_in;
             }
             else {

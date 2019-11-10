@@ -1,8 +1,6 @@
 namespace iShape.Clipper.Intersection.Primitive {
     public struct PathMileStone {
 
-        internal static PathMileStone zero = new PathMileStone(0, 0);
-
         public readonly int index;
         public readonly long offset;
 
@@ -11,30 +9,46 @@ namespace iShape.Clipper.Intersection.Primitive {
             this.offset = offset;
         }
 
-        internal static bool Compare(PathMileStone a, PathMileStone b) {
+        public static bool operator== (PathMileStone a, PathMileStone b) {
+            return a.index == b.index && a.offset == b.offset;
+        }
+
+        public static bool operator!= (PathMileStone a, PathMileStone b) {
+            return a.index != b.index || a.offset != b.offset;
+        }
+
+        public static bool operator <(PathMileStone a, PathMileStone b) {
+            if (a.index != b.index) {
+                return a.index < b.index;
+            }
+
+            return a.offset < b.offset;
+        }
+
+        public static bool operator >(PathMileStone a, PathMileStone b) {
             if (a.index != b.index) {
                 return a.index > b.index;
             }
 
             return a.offset > b.offset;
         }
-
-        internal static bool MoreOrEqual(PathMileStone a, PathMileStone b) {
+        
+        public static bool operator <=(PathMileStone a, PathMileStone b) {
             if (a.index != b.index) {
-                return a.index > b.index;
+                return a.index <= b.index;
+            }
+
+            return a.offset <= b.offset;
+        }
+        
+        public static bool operator >=(PathMileStone a, PathMileStone b) {
+            if (a.index != b.index) {
+                return a.index >= b.index;
             }
 
             return a.offset >= b.offset;
         }
-        
-        public static bool operator== (PathMileStone left, PathMileStone right) {
-            return left.index == right.index && left.offset == right.offset;
-        }
 
-        public static bool operator!= (PathMileStone left, PathMileStone right) {
-            return left.index != right.index || left.offset != right.offset;
-        }
-        
         private bool Equals(PathMileStone other) {
             return index == other.index && offset == other.offset;
         }

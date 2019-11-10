@@ -1,8 +1,8 @@
 using iShape.Clipper.Intersection.Primitive;
 
 namespace iShape.Clipper.Intersection.Navigation {
-    internal struct Cursor {
 
+    internal struct Cursor {
         internal static Cursor empty = new Cursor(0, -1);
 
         internal readonly PinPoint.PinType type;
@@ -16,11 +16,11 @@ namespace iShape.Clipper.Intersection.Navigation {
             this.index = index;
         }
 
-        public static bool operator== (Cursor left, Cursor right) {
+        public static bool operator ==(Cursor left, Cursor right) {
             return left.index == right.index;
         }
 
-        public static bool operator!= (Cursor left, Cursor right) {
+        public static bool operator !=(Cursor left, Cursor right) {
             return left.index != right.index;
         }
 
@@ -31,11 +31,12 @@ namespace iShape.Clipper.Intersection.Navigation {
         public override bool Equals(object obj) {
             return obj is Cursor other && Equals(other);
         }
-        
+
         public override int GetHashCode() {
             unchecked {
-                return 10 * index + (int)type;
+                return 10 * index + (int) type;
             }
         }
     }
+
 }

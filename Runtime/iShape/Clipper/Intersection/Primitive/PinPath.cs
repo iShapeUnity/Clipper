@@ -14,7 +14,7 @@ namespace iShape.Clipper.Intersection.Primitive {
             var a = v0.masterMileStone;
             var b = v1.masterMileStone;
             int length = 0;
-            if (PathMileStone.Compare(a, b)) {
+            if (a > b) {
                 length = count;
             }
 
@@ -41,7 +41,7 @@ namespace iShape.Clipper.Intersection.Primitive {
 
             if (length == 2) {
                 var middleIndex = (v0.masterMileStone.index + 1) % n;
-                var middleSortFactor = new PathMileStone(middleIndex,0);
+                var middleSortFactor = new PathMileStone(middleIndex);
                 var middle = new PinHandler(middleSortFactor, index, 1, 1, v0.type);
                 return new NativeArray<PinHandler>(3, allocator) {[0] = firstHandler, [1] = middle, [2] = lastHandler};
             }

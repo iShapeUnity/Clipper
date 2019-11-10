@@ -98,7 +98,7 @@ namespace iShape.Clipper.Shape {
                         }
                     }
 
-                    if (PathMileStone.MoreOrEqual(inSlaveStart, outSlaveEnd)) {
+                    if (inSlaveStart >= outSlaveEnd) {
                         // a > b
                         if (isInSlaveNotOverflow) {
                             var sliceA = slave.Slice(inSlaveIndex, slaveLastIndex - inSlaveIndex + 1);
@@ -153,7 +153,7 @@ namespace iShape.Clipper.Shape {
                         }
                     }
 
-                    if (PathMileStone.MoreOrEqual(outMasterEnd, inMasterStart)) {
+                    if (outMasterEnd >= inMasterStart) {
                         // a > b
                         if (isOutMasterNotOverflow) {
                             var sliceA = master.Slice(outMasterIndex, masterLastIndex - outMasterIndex + 1);
