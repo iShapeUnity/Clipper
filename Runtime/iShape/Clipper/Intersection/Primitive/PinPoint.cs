@@ -31,7 +31,7 @@ namespace iShape.Clipper.Intersection.Primitive {
             }
         }
 
-        public enum PinType : int {
+        public enum PinType {
             inside = 1,
             in_out = 2,
             in_null = 3,
@@ -71,8 +71,8 @@ namespace iShape.Clipper.Intersection.Primitive {
         }
 
         internal static PinPoint BuildOnMaster(Def def) {
-            bool isCW0 = PinPoint.IsClockWise(a: def.pt, b: def.ms1, c: def.sl0);
-            bool isCW1 = PinPoint.IsClockWise(a: def.pt, b: def.ms1, c: def.sl1);
+            bool isCW0 = PinPoint.IsClockWise(def.pt,def.ms1,def.sl0);
+            bool isCW1 = PinPoint.IsClockWise(def.pt,def.ms1,def.sl1);
 
             PinType type;
             if (isCW0 == isCW1) {
@@ -87,8 +87,8 @@ namespace iShape.Clipper.Intersection.Primitive {
 
 
         internal static PinPoint BuildOnSlave(Def def) {
-            bool isCCW0 = PinPoint.IsClockWise(a: def.pt, b: def.ms0, c: def.sl1);
-            bool isCCW1 = PinPoint.IsClockWise(a: def.pt, b: def.ms1, c: def.sl1);
+            bool isCCW0 = PinPoint.IsClockWise(def.pt,def.ms0,def.sl1);
+            bool isCCW1 = PinPoint.IsClockWise(def.pt,def.ms1,def.sl1);
 
             PinType type;
             if (isCCW0 == isCCW1) {
@@ -103,7 +103,7 @@ namespace iShape.Clipper.Intersection.Primitive {
 
 
         internal static PinPoint BuildOnCross(Def def, IntGeom iGeom) {
-            var corner = new Corner(o: def.pt, a: def.ms0, b: def.ms1, iGeom: iGeom);
+            var corner = new Corner(def.pt,def.ms0,def.ms1, iGeom);
 
             var isSl0 = corner.IsBetween(def.sl0, true);
             var isSl1 = corner.IsBetween(def.sl1, true);

@@ -3,7 +3,7 @@ using iShape.Geometry;
 namespace iShape.Clipper.Util {
     public struct Corner {
 
-        private readonly IntVector basis;
+        private IntVector basis;
         private readonly IntVector a;
         private readonly IntVector b;
         private readonly IntVector o;

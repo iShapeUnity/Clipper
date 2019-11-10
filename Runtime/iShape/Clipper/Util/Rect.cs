@@ -1,9 +1,8 @@
 using iShape.Geometry;
 
 namespace iShape.Clipper.Util {
-    public struct Rect {
-        internal static readonly Rect empty = new Rect(long.MaxValue, long.MaxValue, long.MinValue, long.MinValue);
 
+    public struct Rect {
         public long minX { get; private set; }
         public long minY { get; private set; }
         public long maxX { get; private set; }
@@ -34,7 +33,6 @@ namespace iShape.Clipper.Util {
             }
         }
 
-
         public void Assimilate(IntVector p) {
             if (minX > p.x) {
                 minX = p.x;
@@ -53,15 +51,14 @@ namespace iShape.Clipper.Util {
             }
         }
 
-
         public bool IsNotIntersecting(IntVector a, IntVector b) {
             return a.x < minX && b.x < minX || a.x > maxX && b.x > maxX ||
                    a.y < minY && b.y < minY || a.y > maxY && b.y > maxY;
         }
 
-
         public bool IsIntersecting(Rect box) {
             return !(maxX < box.minX || minX > box.maxX || maxY < box.minY || minY > box.maxY);
         }
     }
+
 }
