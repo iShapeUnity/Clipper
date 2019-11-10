@@ -253,6 +253,8 @@ namespace iShape.Clipper.Intersection {
 
             // remove doubles and organize data
             var navigator = sequence.Convert(exclusionPinType, hasExclusion);
+            
+            sequence.Dispose();
 
             return navigator;
         }
