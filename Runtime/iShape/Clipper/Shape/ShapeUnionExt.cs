@@ -6,9 +6,8 @@ using iShape.Geometry;
 using Unity.Collections;
 
 namespace iShape.Clipper.Shape {
-    
+
     public static class ShapeUnionExt {
-        
         public static UnionSolution Union(
             this NativeArray<IntVector> master, NativeArray<IntVector> slave, IntGeom iGeom, Allocator allocator
         ) {
@@ -294,4 +293,5 @@ namespace iShape.Clipper.Shape {
             return false;
         }
     }
+
 }
