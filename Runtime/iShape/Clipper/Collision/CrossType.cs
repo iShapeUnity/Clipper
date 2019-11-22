@@ -1,4 +1,4 @@
-namespace iShape.Clipper.Intersection {
+namespace iShape.Clipper.Collision {
     internal enum CrossType {
         not_cross,  // -1 - no intersections
         same_line,  //  0 - same line

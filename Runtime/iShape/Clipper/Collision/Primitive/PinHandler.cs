@@ -1,4 +1,4 @@
-namespace iShape.Clipper.Intersection.Primitive {
+namespace iShape.Clipper.Collision.Primitive {
     public struct PinHandler {
 
         internal PathMileStone masterSortFactor;

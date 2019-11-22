@@ -1,4 +1,4 @@
-namespace iShape.Clipper.Intersection.Primitive {
+namespace iShape.Clipper.Collision.Primitive {
     public struct PathMileStone {
 
         public readonly int index;

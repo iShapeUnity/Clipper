@@ -1,12 +1,12 @@
-using iShape.Clipper.Intersection.Navigation;
-using iShape.Clipper.Intersection.Primitive;
+using iShape.Clipper.Collision.Primitive;
+using iShape.Clipper.Collision.Navigation;
 using iShape.Geometry;
 using iShape.Collections;
 using Unity.Collections;
 using UnityEngine;
 
-namespace iShape.Clipper.Intersection {
-    public struct Intersector {
+namespace iShape.Clipper.Collision {
+    public struct CrossDetector {
         public static PinNavigator FindPins(NativeArray<IntVector> iMaster, NativeArray<IntVector> iSlave, IntGeom iGeom, PinPoint.PinType exclusionPinType) {
             var posMatrix = CreatePossibilityMatrix(iMaster, iSlave, Allocator.Temp);
 

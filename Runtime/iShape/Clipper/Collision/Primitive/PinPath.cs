@@ -1,6 +1,6 @@
 using Unity.Collections;
 
-namespace iShape.Clipper.Intersection.Primitive {
+namespace iShape.Clipper.Collision.Primitive {
     public struct PinPath {
         public PinPoint v0;
         public PinPoint v1;

@@ -1,4 +1,4 @@
-namespace iShape.Clipper.Intersection.Navigation {
+namespace iShape.Clipper.Collision.Navigation {
  
     internal struct PinNode {
         internal int isPinPath; // 0 - false, 1 - true

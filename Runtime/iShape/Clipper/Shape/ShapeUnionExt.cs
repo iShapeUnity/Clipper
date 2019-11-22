@@ -1,6 +1,6 @@
-using iShape.Clipper.Intersection;
-using iShape.Clipper.Intersection.Navigation;
-using iShape.Clipper.Intersection.Primitive;
+using iShape.Clipper.Collision;
+using iShape.Clipper.Collision.Navigation;
+using iShape.Clipper.Collision.Primitive;
 using iShape.Collections;
 using iShape.Geometry;
 using Unity.Collections;
@@ -11,7 +11,7 @@ namespace iShape.Clipper.Shape {
         public static UnionSolution Union(
             this NativeArray<IntVector> master, NativeArray<IntVector> slave, IntGeom iGeom, Allocator allocator
         ) {
-            var navigator = Intersector.FindPins(master, slave, iGeom, PinPoint.PinType.out_in);
+            var navigator = CrossDetector.FindPins(master, slave, iGeom, PinPoint.PinType.out_in);
 
             var pathList = new PlainPathList(0, allocator);
             if (navigator.isEqual) {

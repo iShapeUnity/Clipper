@@ -1,28 +1,46 @@
-using iShape.Clipper.Intersection;
-using iShape.Clipper.Intersection.Navigation;
-using iShape.Clipper.Intersection.Primitive;
+using iShape.Clipper.Collision;
+using iShape.Clipper.Collision.Navigation;
+using iShape.Clipper.Collision.Primitive;
 using iShape.Collections;
 using iShape.Geometry;
 using Unity.Collections;
 
 namespace iShape.Clipper.Shape {
 
-    public static class ShapeSubtractExt {
-
+    public static class SubtractSolver {
+        
         public static SubtractSolution Subtract(this NativeArray<IntVector> master, NativeArray<IntVector> slave,
             IntGeom iGeom, Allocator allocator) {
-            var navigator = Intersector.FindPins(master, slave, iGeom, PinPoint.PinType.in_out);
+            var navigator = CrossDetector.FindPins(master, slave, iGeom, PinPoint.PinType.in_out);
 
-            var pathList = new PlainPathList(0, allocator);
             if (navigator.isEqual) {
-                return new SubtractSolution(pathList, SubtractSolution.Nature.empty);
+                return new SubtractSolution(new PlainPathList(), SubtractSolution.Nature.empty);
             }
 
-            var cursor = navigator.NextSub();
+            var subNavigator = new SubtractNavigator(navigator, Allocator.Temp);
+
+            var cursor = subNavigator.First();
 
             if (cursor.isEmpty) {
-                return new SubtractSolution(pathList, SubtractSolution.Nature.notOverlap);
+                return new SubtractSolution(new PlainPathList(0, allocator), SubtractSolution.Nature.notOverlap);
             }
+
+            var pathList = Subtract(subNavigator, master, slave, iGeom, allocator);
+
+            if (pathList.Count > 0) {
+                return new SubtractSolution(pathList, SubtractSolution.Nature.overlap);
+            }
+
+            return new SubtractSolution(pathList, SubtractSolution.Nature.notOverlap);
+        }
+
+
+        internal static PlainPathList Subtract(SubtractNavigator aSubNavigator, NativeArray<IntVector> master,
+            NativeArray<IntVector> slave, IntGeom iGeom, Allocator allocator) {
+            var subNavigator = aSubNavigator;
+
+            var cursor = subNavigator.Next();
+            var pathList = new PlainPathList(1, allocator);
 
             int masterCount = master.Length;
             int masterLastIndex = masterCount - 1;
@@ -30,32 +48,19 @@ namespace iShape.Clipper.Shape {
             int slaveCount = slave.Length;
             int slaveLastIndex = slaveCount - 1;
 
-            var path = new DynamicArray<IntVector>(0, Allocator.Temp);
-            
             while (cursor.isNotEmpty) {
-                navigator.Mark(cursor);
-
+                var path = new DynamicArray<IntVector>(0, Allocator.Temp);
                 var start = cursor;
 
                 do {
                     // in-out slave path
 
-                    var outCursor = navigator.NextSlaveOut(cursor, start);
+                    var outCursor = subNavigator.navigator.nextSlaveOut(cursor);
 
-                    var inSlaveStart = navigator.SlaveStartStone(cursor);
+                    var inSlaveStart = subNavigator.navigator.SlaveStartStone(cursor);
+                    var outSlaveEnd = subNavigator.navigator.SlaveEndStone(outCursor);
 
-                    PathMileStone outSlaveEnd;
-
-                    bool isOutInStart = outCursor == start && path.Count > 0;
-
-                    if (!isOutInStart) {
-                        outSlaveEnd = navigator.SlaveEndStone(outCursor);
-                    } else {
-                        // possible if we start with out-in
-                        outSlaveEnd = navigator.SlaveStartStone(outCursor);
-                    }
-
-                    var startPoint = navigator.SlaveStartPoint(cursor);
+                    var startPoint = subNavigator.navigator.SlaveStartPoint(cursor);
                     path.Add(startPoint);
 
                     bool isInSlaveNotOverflow;
@@ -103,22 +108,16 @@ namespace iShape.Clipper.Shape {
                         }
                     }
 
-                    if (isOutInStart) {
-                        // possible if we start with out-in
-                        break;
-                    }
-
-                    var endPoint = navigator.SlaveEndPoint(outCursor);
+                    var endPoint = subNavigator.navigator.SlaveEndPoint(outCursor);
                     path.Add(endPoint);
 
-                    cursor = navigator.NextMaster(outCursor);
-                    navigator.Mark(cursor);
+                    cursor = subNavigator.navigator.NextMaster(outCursor);
+                    subNavigator.navigator.Mark(cursor);
 
                     // out-in master path
 
-                    var outMasterEnd = navigator.MasterEndStone(outCursor);
-                    var inMasterStart = navigator.MasterStartStone(cursor);
-
+                    var outMasterEnd = subNavigator.navigator.MasterEndStone(outCursor);
+                    var inMasterStart = subNavigator.navigator.MasterStartStone(cursor);
 
                     bool isOutMasterNotOverflow;
                     int outMasterIndex;
@@ -145,7 +144,6 @@ namespace iShape.Clipper.Shape {
                         }
                     }
 
-
                     if (outMasterEnd >= inMasterStart) {
                         // a > b
                         if (isOutMasterNotOverflow) {
@@ -167,72 +165,50 @@ namespace iShape.Clipper.Shape {
                 } while (cursor != start);
 
                 pathList.Add(path.slice, true);
-                
-                path.RemoveAll();
 
-                cursor = navigator.NextSub();
-            }
-            
-            path.Dispose();
-
-            var nature = pathList.Count > 0
-                ? SubtractSolution.Nature.overlap
-                : SubtractSolution.Nature.notOverlap;
-            var solution = new SubtractSolution(pathList, nature);
-
-            return solution;
-        }
-
-
-        private static Cursor NextSub(ref this PinNavigator self) {
-            var cursor = self.Next();
-
-            while (cursor.isNotEmpty && cursor.type != PinPoint.PinType.inside &&
-                   cursor.type != PinPoint.PinType.out_in) {
-                self.Mark(cursor);
-                cursor = self.Next();
+                cursor = subNavigator.Next();
             }
 
-            return cursor;
+            return pathList;
         }
 
-        private static Cursor NextSlaveOut(ref this PinNavigator self, Cursor start, Cursor stop) {
-            var prev = start;
-            var cursor = self.NextSlave(start);
+        private static Cursor nextSlaveOut(this ref PinNavigator self, Cursor cursor) {
+            // keep in mind Test 11, 27
+            var start = cursor;
 
-            while (start != cursor && stop != cursor && cursor.type == PinPoint.PinType.out_in) {
-                var nextMaster = self.NextMaster(cursor);
+            var next = self.NextSlave(cursor);
 
-                if (nextMaster == start) {
-                    return cursor;
+            if (start.type == PinPoint.PinType.out_in) {
+                return next;
+            }
+
+            while (start != next) {
+                if (next.type == PinPoint.PinType.outside) {
+                    break;
                 }
 
-                var nextSlave = self.NextSlave(cursor);
+                // only .out_in is possible here
 
-                var isCanSkip = self.IsCanSkip(prev, cursor, nextSlave);
-                if (!isCanSkip) {
-                    return cursor;
+                var nextNext = self.NextSlave(next);
+
+                // try to find next cursor going by master
+                var masterCursor = start;
+
+                do {
+                    masterCursor = self.NextMaster(masterCursor);
+                } while (masterCursor != next && masterCursor != nextNext);
+
+                if (masterCursor != next) {
+                    return next;
                 }
 
-                self.Mark(cursor);
-                prev = cursor;
-                cursor = nextSlave;
+                // it's inner cursor, skip it
+                self.Mark(next);
+
+                next = nextNext;
             }
 
-            return cursor;
-        }
-
-        private static bool IsCanSkip(ref this PinNavigator self, Cursor prev, Cursor cursor, Cursor nextSlave) {
-            var nextMaster = cursor;
-            bool isFoundMaster;
-            bool isFoundStart;
-            do {
-                nextMaster = self.NextMaster(nextMaster);
-                isFoundMaster = nextMaster == nextSlave;
-                isFoundStart = nextMaster == prev;
-            } while (!(isFoundMaster || isFoundStart));
-
-            return isFoundMaster;
+            return next;
         }
     }
 

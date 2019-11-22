@@ -1,7 +1,7 @@
 using iShape.Clipper.Util;
 using iShape.Geometry;
 
-namespace iShape.Clipper.Intersection.Primitive {
+namespace iShape.Clipper.Collision.Primitive {
     public struct PinPoint {
         internal struct Def {
             internal readonly IntVector pt;

@@ -1,10 +1,10 @@
-using iShape.Clipper.Intersection.Primitive;
+using iShape.Clipper.Collision.Primitive;
 using iShape.Clipper.Util;
 using iShape.Geometry;
 using iShape.Collections;
 using Unity.Collections;
 
-namespace iShape.Clipper.Intersection {
+namespace iShape.Clipper.Collision {
     internal struct PinPathBuilder {
         internal struct Result {
             internal enum PathType {

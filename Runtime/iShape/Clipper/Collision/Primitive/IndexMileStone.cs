@@ -1,4 +1,4 @@
-namespace iShape.Clipper.Intersection.Primitive {
+namespace iShape.Clipper.Collision.Primitive {
     internal struct IndexMileStone {
 
         internal readonly int index;                         // index in outside array

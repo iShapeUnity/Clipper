@@ -1,5 +1,5 @@
-﻿using iShape.Clipper.Intersection;
-using iShape.Clipper.Intersection.Primitive;
+﻿using iShape.Clipper.Collision;
+using iShape.Clipper.Collision.Primitive;
 using iShape.Geometry;
 using NUnit.Framework;
 using Unity.Collections;
@@ -29,7 +29,7 @@ namespace Tests.Clipper {
             };
             var iSlave = new NativeArray<IntVector>(iGeom.Int(slave), Allocator.Temp);
 
-            var result = Intersector.FindPins(iMaster, iSlave, iGeom, PinPoint.PinType.nil);
+            var result = CrossDetector.FindPins(iMaster, iSlave, iGeom, PinPoint.PinType.nil);
 
             Assert.AreEqual(result.pinPathArray.Length, 1);
             Assert.AreEqual(result.pinPointArray.Length, 0);
@@ -77,7 +77,7 @@ namespace Tests.Clipper {
             };
             var iSlave = new NativeArray<IntVector>(iGeom.Int(slave), Allocator.Temp);
 
-            var result = Intersector.FindPins(iMaster, iSlave, iGeom, PinPoint.PinType.nil);
+            var result = CrossDetector.FindPins(iMaster, iSlave, iGeom, PinPoint.PinType.nil);
 
             Assert.AreEqual(result.pinPathArray.Length, 1);
             Assert.AreEqual(result.pinPointArray.Length, 0);
@@ -120,7 +120,7 @@ namespace Tests.Clipper {
             };
             var iSlave = new NativeArray<IntVector>(iGeom.Int(slave), Allocator.Temp);
 
-            var result = Intersector.FindPins(iMaster, iSlave, iGeom, PinPoint.PinType.nil);
+            var result = CrossDetector.FindPins(iMaster, iSlave, iGeom, PinPoint.PinType.nil);
 
             Assert.AreEqual(result.pinPathArray.Length, 1);
             Assert.AreEqual(result.pinPointArray.Length, 0);
@@ -163,7 +163,7 @@ namespace Tests.Clipper {
             };
             var iSlave = new NativeArray<IntVector>(iGeom.Int(slave), Allocator.Temp);
 
-            var result = Intersector.FindPins(iMaster, iSlave, iGeom, PinPoint.PinType.nil);
+            var result = CrossDetector.FindPins(iMaster, iSlave, iGeom, PinPoint.PinType.nil);
 
             Assert.AreEqual(result.pinPathArray.Length, 1);
             Assert.AreEqual(result.pinPointArray.Length, 0);
@@ -206,7 +206,7 @@ namespace Tests.Clipper {
             };
             var iSlave = new NativeArray<IntVector>(iGeom.Int(slave), Allocator.Temp);
 
-            var result = Intersector.FindPins(iMaster, iSlave, iGeom, PinPoint.PinType.nil);
+            var result = CrossDetector.FindPins(iMaster, iSlave, iGeom, PinPoint.PinType.nil);
 
             Assert.AreEqual(result.pinPathArray.Length, 1);
             Assert.AreEqual(result.pinPointArray.Length, 0);
@@ -249,7 +249,7 @@ namespace Tests.Clipper {
             };
             var iSlave = new NativeArray<IntVector>(iGeom.Int(slave), Allocator.Temp);
 
-            var result = Intersector.FindPins(iMaster, iSlave, iGeom, PinPoint.PinType.nil);
+            var result = CrossDetector.FindPins(iMaster, iSlave, iGeom, PinPoint.PinType.nil);
 
             Assert.AreEqual(result.pinPathArray.Length, 1);
             Assert.AreEqual(result.pinPointArray.Length, 0);
@@ -292,7 +292,7 @@ namespace Tests.Clipper {
             };
             var iSlave = new NativeArray<IntVector>(iGeom.Int(slave), Allocator.Temp);
 
-            var result = Intersector.FindPins(iMaster, iSlave, iGeom, PinPoint.PinType.nil);
+            var result = CrossDetector.FindPins(iMaster, iSlave, iGeom, PinPoint.PinType.nil);
 
             Assert.AreEqual(result.pinPathArray.Length, 1);
             Assert.AreEqual(result.pinPointArray.Length, 0);
@@ -335,7 +335,7 @@ namespace Tests.Clipper {
             };
             var iSlave = new NativeArray<IntVector>(iGeom.Int(slave), Allocator.Temp);
 
-            var result = Intersector.FindPins(iMaster, iSlave, iGeom, PinPoint.PinType.nil);
+            var result = CrossDetector.FindPins(iMaster, iSlave, iGeom, PinPoint.PinType.nil);
 
             Assert.AreEqual(result.pinPathArray.Length, 1);
             Assert.AreEqual(result.pinPointArray.Length, 0);
@@ -379,7 +379,7 @@ namespace Tests.Clipper {
             };
             var iSlave = new NativeArray<IntVector>(iGeom.Int(slave), Allocator.Temp);
 
-            var result = Intersector.FindPins(iMaster, iSlave, iGeom, PinPoint.PinType.nil);
+            var result = CrossDetector.FindPins(iMaster, iSlave, iGeom, PinPoint.PinType.nil);
 
             Assert.AreEqual(result.pinPathArray.Length, 1);
             Assert.AreEqual(result.pinPointArray.Length, 0);
@@ -423,7 +423,7 @@ namespace Tests.Clipper {
             };
             var iSlave = new NativeArray<IntVector>(iGeom.Int(slave), Allocator.Temp);
 
-            var result = Intersector.FindPins(iMaster, iSlave, iGeom, PinPoint.PinType.nil);
+            var result = CrossDetector.FindPins(iMaster, iSlave, iGeom, PinPoint.PinType.nil);
 
             Assert.AreEqual(result.pinPathArray.Length, 1);
             Assert.AreEqual(result.pinPointArray.Length, 0);
@@ -467,7 +467,7 @@ namespace Tests.Clipper {
             };
             var iSlave = new NativeArray<IntVector>(iGeom.Int(slave), Allocator.Temp);
 
-            var result = Intersector.FindPins(iMaster, iSlave, iGeom, PinPoint.PinType.nil);
+            var result = CrossDetector.FindPins(iMaster, iSlave, iGeom, PinPoint.PinType.nil);
 
             Assert.AreEqual(result.pinPathArray.Length, 1);
             Assert.AreEqual(result.pinPointArray.Length, 0);
@@ -511,7 +511,7 @@ namespace Tests.Clipper {
             };
             var iSlave = new NativeArray<IntVector>(iGeom.Int(slave), Allocator.Temp);
 
-            var result = Intersector.FindPins(iMaster, iSlave, iGeom, PinPoint.PinType.nil);
+            var result = CrossDetector.FindPins(iMaster, iSlave, iGeom, PinPoint.PinType.nil);
 
             Assert.AreEqual(result.pinPathArray.Length, 1);
             Assert.AreEqual(result.pinPointArray.Length, 0);
@@ -554,7 +554,7 @@ namespace Tests.Clipper {
             };
             var iSlave = new NativeArray<IntVector>(iGeom.Int(slave), Allocator.Temp);
 
-            var result = Intersector.FindPins(iMaster, iSlave, iGeom, PinPoint.PinType.nil);
+            var result = CrossDetector.FindPins(iMaster, iSlave, iGeom, PinPoint.PinType.nil);
 
             Assert.AreEqual(result.pinPathArray.Length, 1);
             Assert.AreEqual(result.pinPointArray.Length, 0);
@@ -597,7 +597,7 @@ namespace Tests.Clipper {
             };
             var iSlave = new NativeArray<IntVector>(iGeom.Int(slave), Allocator.Temp);
 
-            var result = Intersector.FindPins(iMaster, iSlave, iGeom, PinPoint.PinType.nil);
+            var result = CrossDetector.FindPins(iMaster, iSlave, iGeom, PinPoint.PinType.nil);
 
             Assert.AreEqual(result.pinPathArray.Length, 1);
             Assert.AreEqual(result.pinPointArray.Length, 0);
@@ -640,7 +640,7 @@ namespace Tests.Clipper {
             };
             var iSlave = new NativeArray<IntVector>(iGeom.Int(slave), Allocator.Temp);
 
-            var result = Intersector.FindPins(iMaster, iSlave, iGeom, PinPoint.PinType.nil);
+            var result = CrossDetector.FindPins(iMaster, iSlave, iGeom, PinPoint.PinType.nil);
 
             Assert.AreEqual(result.pinPathArray.Length, 1);
             Assert.AreEqual(result.pinPointArray.Length, 0);
@@ -683,7 +683,7 @@ namespace Tests.Clipper {
             };
             var iSlave = new NativeArray<IntVector>(iGeom.Int(slave), Allocator.Temp);
 
-            var result = Intersector.FindPins(iMaster, iSlave, iGeom, PinPoint.PinType.nil);
+            var result = CrossDetector.FindPins(iMaster, iSlave, iGeom, PinPoint.PinType.nil);
 
             Assert.AreEqual(result.pinPathArray.Length, 1);
             Assert.AreEqual(result.pinPointArray.Length, 0);
@@ -728,7 +728,7 @@ namespace Tests.Clipper {
             };
             var iSlave = new NativeArray<IntVector>(iGeom.Int(slave), Allocator.Temp);
 
-            var result = Intersector.FindPins(iMaster, iSlave, iGeom, PinPoint.PinType.nil);
+            var result = CrossDetector.FindPins(iMaster, iSlave, iGeom, PinPoint.PinType.nil);
 
             Assert.AreEqual(result.pinPathArray.Length, 1);
             Assert.AreEqual(result.pinPointArray.Length, 0);
@@ -773,7 +773,7 @@ namespace Tests.Clipper {
             };
             var iSlave = new NativeArray<IntVector>(iGeom.Int(slave), Allocator.Temp);
 
-            var result = Intersector.FindPins(iMaster, iSlave, iGeom, PinPoint.PinType.nil);
+            var result = CrossDetector.FindPins(iMaster, iSlave, iGeom, PinPoint.PinType.nil);
 
             Assert.AreEqual(result.pinPathArray.Length, 1);
             Assert.AreEqual(result.pinPointArray.Length, 0);
@@ -818,7 +818,7 @@ namespace Tests.Clipper {
             };
             var iSlave = new NativeArray<IntVector>(iGeom.Int(slave), Allocator.Temp);
 
-            var result = Intersector.FindPins(iMaster, iSlave, iGeom, PinPoint.PinType.nil);
+            var result = CrossDetector.FindPins(iMaster, iSlave, iGeom, PinPoint.PinType.nil);
 
             Assert.AreEqual(result.pinPathArray.Length, 1);
             Assert.AreEqual(result.pinPointArray.Length, 0);
@@ -863,7 +863,7 @@ namespace Tests.Clipper {
             };
             var iSlave = new NativeArray<IntVector>(iGeom.Int(slave), Allocator.Temp);
 
-            var result = Intersector.FindPins(iMaster, iSlave, iGeom, PinPoint.PinType.nil);
+            var result = CrossDetector.FindPins(iMaster, iSlave, iGeom, PinPoint.PinType.nil);
 
             Assert.AreEqual(result.pinPathArray.Length, 1);
             Assert.AreEqual(result.pinPointArray.Length, 0);
@@ -909,7 +909,7 @@ namespace Tests.Clipper {
 
             var iSlave = new NativeArray<IntVector>(iGeom.Int(slave), Allocator.Temp);
 
-            var result = Intersector.FindPins(iMaster, iSlave, iGeom, PinPoint.PinType.nil);
+            var result = CrossDetector.FindPins(iMaster, iSlave, iGeom, PinPoint.PinType.nil);
 
             Assert.AreEqual(result.pinPathArray.Length, 4);
 
@@ -950,7 +950,7 @@ namespace Tests.Clipper {
 
             var iSlave = new NativeArray<IntVector>(iGeom.Int(slave), Allocator.Temp);
 
-            var result = Intersector.FindPins(iMaster, iSlave, iGeom, PinPoint.PinType.nil);
+            var result = CrossDetector.FindPins(iMaster, iSlave, iGeom, PinPoint.PinType.nil);
 
             Assert.AreEqual(result.pinPathArray.Length, 4);
             Assert.AreEqual(result.pinPointArray.Length, 0);

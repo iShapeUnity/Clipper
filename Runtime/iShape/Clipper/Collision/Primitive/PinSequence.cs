@@ -1,8 +1,8 @@
-using iShape.Clipper.Intersection.Navigation;
+using iShape.Clipper.Collision.Navigation;
 using iShape.Collections;
 using Unity.Collections;
 
-namespace iShape.Clipper.Intersection.Primitive {
+namespace iShape.Clipper.Collision.Primitive {
     
     internal struct PinSequence {
         

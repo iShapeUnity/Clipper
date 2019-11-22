@@ -1,7 +1,7 @@
 using iShape.Collections;
 using Unity.Collections;
 
-namespace iShape.Clipper.Intersection {
+namespace iShape.Clipper.Collision {
     
     internal struct AdjacencyMatrix {
         

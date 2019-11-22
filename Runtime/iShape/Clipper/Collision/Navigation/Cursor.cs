@@ -1,6 +1,6 @@
-using iShape.Clipper.Intersection.Primitive;
+using iShape.Clipper.Collision.Primitive;
 
-namespace iShape.Clipper.Intersection.Navigation {
+namespace iShape.Clipper.Collision.Navigation {
 
     internal struct Cursor {
         internal static Cursor empty = new Cursor(0, -1);

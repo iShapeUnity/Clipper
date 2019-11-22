@@ -1,5 +1,5 @@
 using iShape.Geometry;
-namespace iShape.Clipper.Intersection.Primitive  {
+namespace iShape.Clipper.Collision.Primitive  {
     internal struct PinEdge {
         internal PinPoint v0;
         internal PinPoint v1;

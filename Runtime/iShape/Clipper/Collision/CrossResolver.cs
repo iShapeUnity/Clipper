@@ -1,6 +1,6 @@
 using iShape.Geometry;
 
-namespace iShape.Clipper.Intersection {
+namespace iShape.Clipper.Collision {
     internal struct CrossResolver {
 
         //-1 - no intersections
