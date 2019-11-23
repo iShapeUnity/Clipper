@@ -1274,6 +1274,114 @@ namespace Tests.Clipper {
 
             solution.Dispose();
         }
+        
+        [Test]
+        public void Test_41() {
+            var data = SubtractTestData.data[41];
+
+            var master = new NativeArray<IntVector>(iGeom.Int(data[0]), Allocator.Temp);
+            var slave = new NativeArray<IntVector>(iGeom.Int(data[1]), Allocator.Temp);
+
+            var solution = master.Subtract(slave, iGeom, Allocator.Temp);
+
+            Assert.AreEqual(solution.nature, SubtractSolution.Nature.overlap);
+            Assert.AreEqual(solution.pathList.Count, 1);
+
+            var path = solution.pathList.GetPath(0, Allocator.Temp).ToArray();
+            var sample = iGeom.Int(new[] {
+                new Vector2(-5,5),
+                new Vector2(-5,-5),
+                new Vector2(-10,-5),
+                new Vector2(-10,5)
+            });
+
+            Assert.AreEqual(path, sample);
+
+            solution.Dispose();
+        }
+        
+        [Test]
+        public void Test_42() {
+            var data = SubtractTestData.data[42];
+
+            var master = new NativeArray<IntVector>(iGeom.Int(data[0]), Allocator.Temp);
+            var slave = new NativeArray<IntVector>(iGeom.Int(data[1]), Allocator.Temp);
+
+            var solution = master.Subtract(slave, iGeom, Allocator.Temp);
+
+            Assert.AreEqual(solution.nature, SubtractSolution.Nature.overlap);
+            Assert.AreEqual(solution.pathList.Count, 1);
+
+            var path = solution.pathList.GetPath(0, Allocator.Temp).ToArray();
+            var sample = iGeom.Int(new[] {
+                new Vector2(-5,5),
+                new Vector2(-5,-5),
+                new Vector2(-10,-5),
+                new Vector2(-10,5)
+            });
+
+            Assert.AreEqual(path, sample);
+
+            solution.Dispose();
+        }
+        
+        [Test]
+        public void Test_43() {
+            var data = SubtractTestData.data[43];
+
+            var master = new NativeArray<IntVector>(iGeom.Int(data[0]), Allocator.Temp);
+            var slave = new NativeArray<IntVector>(iGeom.Int(data[1]), Allocator.Temp);
+
+            var solution = master.Subtract(slave, iGeom, Allocator.Temp);
+
+            Assert.AreEqual(solution.nature, SubtractSolution.Nature.overlap);
+            Assert.AreEqual(solution.pathList.Count, 1);
+
+            var path = solution.pathList.GetPath(0, Allocator.Temp).ToArray();
+            var sample = iGeom.Int(new[] {
+                new Vector2(10, 5),
+                new Vector2(0, 5),
+                new Vector2(10, 0),
+                new Vector2(10, -10),
+                new Vector2(0, -10),
+                new Vector2(-10, -10),
+                new Vector2(-10, 10),
+                new Vector2(10, 10)
+            });
+
+            Assert.AreEqual(path, sample);
+
+            solution.Dispose();
+        }
+        
+        [Test]
+        public void Test_44() {
+            var data = SubtractTestData.data[44];
+
+            var master = new NativeArray<IntVector>(iGeom.Int(data[0]), Allocator.Temp);
+            var slave = new NativeArray<IntVector>(iGeom.Int(data[1]), Allocator.Temp);
+
+            var solution = master.Subtract(slave, iGeom, Allocator.Temp);
+
+            Assert.AreEqual(solution.nature, SubtractSolution.Nature.overlap);
+            Assert.AreEqual(solution.pathList.Count, 1);
+
+            var path = solution.pathList.GetPath(0, Allocator.Temp).ToArray();
+            var sample = iGeom.Int(new[] {
+                new Vector2(-10, -5),
+                new Vector2(-5, -5),
+                new Vector2(-5, 5),
+                new Vector2(5, 5),
+                new Vector2(5, -5),
+                new Vector2(10, -5),
+                new Vector2(10, -10),
+                new Vector2(-10, -10)
+            });
+
+            Assert.AreEqual(path, sample);
+
+            solution.Dispose();
+        }
     }
 
 }

@@ -801,6 +801,77 @@ namespace Tests.Clipper.Data {
                     new Vector2(10.0f, -10.0f),
                     new Vector2(10.0f, 10.0f)
                 }
+            },
+            // 41
+            new[] {
+                new[] {
+                    new Vector2(-10.0f, 5.0f),
+                    new Vector2(10.0f, 5.0f),
+                    new Vector2(10.0f, -5.0f),
+                    new Vector2(-10.0f, -5.0f)
+                },
+                new[] {
+                    new Vector2(-5.0f, 10.0f),
+                    new Vector2(-5.0f, -5.0f),
+                    new Vector2(5.0f, -5.0f),
+                    new Vector2(5.0f, -10.0f),
+                    new Vector2(15.0f, -10.0f),
+                    new Vector2(15.0f, 10.0f)
+                }
+            },
+            // 42
+            new[] {
+                new[] {
+                    new Vector2(-10.0f, 5.0f),
+                    new Vector2(10.0f, 5.0f),
+                    new Vector2(10.0f, -5.0f),
+                    new Vector2(-10.0f, -5.0f)
+                },
+                new[] {
+                    new Vector2(-5.0f, 10.0f),
+                    new Vector2(-5.0f, -5.0f),
+                    new Vector2(10.0f, -5.0f),
+                    new Vector2(10.0f, 0.0f),
+                    new Vector2(15.0f, 0.0f),
+                    new Vector2(15.0f, 10.0f)
+                }
+            },
+            // 43
+            new[] {
+                new[] {
+                    new Vector2(-10.0f, 10.0f),
+                    new Vector2(10.0f, 10.0f),
+                    new Vector2(10.0f, -10.0f),
+                    new Vector2(-10.0f, -10.0f)
+                },
+                new[] {
+                    new Vector2(0.0f, 5.0f),
+                    new Vector2(10.0f, 0.0f),
+                    new Vector2(10.0f, -10.0f),
+                    new Vector2(0.0f, -10.0f),
+                    new Vector2(0.0f, -15.0f),
+                    new Vector2(15.0f, -15.0f),
+                    new Vector2(15.0f, 5.0f)
+                }
+            },
+            // 44
+            new[] {
+                new[] {
+                    new Vector2(-10.0f, 5.0f),
+                    new Vector2(10.0f, 5.0f),
+                    new Vector2(10.0f, -10.0f),
+                    new Vector2(-10.0f, -10.0f)
+                },
+                new[] {
+                    new Vector2(-5.0f, 5.0f),
+                    new Vector2(5.0f, 5.0f),
+                    new Vector2(5.0f, -5.0f),
+                    new Vector2(15.0f, -5.0f),
+                    new Vector2(15.0f, 10.0f),
+                    new Vector2(-15.0f, 10.0f),
+                    new Vector2(-15.0f, -5.0f),
+                    new Vector2(-5.0f, -5.0f)
+                }
             }
         };
     }
