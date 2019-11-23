@@ -3,7 +3,7 @@ using iShape.Clipper.Collision.Primitive;
 using iShape.Collections;
 using Unity.Collections;
 
-namespace iShape.Clipper.Shape {
+namespace iShape.Clipper.Solver {
 
     internal struct UnionNavigator {
 
@@ -78,7 +78,7 @@ namespace iShape.Clipper.Shape {
                 var i = 1;
                 while (i < m) {
                     var b = cursors[i];
-                    if (a.type == PinPoint.PinType.outside && b.type != PinPoint.PinType.outside) {
+                    if (a.type != PinPoint.PinType.outside && b.type == PinPoint.PinType.outside) {
                         cursors[i - 1] = b;
                         isNotSorted = true;
                     } else {

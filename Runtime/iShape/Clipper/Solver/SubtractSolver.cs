@@ -5,16 +5,19 @@ using iShape.Collections;
 using iShape.Geometry;
 using Unity.Collections;
 
-namespace iShape.Clipper.Shape {
+namespace iShape.Clipper.Solver {
 
     public static class SubtractSolver {
-        
-        public static SubtractSolution Subtract(this NativeArray<IntVector> master, NativeArray<IntVector> slave,
-            IntGeom iGeom, Allocator allocator) {
+        public static SubtractSolution Subtract(
+            this NativeArray<IntVector> master, NativeArray<IntVector> slave,
+            IntGeom iGeom, Allocator allocator
+        ) {
             var navigator = CrossDetector.FindPins(master, slave, iGeom, PinPoint.PinType.in_out);
 
+            PlainPathList pathList;
             if (navigator.isEqual) {
-                return new SubtractSolution(new PlainPathList(), SubtractSolution.Nature.empty);
+                pathList = new PlainPathList(0, allocator);
+                return new SubtractSolution(pathList, SubtractSolution.Nature.empty);
             }
 
             var subNavigator = new SubtractNavigator(navigator, Allocator.Temp);
@@ -25,19 +28,21 @@ namespace iShape.Clipper.Shape {
                 return new SubtractSolution(new PlainPathList(0, allocator), SubtractSolution.Nature.notOverlap);
             }
 
-            var pathList = Subtract(subNavigator, master, slave, iGeom, allocator);
+            pathList = Subtract(subNavigator, master, slave, allocator);
 
-            if (pathList.Count > 0) {
-                return new SubtractSolution(pathList, SubtractSolution.Nature.overlap);
-            }
+            navigator.Dispose();
 
-            return new SubtractSolution(pathList, SubtractSolution.Nature.notOverlap);
+            var nature = pathList.Count > 0 ? SubtractSolution.Nature.overlap : SubtractSolution.Nature.notOverlap;
+
+            return new SubtractSolution(pathList, nature);
         }
 
 
-        internal static PlainPathList Subtract(SubtractNavigator aSubNavigator, NativeArray<IntVector> master,
-            NativeArray<IntVector> slave, IntGeom iGeom, Allocator allocator) {
-            var subNavigator = aSubNavigator;
+        internal static PlainPathList Subtract(
+            SubtractNavigator navigator, NativeArray<IntVector> master,
+            NativeArray<IntVector> slave, Allocator allocator
+        ) {
+            var subNavigator = navigator;
 
             var cursor = subNavigator.Next();
             var pathList = new PlainPathList(1, allocator);
@@ -48,8 +53,9 @@ namespace iShape.Clipper.Shape {
             int slaveCount = slave.Length;
             int slaveLastIndex = slaveCount - 1;
 
+            var path = new DynamicArray<IntVector>(0, Allocator.Temp);
+
             while (cursor.isNotEmpty) {
-                var path = new DynamicArray<IntVector>(0, Allocator.Temp);
                 var start = cursor;
 
                 do {
@@ -165,6 +171,7 @@ namespace iShape.Clipper.Shape {
                 } while (cursor != start);
 
                 pathList.Add(path.slice, true);
+                path.RemoveAll();
 
                 cursor = subNavigator.Next();
             }

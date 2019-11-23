@@ -5,45 +5,73 @@ using iShape.Collections;
 using iShape.Geometry;
 using Unity.Collections;
 
-namespace iShape.Clipper.Shape {
+namespace iShape.Clipper.Solver {
 
-    public static class ShapeUnionExt {
+    public static class UnionSolver {
         public static UnionSolution Union(
-            this NativeArray<IntVector> master, NativeArray<IntVector> slave, IntGeom iGeom, Allocator allocator
+            this NativeArray<IntVector> master, NativeArray<IntVector> slave,
+            IntGeom iGeom, Allocator allocator
         ) {
-            var navigator = CrossDetector.FindPins(master, slave, iGeom, PinPoint.PinType.out_in);
+            var navigator = CrossDetector.FindPins(master, slave, iGeom, PinPoint.PinType.in_out);
 
-            var pathList = new PlainPathList(0, allocator);
+            PlainPathList pathList;
+
             if (navigator.isEqual) {
+                pathList = new PlainPathList(1, allocator);
                 pathList.Add(master, true);
-                return new UnionSolution(pathList, UnionSolution.Nature.overlap);
+                return new UnionSolution(new PlainPathList(), UnionSolution.Nature.overlap);
             }
 
-            var cursor = navigator.NextUnion();
+            var unionNavigator = new UnionNavigator(navigator, Allocator.Temp);
+
+            var cursor = unionNavigator.First();
 
             if (cursor.isEmpty) {
                 if (navigator.hasContacts) {
-                    if (master.IsOverlap(slave)) {
+                    if (master.isOverlap(slave)) {
+                        pathList = new PlainPathList(1, allocator);
                         pathList.Add(master, true);
                         return new UnionSolution(pathList, UnionSolution.Nature.overlap);
-                    } else if (slave.IsOverlap(slave)) {
+                    } else if (slave.isOverlap(points: slave)) {
+                        pathList = new PlainPathList(1, allocator);
                         pathList.Add(slave, true);
                         return new UnionSolution(pathList, UnionSolution.Nature.overlap);
                     } else {
+                        pathList = new PlainPathList(0, allocator);
                         return new UnionSolution(pathList, UnionSolution.Nature.notOverlap);
                     }
                 } else {
-                    if (master.IsContain(slave.Any())) {
+                    if (master.isContain(slave.any())) {
+                        pathList = new PlainPathList(1, allocator);
                         pathList.Add(master, true);
                         return new UnionSolution(pathList, UnionSolution.Nature.overlap);
-                    } else if (slave.IsContain(point: master.Any())) {
-                        pathList.Add(slave, true);
+                    } else if (slave.isContain(master.any())) {
+                        pathList = new PlainPathList(1, allocator);
+                        pathList.Add(slave, isClockWise: true);
                         return new UnionSolution(pathList, UnionSolution.Nature.overlap);
                     } else {
+                        pathList = new PlainPathList(0, allocator);
                         return new UnionSolution(pathList, UnionSolution.Nature.notOverlap);
                     }
                 }
             }
+
+            pathList = Union(unionNavigator, master, slave, allocator);
+            
+            navigator.Dispose();
+
+            var nature = pathList.Count > 0 ? UnionSolution.Nature.overlap : UnionSolution.Nature.notOverlap;
+
+            return new UnionSolution(pathList, nature);
+        }
+
+        internal static PlainPathList Union(
+            UnionNavigator navigator, NativeArray<IntVector> master,
+            NativeArray<IntVector> slave, Allocator allocator
+        ) {
+            var unionNavigator = navigator;
+
+            var pathList = new PlainPathList(1, allocator);
 
             int masterCount = master.Length;
             int masterLastIndex = masterCount - 1;
@@ -51,23 +79,22 @@ namespace iShape.Clipper.Shape {
             int slaveCount = slave.Length;
             int slaveLastIndex = slaveCount - 1;
 
+            var cursor = unionNavigator.Next();
+
             var path = new DynamicArray<IntVector>(0, Allocator.Temp);
-
+            
             while (cursor.isNotEmpty) {
-                navigator.Mark(cursor);
-
                 var start = cursor;
 
                 do {
                     // in-out slave path
 
-                    var outCursor = navigator.NextSlaveOut(cursor, start);
+                    var outCursor = unionNavigator.navigator.nextSlaveOut(cursor);
 
-                    var inSlaveStart = navigator.SlaveStartStone(cursor);
+                    var inSlaveStart = unionNavigator.navigator.SlaveStartStone(cursor);
+                    var outSlaveEnd = unionNavigator.navigator.SlaveEndStone(outCursor);
 
-                    var outSlaveEnd = navigator.SlaveEndStone(outCursor);
-
-                    var startPoint = navigator.SlaveStartPoint(cursor);
+                    var startPoint = unionNavigator.navigator.SlaveStartPoint(cursor);
                     path.Add(startPoint);
 
                     bool isInSlaveNotOverflow;
@@ -116,16 +143,16 @@ namespace iShape.Clipper.Shape {
                         }
                     }
 
-                    var endPoint = navigator.SlaveEndPoint(outCursor);
+                    var endPoint = unionNavigator.navigator.SlaveEndPoint(outCursor);
                     path.Add(endPoint);
 
-                    cursor = navigator.NextMaster(outCursor);
-                    navigator.Mark(cursor);
+                    cursor = unionNavigator.navigator.NextMaster(outCursor);
+                    unionNavigator.navigator.Mark(cursor);
 
                     // out-in master path
 
-                    var outMasterEnd = navigator.MasterEndStone(outCursor);
-                    var inMasterStart = navigator.MasterStartStone(cursor);
+                    var outMasterEnd = unionNavigator.navigator.MasterEndStone(outCursor);
+                    var inMasterStart = unionNavigator.navigator.MasterStartStone(cursor);
 
                     bool isOutMasterNotOverflow;
                     int outMasterIndex;
@@ -136,6 +163,7 @@ namespace iShape.Clipper.Shape {
                         outMasterIndex = 0;
                         isOutMasterNotOverflow = false;
                     }
+
 
                     bool isInMasterNotOverflow;
                     int inMasterIndex;
@@ -174,69 +202,93 @@ namespace iShape.Clipper.Shape {
 
                 bool isClockWise = path.IsClockWise();
                 pathList.Add(path.slice, isClockWise);
-
                 path.RemoveAll();
-
-                cursor = navigator.NextUnion();
+                
+                cursor = unionNavigator.Next();
             }
-
+            
             path.Dispose();
 
-            var nature = pathList.Count > 0 ? UnionSolution.Nature.overlap : UnionSolution.Nature.notOverlap;
-
-            var solution = new UnionSolution(pathList, nature);
-            return solution;
+            return pathList;
         }
 
-        private static Cursor NextUnion(ref this PinNavigator self) {
-            var cursor = self.Next();
+        private static Cursor nextSlaveOut(this ref PinNavigator self, Cursor cursor) {
+            // keep in mind Test 11, 27
+            var start = cursor;
 
-            while (cursor.isNotEmpty && cursor.type != PinPoint.PinType.outside &&
-                   cursor.type != PinPoint.PinType.in_out) {
-                self.Mark(cursor);
-                cursor = self.Next();
+            var next = self.NextSlave(cursor);
+
+            if (start.type == PinPoint.PinType.in_out) {
+                return next;
             }
 
-            return cursor;
-        }
-
-        private static Cursor NextSlaveOut(ref this PinNavigator self, Cursor start, Cursor stop) {
-            var prev = start;
-            var cursor = self.NextSlave(start);
-
-            while (start != cursor && stop != cursor && cursor.type == PinPoint.PinType.in_out) {
-                var nextMaster = self.NextMaster(cursor);
-
-                if (nextMaster == start) {
-                    return cursor;
+            while (start != next) {
+                if (next.type == PinPoint.PinType.inside) {
+                    break;
                 }
 
-                var nextSlave = self.NextSlave(cursor);
+                // only .out_in is possible here
 
-                var isCanSkip = self.IsCanSkip(prev, cursor, nextSlave);
-                if (!isCanSkip) {
-                    return cursor;
+                var nextNext = self.NextSlave(next);
+
+                // try to find next cursor going by master
+                var masterCursor = start;
+
+                do {
+                    masterCursor = self.NextMaster(masterCursor);
+                } while (masterCursor != next && masterCursor != nextNext);
+
+                if (masterCursor != next) {
+                    return next;
                 }
 
-                self.Mark(cursor);
-                prev = cursor;
-                cursor = nextSlave;
+                // it's inner cursor, skip it
+                self.Mark(next);
+
+                next = nextNext;
             }
 
-            return cursor;
+            return next;
         }
 
-        private static bool IsCanSkip(ref this PinNavigator self, Cursor prev, Cursor cursor, Cursor nextSlave) {
-            var nextMaster = cursor;
-            bool isFoundMaster;
-            bool isFoundStart;
-            do {
-                nextMaster = self.NextMaster(nextMaster);
-                isFoundMaster = nextMaster == nextSlave;
-                isFoundStart = nextMaster == prev;
-            } while (!(isFoundMaster || isFoundStart));
 
-            return isFoundMaster;
+        private static IntVector any(this NativeArray<IntVector> self) {
+            var a = self[0];
+            var b = self[1];
+            return new IntVector((a.x + b.x) >> 1, (a.y + b.y) >> 1);
+        }
+
+        private static bool isContain(this NativeArray<IntVector> self, IntVector point) {
+            int n = self.Length;
+            var isContain = false;
+            var p2 = self[n - 1];
+            for (int i = 0; i < n; ++i) {
+                var p1 = self[i];
+                if (((p1.y > point.y) != (p2.y > point.y)) &&
+                    point.x < ((p2.x - p1.x) * (point.y - p1.y) / (p2.y - p1.y) + p1.x)) {
+                    isContain = !isContain;
+                }
+
+                p2 = p1;
+            }
+
+            return isContain;
+        }
+
+        private static bool isOverlap(this NativeArray<IntVector> self, NativeArray<IntVector> points) {
+            int n = points.Length;
+            var a = points[n - 1];
+            for (int i = 0; i < n; ++i) {
+                var b = points[i];
+                var c = new IntVector((a.x + b.x) >> 1, (a.y + b.y) >> 1);
+                if (self.isContain(c)) {
+                    return true;
+                }
+
+                a = b;
+            }
+
+            return false;
         }
 
         private static bool IsClockWise(ref this DynamicArray<IntVector> self) {
@@ -252,45 +304,6 @@ namespace iShape.Clipper.Shape {
             }
 
             return sum >= 0;
-        }
-
-        private static IntVector Any(ref this NativeArray<IntVector> self) {
-            var a = self[0];
-            var b = self[1];
-            return new IntVector((a.x + b.x) >> 1, (a.y + b.y) >> 1);
-        }
-
-        private static bool IsContain(ref this NativeArray<IntVector> self, IntVector point) {
-            int n = self.Length;
-            var isContain = false;
-            var p2 = self[n - 1];
-            for (int i = 0; i < n; ++i) {
-                var p1 = self[i];
-                if (p1.y > point.y != p2.y > point.y &&
-                    point.x < (p2.x - p1.x) * (point.y - p1.y) / (p2.y - p1.y) + p1.x) {
-                    isContain = !isContain;
-                }
-
-                p2 = p1;
-            }
-
-            return isContain;
-        }
-
-        private static bool IsOverlap(ref this NativeArray<IntVector> self, NativeArray<IntVector> points) {
-            int n = points.Length;
-            var a = points[n - 1];
-            for (int i = 0; i < n; ++i) {
-                var b = points[i];
-                var c = new IntVector((a.x + b.x) >> 1, (a.y + b.y) >> 1);
-                if (self.IsContain(c)) {
-                    return true;
-                }
-
-                a = b;
-            }
-
-            return false;
         }
     }
 

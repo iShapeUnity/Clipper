@@ -38,40 +38,6 @@ namespace iShape.Clipper.Collision.Navigation {
             this.hasContacts = true;
         }
 
-        internal Cursor Next(Cursor cursor) {
-            return Next(cursor.index);
-        }
-
-        internal Cursor Next() {
-            return this.nodeArray.Length != 0 ? Next(0) : Cursor.empty;
-        }
-
-
-        private Cursor Next(int index) {
-            var i = index;
-            var n = nodeArray.Length;
-            do {
-                var node = nodeArray[i];
-                if (node.marker == 0) {
-                    PinPoint.PinType type;
-                    if (node.isPinPath == 0) {
-                        var pin = pinPointArray[node.index];
-                        type = pin.type;
-                    } else {
-                        var path = pinPathArray[node.index];
-                        type = path.v0.type;
-                    }
-
-                    return new Cursor(type, i);
-                }
-
-                i = (i + 1) % n;
-            } while (i != index);
-
-            return Cursor.empty;
-        }
-
-
         internal void Mark(Cursor cursor) {
             var node = nodeArray[cursor.index];
             node.marker = 1;
@@ -95,8 +61,7 @@ namespace iShape.Clipper.Collision.Navigation {
             var path = pinPathArray[nextNode.index];
             return new Cursor(path.v0.type, index);
         }
-
-
+        
         internal Cursor NextMaster(Cursor cursor) {
             var node = nodeArray[cursor.index];
 
@@ -136,30 +101,6 @@ namespace iShape.Clipper.Collision.Navigation {
             var path = pinPathArray[node.index];
             return path.v1.masterMileStone;
         }
-
-        internal IntVector MasterStartPoint(Cursor cursor) {
-            var node = nodeArray[cursor.index];
-            if (node.isPinPath == 0) {
-                var pin = pinPointArray[node.index];
-                return pin.point;
-            }
-
-            var path = pinPathArray[node.index];
-            return path.v0.point;
-        }
-
-
-        internal IntVector MasterEndPoint(Cursor cursor) {
-            var node = nodeArray[cursor.index];
-            if (node.isPinPath == 0) {
-                var pin = pinPointArray[node.index];
-                return pin.point;
-            }
-
-            var path = pinPathArray[node.index];
-            return path.v1.point;
-        }
-
 
         internal PathMileStone SlaveStartStone(Cursor cursor) {
             var node = nodeArray[cursor.index];

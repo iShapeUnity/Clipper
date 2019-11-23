@@ -3,7 +3,7 @@ using iShape.Clipper.Collision.Primitive;
 using iShape.Collections;
 using Unity.Collections;
 
-namespace iShape.Clipper.Shape {
+namespace iShape.Clipper.Solver {
 
     internal struct SubtractNavigator {
         internal PinNavigator navigator;
@@ -31,8 +31,18 @@ namespace iShape.Clipper.Shape {
     
         internal Cursor First() {
             return nextCursors.Length > 0 ? this.nextCursors[0] : Cursor.empty;
-        } 
- 
+        }
+        
+        internal void Reset() {
+            var nodeArray = this.navigator.nodeArray;
+            int n = nodeArray.Length;
+            for(int i = 0; i < n; ++i) {
+                var node = nodeArray[i];
+                node.marker = 0;
+                nodeArray[i] = node;
+            }
+        }
+
         private static NativeArray<Cursor> getCursors(PinNavigator navigator, Allocator allocator) {
             var n = navigator.nodeArray.Length;
             var cursors = new DynamicArray<Cursor>(n, Allocator.Temp);
@@ -76,7 +86,7 @@ namespace iShape.Clipper.Shape {
                 var i = 1;
                 while (i < m) {
                     var b = cursors[i];
-                    if (a.type == PinPoint.PinType.inside && b.type != PinPoint.PinType.inside) {
+                    if (a.type != PinPoint.PinType.inside && b.type == PinPoint.PinType.inside) {
                         cursors[i - 1] = b;
                         isNotSorted = true;
                     }

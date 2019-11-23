@@ -1,4 +1,4 @@
-using iShape.Clipper.Shape;
+using iShape.Clipper.Solver;
 using iShape.Geometry;
 using NUnit.Framework;
 using Tests.Clipper.Data;
