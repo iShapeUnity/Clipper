@@ -78,6 +78,23 @@ namespace iShape.Clipper.Collision.Navigation {
             var path = pinPathArray[nextNode.index];
             return new Cursor(path.v0.type, index);
         }
+        
+        internal Cursor PrevMaster(Cursor cursor) {
+            var node = nodeArray[cursor.index];
+
+            int n = nodeArray.Length;
+            int prevMasterIndex = (node.masterIndex - 1 + n) % n;
+            int index = prevMasterIndex;
+            var prevNode = nodeArray[index];
+
+            if (prevNode.isPinPath == 0) {
+                var pin = pinPointArray[prevNode.index];
+                return new Cursor(pin.type, index);
+            }
+
+            var path = pinPathArray[prevNode.index];
+            return new Cursor(path.v0.type, index);
+        }
 
         internal PathMileStone MasterStartStone(Cursor cursor) {
             var node = nodeArray[cursor.index];

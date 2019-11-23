@@ -7,8 +7,9 @@ using Unity.Collections;
 
 namespace iShape.Clipper.Solver {
 
-    public static class SubtractSolver {
-        public static SubtractSolution Subtract(
+    public static class IntersectSolver {
+        
+        public static SubtractSolution Intersect(
             this NativeArray<IntVector> master, NativeArray<IntVector> slave,
             IntGeom iGeom, Allocator allocator
         ) {
@@ -28,7 +29,7 @@ namespace iShape.Clipper.Solver {
                 return new SubtractSolution(new PlainPathList(0, allocator), SubtractSolution.Nature.notOverlap);
             }
 
-            pathList = Subtract(subNavigator, master, slave, allocator);
+            pathList = Intersect(subNavigator, master, slave, allocator);
 
             navigator.Dispose();
 
@@ -38,15 +39,18 @@ namespace iShape.Clipper.Solver {
         }
 
 
-        internal static PlainPathList Subtract(
-            InsideNavigator navigator, NativeArray<IntVector> master,
+        internal static PlainPathList Intersect(
+            InsideNavigator insideNavigator, NativeArray<IntVector> master,
             NativeArray<IntVector> slave, Allocator allocator
         ) {
-            var subNavigator = navigator;
-
-            var cursor = subNavigator.Next();
+            var cursor = insideNavigator.Next();
             var pathList = new PlainPathList(1, allocator);
 
+            if (cursor.isEmpty || cursor.type != PinPoint.PinType.inside) {
+                pathList.Add(slave, false);
+                return pathList;
+            }
+            
             int masterCount = master.Length;
             int masterLastIndex = masterCount - 1;
 
@@ -61,12 +65,12 @@ namespace iShape.Clipper.Solver {
                 do {
                     // in-out slave path
 
-                    var outCursor = subNavigator.navigator.nextSlaveOut(cursor);
+                    var outCursor = insideNavigator.navigator.nextSlaveOut(cursor);
 
-                    var inSlaveStart = subNavigator.navigator.SlaveStartStone(cursor);
-                    var outSlaveEnd = subNavigator.navigator.SlaveEndStone(outCursor);
+                    var inSlaveStart = insideNavigator.navigator.SlaveEndStone(cursor);
+                    var outSlaveEnd = insideNavigator.navigator.SlaveStartStone(outCursor);
 
-                    var startPoint = subNavigator.navigator.SlaveStartPoint(cursor);
+                    var startPoint = insideNavigator.navigator.SlaveEndPoint(cursor);
                     path.Add(startPoint);
 
                     bool isInSlaveNotOverflow;
@@ -114,66 +118,70 @@ namespace iShape.Clipper.Solver {
                         }
                     }
 
-                    var endPoint = subNavigator.navigator.SlaveEndPoint(outCursor);
+                    var endPoint = insideNavigator.navigator.SlaveStartPoint(outCursor);
                     path.Add(endPoint);
 
-                    cursor = subNavigator.navigator.NextMaster(outCursor);
-                    subNavigator.navigator.Mark(cursor);
+                    cursor = insideNavigator.navigator.PrevMaster(outCursor);
+                    insideNavigator.navigator.Mark(cursor);
 
                     // out-in master path
 
-                    var outMasterEnd = subNavigator.navigator.MasterEndStone(outCursor);
-                    var inMasterStart = subNavigator.navigator.MasterStartStone(cursor);
+                    var outMasterEnd = insideNavigator.navigator.MasterStartStone(outCursor);
+                    var inMasterStart = insideNavigator.navigator.MasterEndStone(cursor);
 
                     bool isOutMasterNotOverflow;
                     int outMasterIndex;
-                    if (outMasterEnd.index + 1 < masterCount) {
-                        outMasterIndex = outMasterEnd.index + 1;
+                
+                    if (outMasterEnd.offset != 0) {
                         isOutMasterNotOverflow = true;
+                        outMasterIndex = outMasterEnd.index;
                     } else {
-                        outMasterIndex = 0;
-                        isOutMasterNotOverflow = false;
+                        if (outMasterEnd.index != 0) {
+                            isOutMasterNotOverflow = true;
+                            outMasterIndex = outMasterEnd.index - 1;
+                        } else {
+                            isOutMasterNotOverflow = false;
+                            outMasterIndex = masterCount - 1;
+                        }
                     }
 
                     bool isInMasterNotOverflow;
                     int inMasterIndex;
-                    if (inMasterStart.offset != 0) {
-                        inMasterIndex = inMasterStart.index;
+                
+                    if (inMasterStart.index + 1 < masterCount) {
                         isInMasterNotOverflow = true;
+                        inMasterIndex = inMasterStart.index + 1;
                     } else {
-                        if (inMasterStart.index != 0) {
-                            inMasterIndex = inMasterStart.index - 1;
-                            isInMasterNotOverflow = true;
-                        } else {
-                            inMasterIndex = masterCount - 1;
-                            isInMasterNotOverflow = false;
-                        }
+                        isInMasterNotOverflow = false;
+                        inMasterIndex = 0;
                     }
 
-                    if (outMasterEnd >= inMasterStart) {
+                    if (inMasterStart >= outMasterEnd) {
                         // a > b
                         if (isOutMasterNotOverflow) {
-                            var sliceA = master.Slice(outMasterIndex, masterLastIndex - outMasterIndex + 1);
-                            path.Add(sliceA);
-                        }
-
-                        if (isInMasterNotOverflow) {
-                            var sliceB = master.Slice(0, inMasterIndex + 1);
+                            var sliceB = master.Slice(0, outMasterIndex + 1).Reversed(Allocator.Temp);
                             path.Add(sliceB);
+                            sliceB.Dispose();
+                        }
+                        if (isInMasterNotOverflow) {
+                            var sliceA = master.Slice(inMasterIndex, masterLastIndex - inMasterIndex + 1).Reversed(Allocator.Temp);
+                            path.Add(sliceA);
+                            sliceA.Dispose();
                         }
                     } else {
                         // a < b
-                        if (isInMasterNotOverflow && isOutMasterNotOverflow && outMasterIndex <= inMasterIndex) {
-                            var slice = master.Slice(outMasterIndex, inMasterIndex - outMasterIndex + 1);
+                        if (isInMasterNotOverflow && isOutMasterNotOverflow && inMasterIndex <= outMasterIndex) {
+                            var slice = master.Slice(inMasterIndex, outMasterIndex - inMasterIndex + 1).Reversed(Allocator.Temp);
                             path.Add(slice);
+                            slice.Dispose();
                         }
                     }
                 } while (cursor != start);
 
-                pathList.Add(path.slice, true);
+                pathList.Add(path.slice, false);
                 path.RemoveAll();
 
-                cursor = subNavigator.Next();
+                cursor = insideNavigator.Next();
             }
 
             return pathList;
@@ -184,10 +192,6 @@ namespace iShape.Clipper.Solver {
             var start = cursor;
 
             var next = self.NextSlave(cursor);
-
-            if (start.type == PinPoint.PinType.out_in) {
-                return next;
-            }
 
             while (start != next) {
                 if (next.type == PinPoint.PinType.outside) {
@@ -205,7 +209,7 @@ namespace iShape.Clipper.Solver {
                     masterCursor = self.NextMaster(masterCursor);
                 } while (masterCursor != next && masterCursor != nextNext);
 
-                if (masterCursor != next) {
+                if (masterCursor == next) {
                     return next;
                 }
 

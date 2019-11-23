@@ -5,13 +5,13 @@ using Unity.Collections;
 
 namespace iShape.Clipper.Solver {
 
-    internal struct UnionNavigator {
+    internal struct OutsideNavigator {
 
         internal PinNavigator navigator;
         private NativeArray<Cursor> nextCursors;
         private int nextIndex;
 
-        internal UnionNavigator(PinNavigator navigator, Allocator allocator) {
+        internal OutsideNavigator(PinNavigator navigator, Allocator allocator) {
             this.navigator = navigator;
             this.nextCursors = getCursors(navigator, allocator);
             this.nextIndex = 0;

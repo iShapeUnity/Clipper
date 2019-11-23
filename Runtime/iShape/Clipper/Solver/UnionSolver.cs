@@ -22,7 +22,7 @@ namespace iShape.Clipper.Solver {
                 return new UnionSolution(new PlainPathList(), UnionSolution.Nature.overlap);
             }
 
-            var unionNavigator = new UnionNavigator(navigator, Allocator.Temp);
+            var unionNavigator = new OutsideNavigator(navigator, Allocator.Temp);
 
             var cursor = unionNavigator.First();
 
@@ -66,7 +66,7 @@ namespace iShape.Clipper.Solver {
         }
 
         internal static PlainPathList Union(
-            UnionNavigator navigator, NativeArray<IntVector> master,
+            OutsideNavigator navigator, NativeArray<IntVector> master,
             NativeArray<IntVector> slave, Allocator allocator
         ) {
             var unionNavigator = navigator;
