@@ -6,13 +6,13 @@ namespace iShape.Clipper.Collision.Navigation {
     public struct PinNavigator {
         
         // for s in slavePath { nodeArray[s] }  iterate all pins in counter clockwise order by slave path
-        private readonly NativeArray<int> slavePath;
+        private NativeArray<int> slavePath;
 
         // pinPathArray[nodeArray[i].index] return PinPath for this pin
-        public readonly NativeArray<PinPath> pinPathArray;
+        public NativeArray<PinPath> pinPathArray { get; }
         
         // supply array for nodeArray[i].index return PinPoint for this pin
-        public readonly NativeArray<PinPoint> pinPointArray;
+        public NativeArray<PinPoint> pinPointArray { get; }
 
         // keep info about each pin node, also for n in nodeArray iterate all pins in clockwise order by master path
         internal NativeArray<PinNode> nodeArray;

@@ -22,9 +22,9 @@ namespace iShape.Clipper.Solver {
                 return new UnionSolution(new PlainPathList(), UnionSolution.Nature.overlap);
             }
 
-            var unionNavigator = new OutsideNavigator(navigator, Allocator.Temp);
+            var filterNavigator = new FilterNavigator(navigator, PinPoint.PinType.outside, PinPoint.PinType.in_out, Allocator.Temp);
 
-            var cursor = unionNavigator.First();
+            var cursor = filterNavigator.First();
 
             if (cursor.isEmpty) {
                 if (navigator.hasContacts) {
@@ -56,7 +56,7 @@ namespace iShape.Clipper.Solver {
                 }
             }
 
-            pathList = Union(unionNavigator, master, slave, allocator);
+            pathList = Union(filterNavigator, master, slave, allocator);
             
             navigator.Dispose();
 
@@ -66,11 +66,9 @@ namespace iShape.Clipper.Solver {
         }
 
         internal static PlainPathList Union(
-            OutsideNavigator navigator, NativeArray<IntVector> master,
+            FilterNavigator filterNavigator, NativeArray<IntVector> master,
             NativeArray<IntVector> slave, Allocator allocator
         ) {
-            var unionNavigator = navigator;
-
             var pathList = new PlainPathList(1, allocator);
 
             int masterCount = master.Length;
@@ -79,7 +77,7 @@ namespace iShape.Clipper.Solver {
             int slaveCount = slave.Length;
             int slaveLastIndex = slaveCount - 1;
 
-            var cursor = unionNavigator.Next();
+            var cursor = filterNavigator.Next();
 
             var path = new DynamicArray<IntVector>(0, Allocator.Temp);
             
@@ -89,12 +87,12 @@ namespace iShape.Clipper.Solver {
                 do {
                     // in-out slave path
 
-                    var outCursor = unionNavigator.navigator.nextSlaveOut(cursor);
+                    var outCursor = filterNavigator.navigator.nextSlaveOut(cursor);
 
-                    var inSlaveStart = unionNavigator.navigator.SlaveStartStone(cursor);
-                    var outSlaveEnd = unionNavigator.navigator.SlaveEndStone(outCursor);
+                    var inSlaveStart = filterNavigator.navigator.SlaveStartStone(cursor);
+                    var outSlaveEnd = filterNavigator.navigator.SlaveEndStone(outCursor);
 
-                    var startPoint = unionNavigator.navigator.SlaveStartPoint(cursor);
+                    var startPoint = filterNavigator.navigator.SlaveStartPoint(cursor);
                     path.Add(startPoint);
 
                     bool isInSlaveNotOverflow;
@@ -143,16 +141,16 @@ namespace iShape.Clipper.Solver {
                         }
                     }
 
-                    var endPoint = unionNavigator.navigator.SlaveEndPoint(outCursor);
+                    var endPoint = filterNavigator.navigator.SlaveEndPoint(outCursor);
                     path.Add(endPoint);
 
-                    cursor = unionNavigator.navigator.NextMaster(outCursor);
-                    unionNavigator.navigator.Mark(cursor);
+                    cursor = filterNavigator.navigator.NextMaster(outCursor);
+                    filterNavigator.navigator.Mark(cursor);
 
                     // out-in master path
 
-                    var outMasterEnd = unionNavigator.navigator.MasterEndStone(outCursor);
-                    var inMasterStart = unionNavigator.navigator.MasterStartStone(cursor);
+                    var outMasterEnd = filterNavigator.navigator.MasterEndStone(outCursor);
+                    var inMasterStart = filterNavigator.navigator.MasterStartStone(cursor);
 
                     bool isOutMasterNotOverflow;
                     int outMasterIndex;
@@ -204,7 +202,7 @@ namespace iShape.Clipper.Solver {
                 pathList.Add(path.slice, isClockWise);
                 path.RemoveAll();
                 
-                cursor = unionNavigator.Next();
+                cursor = filterNavigator.Next();
             }
             
             path.Dispose();

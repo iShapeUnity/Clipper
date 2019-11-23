@@ -3,10 +3,10 @@ using iShape.Geometry;
 namespace iShape.Clipper.Util {
 
     public struct Rect {
-        public long minX { get; private set; }
-        public long minY { get; private set; }
-        public long maxX { get; private set; }
-        public long maxY { get; private set; }
+        private long minX;
+        private long minY;
+        private long maxX;
+        private long maxY;
 
         public Rect(long minX, long minY, long maxX, long maxY) {
             this.minX = minX;

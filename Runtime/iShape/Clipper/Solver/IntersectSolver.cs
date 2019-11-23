@@ -21,15 +21,15 @@ namespace iShape.Clipper.Solver {
                 return new SubtractSolution(pathList, SubtractSolution.Nature.empty);
             }
 
-            var subNavigator = new InsideNavigator(navigator, Allocator.Temp);
+            var filterNavigator = new FilterNavigator(navigator, PinPoint.PinType.inside, PinPoint.PinType.out_in, Allocator.Temp);
 
-            var cursor = subNavigator.First();
+            var cursor = filterNavigator.First();
 
             if (cursor.isEmpty) {
                 return new SubtractSolution(new PlainPathList(0, allocator), SubtractSolution.Nature.notOverlap);
             }
 
-            pathList = Intersect(subNavigator, master, slave, allocator);
+            pathList = Intersect(filterNavigator, master, slave, allocator);
 
             navigator.Dispose();
 
@@ -40,10 +40,10 @@ namespace iShape.Clipper.Solver {
 
 
         internal static PlainPathList Intersect(
-            InsideNavigator insideNavigator, NativeArray<IntVector> master,
+            FilterNavigator filterNavigator, NativeArray<IntVector> master,
             NativeArray<IntVector> slave, Allocator allocator
         ) {
-            var cursor = insideNavigator.Next();
+            var cursor = filterNavigator.Next();
             var pathList = new PlainPathList(1, allocator);
 
             if (cursor.isEmpty || cursor.type != PinPoint.PinType.inside) {
@@ -65,12 +65,12 @@ namespace iShape.Clipper.Solver {
                 do {
                     // in-out slave path
 
-                    var outCursor = insideNavigator.navigator.nextSlaveOut(cursor);
+                    var outCursor = filterNavigator.navigator.nextSlaveOut(cursor);
 
-                    var inSlaveStart = insideNavigator.navigator.SlaveEndStone(cursor);
-                    var outSlaveEnd = insideNavigator.navigator.SlaveStartStone(outCursor);
+                    var inSlaveStart = filterNavigator.navigator.SlaveEndStone(cursor);
+                    var outSlaveEnd = filterNavigator.navigator.SlaveStartStone(outCursor);
 
-                    var startPoint = insideNavigator.navigator.SlaveEndPoint(cursor);
+                    var startPoint = filterNavigator.navigator.SlaveEndPoint(cursor);
                     path.Add(startPoint);
 
                     bool isInSlaveNotOverflow;
@@ -118,16 +118,16 @@ namespace iShape.Clipper.Solver {
                         }
                     }
 
-                    var endPoint = insideNavigator.navigator.SlaveStartPoint(outCursor);
+                    var endPoint = filterNavigator.navigator.SlaveStartPoint(outCursor);
                     path.Add(endPoint);
 
-                    cursor = insideNavigator.navigator.PrevMaster(outCursor);
-                    insideNavigator.navigator.Mark(cursor);
+                    cursor = filterNavigator.navigator.PrevMaster(outCursor);
+                    filterNavigator.navigator.Mark(cursor);
 
                     // out-in master path
 
-                    var outMasterEnd = insideNavigator.navigator.MasterStartStone(outCursor);
-                    var inMasterStart = insideNavigator.navigator.MasterEndStone(cursor);
+                    var outMasterEnd = filterNavigator.navigator.MasterStartStone(outCursor);
+                    var inMasterStart = filterNavigator.navigator.MasterEndStone(cursor);
 
                     bool isOutMasterNotOverflow;
                     int outMasterIndex;
@@ -181,7 +181,7 @@ namespace iShape.Clipper.Solver {
                 pathList.Add(path.slice, false);
                 path.RemoveAll();
 
-                cursor = insideNavigator.Next();
+                cursor = filterNavigator.Next();
             }
 
             return pathList;
