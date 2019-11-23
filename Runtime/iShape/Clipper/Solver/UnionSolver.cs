@@ -12,7 +12,7 @@ namespace iShape.Clipper.Solver {
             this NativeArray<IntVector> master, NativeArray<IntVector> slave,
             IntGeom iGeom, Allocator allocator
         ) {
-            var navigator = CrossDetector.FindPins(master, slave, iGeom, PinPoint.PinType.in_out);
+            var navigator = CrossDetector.FindPins(master, slave, iGeom, PinPoint.PinType.out_in);
 
             PlainPathList pathList;
 
