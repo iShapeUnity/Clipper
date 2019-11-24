@@ -31,7 +31,7 @@ namespace iShape.Clipper.Solver {
             }
 
             restPathList = SubtractSolver.Subtract(filterNavigator, master, slave, allocator);
-            
+
             filterNavigator.Reset();
             bitePathList = IntersectSolver.Intersect(filterNavigator, master, slave, allocator);
 
