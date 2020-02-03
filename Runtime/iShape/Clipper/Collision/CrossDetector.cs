@@ -3,7 +3,6 @@ using iShape.Clipper.Collision.Navigation;
 using iShape.Geometry;
 using iShape.Collections;
 using Unity.Collections;
-using UnityEngine;
 
 namespace iShape.Clipper.Collision {
     public struct CrossDetector {
@@ -16,7 +15,6 @@ namespace iShape.Clipper.Collision {
             posMatrix.Dispose();
 
             var pinPoints = new DynamicArray<PinPoint>(0, Allocator.Temp);
-            var pinEdges = new DynamicArray<PinEdge>(0, Allocator.Temp);
 
             int masterCount = iMaster.Length;
             int slaveCount = iSlave.Length;
@@ -26,238 +24,242 @@ namespace iShape.Clipper.Collision {
 
             int msLastIx = iMaster.Length - 1;
             int slLastIx = iSlave.Length - 1;
-
-            bool hasExclusion = false;
+            var endsCount = 0;
+        
+        while (i < n) {
+            let msIx0 = masterIndices[i]
+            let msIx1 = msIx0 < msLastIx ? msIx0 + 1 : 0
             
-            while (i < n) {
-                int msIx0 = masterIndices[i];
-                int msIx1 = msIx0 < msLastIx ? msIx0 + 1 : 0;
+            let ms0 = iMaster[msIx0]
+            let ms1 = iMaster[msIx1]
+            
+            var j = i
+            
+            repeat {
+                let slIx0 = slaveIndices[j]
+                let slIx1 = slIx0 < slLastIx ? slIx0 + 1 : 0
+                
+                let sl0 = iSlave[slIx0]
+                let sl1 = iSlave[slIx1]
+                
+                var point: IntPoint = .zero
+                let crossType = CrossResolver.defineType(a0: ms0, a1: ms1, b0: sl0, b1: sl1, cross: &point)
+                
+                // .not_cross, .pure are the most possible cases (more then 99%)
+                
+                j += 1
+                
+                switch crossType {
+                case .not_cross, .same_line:
+                    continue
+                case .pure:
+                    // simple intersection and most common case
+                    
+                    let pinPointDef = PinPoint.Def(
+                        pt: point,
+                        ms0: ms0,
+                        ms1: ms1,
+                        sl0: sl0,
+                        sl1: sl1,
+                        masterMileStone: PathMileStone(index: msIx0, offset: ms0.sqrDistance(point: point)),
+                        slaveMileStone: PathMileStone(index: slIx0, offset: sl0.sqrDistance(point: point))
+                    )
+                    
+                    let pinPoint = PinPoint.buildSimple(def: pinPointDef)
 
-                var ms0 = iMaster[msIx0];
-                var ms1 = iMaster[msIx1];
+                    pinPoints.append(pinPoint)
+                case .end_a0:
+                    let prevMs = (msIx0 - 1 + masterCount) % masterCount
+                    let nextMs = msIx1
+                    
+                    let prevSl = slIx0
+                    let nextSl = slIx1
 
-                int j = i;
+                    let pinPointDef = PinPoint.Def(
+                        pt: point,
+                        ms0: iMaster[prevMs],
+                        ms1: iMaster[nextMs],
+                        sl0: iSlave[prevSl],
+                        sl1: iSlave[nextSl],
+                        masterMileStone: PathMileStone(index: msIx0),
+                        slaveMileStone: PathMileStone(index: slIx0, offset: sl0.sqrDistance(point: point))
+                    )
 
-                do {
-                    int slIx0 = slaveIndices[j];
-                    int slIx1 = slIx0 < slLastIx ? slIx0 + 1 : 0;
+                    let pinPoint = PinPoint.buildOnSlave(def: pinPointDef, iGeom: iGeom)
+                    pinPoints.append(pinPoint)
+                    endsCount += 1
+                case .end_a1:
+                    let prevMs = msIx0
+                    let nextMs = (msIx1 + 1) % masterCount
+                    
+                    let prevSl = slIx0
+                    let nextSl = slIx1
 
-                    var sl0 = iSlave[slIx0];
-                    var sl1 = iSlave[slIx1];
+                    let pinPointDef = PinPoint.Def(
+                        pt: point,
+                        ms0: iMaster[prevMs],
+                        ms1: iMaster[nextMs],
+                        sl0: iSlave[prevSl],
+                        sl1: iSlave[nextSl],
+                        masterMileStone: PathMileStone(index: msIx1),
+                        slaveMileStone: PathMileStone(index: slIx0, offset: sl0.sqrDistance(point: point))
+                    )
 
-                    var intersectionTest = CrossResolver.DefineType(ms0, ms1, sl0, sl1);
+                    let pinPoint = PinPoint.buildOnSlave(def: pinPointDef, iGeom: iGeom)
+                    pinPoints.append(pinPoint)
+                    endsCount += 1
+                case .end_b0:
+                    let prevMs = msIx0
+                    let nextMs = msIx1
+                    
+                    let prevSl = (slIx0 - 1 + slaveCount) % slaveCount
+                    let nextSl = slIx1
 
-                    // -1, 1 are the most possible cases (more then 99%)
-                    // -1 - no intersections
-                    //  1 - simple intersection with no overlaps
+                    let pinPointDef = PinPoint.Def(
+                        pt: point,
+                        ms0: iMaster[prevMs],
+                        ms1: iMaster[nextMs],
+                        sl0: iSlave[prevSl],
+                        sl1: iSlave[nextSl],
+                        masterMileStone: PathMileStone(index: msIx0, offset: ms0.sqrDistance(point: point)),
+                        slaveMileStone: PathMileStone(index: slIx0)
+                    )
+                    
+                    let pinPoint = PinPoint.buildOnMaster(def: pinPointDef)
+                    pinPoints.append(pinPoint)
+                    endsCount += 1
+                case .end_b1:
+                    let prevMs = msIx0
+                    let nextMs = msIx1
+                    
+                    let prevSl = slIx0
+                    let nextSl = (slIx1 + 1) % slaveCount
 
+                    let pinPointDef = PinPoint.Def(
+                        pt: point,
+                        ms0: iMaster[prevMs],
+                        ms1: iMaster[nextMs],
+                        sl0: iSlave[prevSl],
+                        sl1: iSlave[nextSl],
+                        masterMileStone: PathMileStone(index: msIx0, offset: ms0.sqrDistance(point: point)),
+                        slaveMileStone: PathMileStone(index: slIx1)
+                    )
+                    
+                    let pinPoint = PinPoint.buildOnMaster(def: pinPointDef)
+                    pinPoints.append(pinPoint)
+                    endsCount += 1
+                case .end_a0_b0:
+                    let prevMs = (msIx0 - 1 + masterCount) % masterCount
+                    let nextMs = msIx1
 
-                    // 0, 2 are very specific, but still possible cases
-                    // 0 - same line
-                    // 2 - one of the end is lying on others edge
+                    let prevSl = (slIx0 - 1 + slaveCount) % slaveCount
+                    let nextSl = slIx1
+                    
+                    let pinPointDef = PinPoint.Def(
+                        pt: point,
+                        ms0: iMaster[prevMs],
+                        ms1: iMaster[nextMs],
+                        sl0: iSlave[prevSl],
+                        sl1: iSlave[nextSl],
+                        masterMileStone: PathMileStone(index: msIx0),
+                        slaveMileStone: PathMileStone(index: slIx0)
+                    )
+                    
+                    let pinPoint = PinPoint.buildOnCross(def: pinPointDef, iGeom: iGeom)
+                    pinPoints.append(pinPoint)
+                    endsCount += 1
+                case .end_a0_b1:
+                    let prevMs = (msIx0 - 1 + masterCount) % masterCount
+                    let nextMs = msIx1
 
-                    // case when one on of slave ends is overlapped by on of the master ends
-                    // can conflict with possible edge case
-                    j += 1;
+                    let prevSl = slIx0
+                    let nextSl = (slIx1 + 1) % slaveCount
+                    
+                    let pinPointDef = PinPoint.Def(
+                        pt: point,
+                        ms0: iMaster[prevMs],
+                        ms1: iMaster[nextMs],
+                        sl0: iSlave[prevSl],
+                        sl1: iSlave[nextSl],
+                        masterMileStone: PathMileStone(index: msIx0),
+                        slaveMileStone: PathMileStone(index: slIx1)
+                    )
+                    
+                    let pinPoint = PinPoint.buildOnCross(def: pinPointDef, iGeom: iGeom)
+                    pinPoints.append(pinPoint)
+                    endsCount += 1
+                case .end_a1_b0:
+                    let prevMs = msIx0
+                    let nextMs = (msIx1 + 1) % masterCount
 
-                    switch (intersectionTest) {
-                        case CrossType.not_cross:
-                            continue;
-                        case CrossType.pure: {
-                            var point = Cross(ms0, ms1, sl0, sl1);
-                            // simple intersection and most common case
+                    let prevSl = (slIx0 - 1 + slaveCount) % slaveCount
+                    let nextSl = slIx1
+                    
+                    let pinPointDef = PinPoint.Def(
+                        pt: point,
+                        ms0: iMaster[prevMs],
+                        ms1: iMaster[nextMs],
+                        sl0: iSlave[prevSl],
+                        sl1: iSlave[nextSl],
+                        masterMileStone: PathMileStone(index: msIx1),
+                        slaveMileStone: PathMileStone(index: slIx0)
+                    )
+                    
+                    let pinPoint = PinPoint.buildOnCross(def: pinPointDef, iGeom: iGeom)
+                    pinPoints.append(pinPoint)
+                    endsCount += 1
+                case .end_a1_b1:
+                    let prevMs = msIx0
+                    let nextMs = (msIx1 + 1) % masterCount
 
-                            var pinPointDef = new PinPoint.Def(
-                                point,
-                                ms0,
-                                ms1,
-                                sl0,
-                                sl1,
-                                new PathMileStone(msIx0, ms0.SqrDistance(point)),
-                                new PathMileStone(slIx0, sl0.SqrDistance(point))
-                            );
-
-                            var pinPoint = PinPoint.BuildSimple(pinPointDef);
-                            pinPoints.Add(pinPoint);
-
-                            continue;
-                        }
-                        case CrossType.edge_cross: {
-                            // one of the end is lying on others edge
-
-                            var point = EndCross(ms0, ms1, sl0, sl1);
-
-                            bool isMsEnd = ms0 == point || ms1 == point;
-                            bool isSlEnd = sl0 == point || sl1 == point;
-
-                            // skip case when on of the slave end is equal to one of the master end
-                            if (!(isMsEnd && isSlEnd)) {
-                                int prevMs = msIx0;
-                                int nextMs = msIx1;
-
-                                int prevSl = slIx0;
-                                int nextSl = slIx1;
-
-                                int masterEdge = msIx0;
-                                long masterOffset = 0;
-
-                                var slaveEdge = slIx0;
-                                long slaveOffset = 0;
-
-                                if (isMsEnd) {
-                                    if (ms0 == point) {
-                                        prevMs = (msIx0 - 1 + masterCount) % masterCount;
-                                    }
-                                    else {
-                                        nextMs = (msIx1 + 1) % masterCount;
-                                        masterEdge = msIx1;
-                                    }
-
-                                    slaveOffset = sl0.SqrDistance(point);
-                                }
-
-                                if (isSlEnd) {
-                                    if (sl0 == point) {
-                                        prevSl = (slIx0 - 1 + slaveCount) % slaveCount;
-                                    }
-                                    else {
-                                        slaveEdge = slIx1;
-                                        nextSl = (slIx1 + 1) % slaveCount;
-                                    }
-
-                                    masterOffset = ms0.SqrDistance(point);
-                                }
-
-                                var pinPointDef = new PinPoint.Def(
-                                    point,
-                                    iMaster[prevMs],
-                                    iMaster[nextMs],
-                                    iSlave[prevSl],
-                                    iSlave[nextSl],
-                                    new PathMileStone(masterEdge, masterOffset),
-                                    new PathMileStone(slaveEdge, slaveOffset));
-
-                                if (isMsEnd) {
-                                    // pin point is on slave
-                                    var pinPoint = PinPoint.BuildOnSlave(pinPointDef);
-                                    if (pinPoint.type != exclusionPinType) {
-                                        pinPoints.Add(pinPoint);
-                                    }
-                                }
-                                else if (isSlEnd) {
-                                    // pin point is on master
-                                    var pinPoint = PinPoint.BuildOnMaster(pinPointDef);
-                                    if (pinPoint.type != exclusionPinType) {
-                                        pinPoints.Add(pinPoint);
-                                    } else {
-                                        hasExclusion = true;
-                                    }
-                                }
-
-                                continue;
-                            }
-
-                            break;
-                        }
-                        case CrossType.same_line: {
-                            // possible edge case
-
-                            var ms0Pt = new Vertex(msIx0, ms0);
-                            var ms1Pt = new Vertex(msIx1, ms1);
-                            var sl0Pt = new Vertex(slIx0, sl0);
-                            var sl1Pt = new Vertex(slIx1, sl1);
-
-                            var pinEdge = new PinEdge(ms0Pt, ms1Pt, sl0Pt, sl1Pt);
-                            if (!pinEdge.isZeroLength) {
-                                pinEdges.Add(pinEdge);
-                                continue;
-                            }
-
-                            break;
-                        }
-                        case CrossType.common_end:
-                            break;
-                    }
-
-
-                    // only 0, 2, 3 cases are possible here
-
-                    // lets ignore case for second end (it just add double)
-                    bool isFirstPointCross = ms0 == sl0 || ms0 == sl1;
-
-                    if (isFirstPointCross) {
-                        var point = ms0;
-
-                        int masterIndex = msIx0;
-                        int slaveIndex;
-
-                        int prevMs = (msIx0 - 1 + masterCount) % masterCount;
-                        int nextMs = msIx1;
-
-                        int prevSl = slIx0;
-                        int nextSl = slIx1;
-
-                        if (sl0 == point) {
-                            slaveIndex = slIx0;
-                            prevSl = (slIx0 - 1 + slaveCount) % slaveCount;
-                        }
-                        else {
-                            slaveIndex = slIx1;
-                            nextSl = (slIx1 + 1) % slaveCount;
-                        }
-
-                        var pinPointDef = new PinPoint.Def(
-                            point,
-                            iMaster[prevMs],
-                            iMaster[nextMs],
-                            iSlave[prevSl],
-                            iSlave[nextSl],
-                            new PathMileStone(masterIndex),
-                            new PathMileStone(slaveIndex)
-                        );
-
-                        var pinPoint = PinPoint.BuildOnCross(pinPointDef, iGeom);
-                        if (pinPoint.type != exclusionPinType) {
-                            pinPoints.Add(pinPoint);
-                        }
-                    }
-                } while (j < n && msIx0 == masterIndices[j]);
-
-                i = j;
-            }
-
-            if (iMaster.Length == iSlave.Length && iMaster.Length == pinEdges.Count) {
-                if (iMaster == iSlave) {
-                    masterIndices.Dispose();
-                    slaveIndices.Dispose();
-                    return new PinNavigator();
+                    let prevSl = slIx0
+                    let nextSl = (slIx1 + 1) % slaveCount
+                    
+                    let pinPointDef = PinPoint.Def(
+                        pt: point,
+                        ms0: iMaster[prevMs],
+                        ms1: iMaster[nextMs],
+                        sl0: iSlave[prevSl],
+                        sl1: iSlave[nextSl],
+                        masterMileStone: PathMileStone(index: msIx1),
+                        slaveMileStone: PathMileStone(index: slIx1)
+                    )
+                    
+                    let pinPoint = PinPoint.buildOnCross(def: pinPointDef, iGeom: iGeom)
+                    pinPoints.append(pinPoint)
+                    endsCount += 1
                 }
-            }
+            } while j < n && msIx0 == masterIndices[j]
             
-            masterIndices.Dispose();
-            slaveIndices.Dispose();
-
-            // merge all edges
-            var builder = new PinPathBuilder(pinEdges.Convert(), iGeom);
-
-            // build pin paths from edges
-            var result = builder.Build(iMaster, iSlave, Allocator.Temp);
-            builder.Dispose();
-            
-            if (result.pathType == PinPathBuilder.Result.PathType.equal) {
-                return new PinNavigator(true);
-            }
-
-            // combine pin points and paths
-            var sequence = new PinSequence(pinPoints.Convert(), result.pinPath, iMaster.Length, Allocator.Temp);
-
-            // remove doubles and organize data
-            var navigator = sequence.Convert(exclusionPinType, hasExclusion);
-            
-            sequence.Dispose();
-
-            return navigator;
+            i = j
         }
+        
+        var pinPaths: [PinPath]
+        var hasExclusion = false
+        if endsCount > 0 {
+            pinPaths = CrossDetector.organize(pinPoints: &pinPoints, masterCount: masterCount, slaveCount: slaveCount)
+            if !pinPaths.isEmpty {
+                
+                // test for same shapes
+                if pinPaths.count == 1 && iMaster.count == iSlave.count && pinPaths[0].isClosed {
+                    return PinNavigator()
+                }
+                
+                hasExclusion = CrossDetector.removeExclusion(pinPaths: &pinPaths, exclusion: exclusionPinType)
+            }
+        } else {
+            pinPaths = []
+        }
+        
+        if !pinPoints.isEmpty {
+            let pinExclusion = CrossDetector.removeExclusion(pinPoints: &pinPoints, exclusion: exclusionPinType)
+            hasExclusion = pinExclusion || hasExclusion
+        }
+
+        let navigator = CrossDetector.buildNavigator(pinPointArray: &pinPoints, pinPathArray: &pinPaths, masterCount: iMaster.count, hasExclusion: hasExclusion)
+        
+        return navigator
+    }
 
         private static AdjacencyMatrix CreatePossibilityMatrix(NativeArray<IntVector> master, NativeArray<IntVector> slave, Allocator allocator) {
             var slaveBoxArea = new iShape.Clipper.Util.Rect(long.MaxValue, long.MaxValue, long.MinValue, long.MinValue);
@@ -304,65 +306,182 @@ namespace iShape.Clipper.Collision {
         }
 
 
-        private static IntVector Cross(IntVector a0, IntVector a1, IntVector b0, IntVector b1) {
-            long dxA = a0.x - a1.x;
-            long dyB = b0.y - b1.y;
-            long dyA = a0.y - a1.y;
-            long dxB = b0.x - b1.x;
+    private static DynamicArray<PinPath> Organize(ref DynamicArray<PinPoint> pinPoints, int masterCount, int slaveCount, Allocator allocator) {
+        /*
+        pinPoints.sort(by: { a, b in
+            if a.masterMileStone.index != b.masterMileStone.index {
+                return a.masterMileStone.index < b.masterMileStone.index
+            }
 
-            float divider = dxA * dyB - dyA * dxB;
-
-            float xyA = a0.x * a1.y - a0.y * a1.x;
-            float xyB = b0.x * b1.y - b0.y * b1.x;
-
-            float invertDivider = 1.0f / divider;
-
-            float x = xyA * (b0.x - b1.x) - (a0.x - a1.x) * xyB;
-            float y = xyA * (b0.y - b1.y) - (a0.y - a1.y) * xyB;
-
-            return new IntVector((long) Mathf.Round(x * invertDivider), (long) Mathf.Round(y * invertDivider));
+            return a.masterMileStone.offset < b.masterMileStone.offset
+        })
+        */
+        RemoveDoubles(ref pinPoints);
+        
+        if (pinPoints.Count > 1) {
+            return FindEdges(ref pinPoints, masterCount, slaveCount, allocator);
         }
         
-        private static IntVector EndCross(IntVector a0, IntVector a1, IntVector b0, IntVector b1) {
-            var p = Cross(a0, a1, b0, b1);
-        
-            if (a0 == p || a1 == p || b0 == p || b1 == p) {
-                return p;
+        return new DynamicArray<PinPath>(0, allocator);
+    }
+    
+    private static void RemoveDoubles(ref DynamicArray<PinPoint> pinPoints) {
+        int n = pinPoints.Count;
+        var a = pinPoints[0];
+        var i = 1;
+        var removeIndex = new DynamicArray<int>(n >> 1, Allocator.Temp);
+        while (i < n) {
+            var b = pinPoints[i];
+            if (a == b) {
+                removeIndex.Add(i);
             }
 
-            var dx = a0.x - p.x;
-            var dy = a0.y - p.y;
-            var dl = dx * dx + dy * dy;
-            var minP = a0;
-            var minL = dl;
-
-            dx = a1.x - p.x;
-            dy = a1.y - p.y;
-            dl = dx * dx + dy * dy;
-        
-            if (minL > dl) {
-                minP = a1;
-                minL = dl;
-            }
-
-            dx = b0.x - p.x;
-            dy = b0.y - p.y;
-            dl = dx * dx + dy * dy;
-        
-            if (minL > dl) {
-                minP = b0;
-                minL = dl;
-            }
-
-            dx = b1.x - p.x;
-            dy = b1.y - p.y;
-            dl = dx * dx + dy * dy;
-        
-            if (minL > dl) {
-                minP = b1;
-            }
-
-            return minP;
+            a = b;
+            i += 1;
         }
+        
+        if (removeIndex.Count != 0) {
+            var j = removeIndex.Count - 1;
+            while (j >= 0) {
+                pinPoints.RemoveAt(removeIndex[j]);
+                j -= 1;
+            }
+        }
+    }
+    
+    private static DynamicArray<PinPath> FindEdges(ref DynamicArray<PinPoint> pinPoints, int masterCount, int slaveCount, Allocator allocator) {
+        var edges = new DynamicArray<PinEdge>(8, Allocator.Temp);
+        int n = pinPoints.Count;
+
+        var isPrevEdge = false;
+
+        int i = 0;
+        int j = n - 1;
+
+        var a = pinPoints[j];
+        var removeMark = new NativeArray<bool>(n, Allocator.Temp);
+        
+        while (i < n) {
+            var b = pinPoints[i];
+
+            int aMi = a.masterMileStone.index;
+            int bMi = b.masterMileStone.index;
+
+            bool isSameMaster = aMi == bMi || b.masterMileStone.offset == 0 && (aMi + 1) % masterCount == bMi;
+            
+            if (isSameMaster &&
+                CrossDetector.IsDirect(a.masterMileStone, b.masterMileStone, masterCount) &&
+                CrossDetector.Same(a.slaveMileStone, b.slaveMileStone, slaveCount)) {
+                if (isPrevEdge) {
+                    var prevEdge = edges[edges.Count - 1];
+                    prevEdge.v1 = b;
+                    edges[edges.Count - 1] = prevEdge;
+                } else {
+                    bool isDirectSlave =
+                        CrossDetector.IsDirect(a.slaveMileStone, b.slaveMileStone, slaveCount);
+                    edges.Add(new PinEdge(a,  b, isDirectSlave));
+                }
+
+                removeMark[i] = true;
+                removeMark[j] = true;
+                isPrevEdge = true;
+            } else {
+                isPrevEdge = false;
+            }
+
+            a = b;
+            j = i;
+            i += 1;
+        }
+
+        DynamicArray<PinPath> pinPaths;
+
+        if (edges.Count > 0) {
+            i = n - 1;
+            while (i >= 0) {
+                if (removeMark[i]) {
+                    pinPoints.RemoveAt(i);
+                }
+
+                i -= 1;
+            }
+
+            if (edges.Count > 1) {
+                var first = edges[0];
+                var last = edges[edges.Count - 1];
+                if (first.v0 == last.v1) {
+                    first.v0 = last.v0;
+                    edges[0] = first;
+                    edges.RemoveLast();
+                }
+            }
+            
+            pinPaths = new DynamicArray<PinPath>(edges.Count, allocator);
+
+            for (int k = 0; k < edges.Count; ++k) {
+                pinPaths.Add(new PinPath(edges[k]));
+            }
+        } else {
+            pinPaths = new DynamicArray<PinPath>(0, allocator);
+        }
+        
+        return pinPaths;
+    }
+
+    private static bool Same(PathMileStone a, PathMileStone b, int module) {
+        if (a.index == b.index) {
+            return true;
+        }
+        
+        if (b.offset == 0 && (a.index + 1) % module == b.index) {
+            return true;
+        }
+
+        if (a.offset == 0 && (b.index + 1) % module == a.index) {
+            return true;
+        }
+
+        return false;
+    }
+    
+    private static bool IsDirect(PathMileStone a, PathMileStone b, int module) {
+        if (a.index != b.index) {
+            return a.offset < b.offset;
+        }
+
+        return b.offset == 0 && (a.index + 1) % module == b.index;
+    }
+    
+    private static bool RemoveExclusion(ref DynamicArray<PinPoint> pinPoints, PinPoint.PinType exclusion) {
+        var i = pinPoints.Count - 1;
+        var result = false;
+        do {
+            var pin = pinPoints[i];
+            if (pin.type == exclusion) {
+                pinPoints.RemoveAt(i);
+                result = true;
+            }
+
+            i -= 1;
+        } while (i >= 0);
+
+        return result;
+    }
+    
+    private static bool RemoveExclusion(ref DynamicArray<PinPath> pinPaths, PinPoint.PinType exclusion) {
+        var i = pinPaths.Count - 1;
+        var result = false;
+        do {
+            var path = pinPaths[i];
+            if (path.v0.type == exclusion) {
+                pinPaths.RemoveAt(i);
+                result = true;
+            }
+
+            i -= 1;
+        } while (i >= 0);
+
+        return result;
+    }
     }
 }

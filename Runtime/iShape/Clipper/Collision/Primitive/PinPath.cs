@@ -5,9 +5,12 @@ namespace iShape.Clipper.Collision.Primitive {
         public PinPoint v0;
         public PinPoint v1;
 
-        internal PinPath(PinPoint v0, PinPoint v1, PinPoint.PinType type) {
-            this.v0 = new PinPoint(v0, type);
-            this.v1 = new PinPoint(v1, type);
+        public bool isClosed => v0 == v1;
+
+        internal PinPath(PinEdge edge) {
+            var type = edge.type;
+            this.v0 = new PinPoint(edge.v0, type);
+            this.v1 = new PinPoint(edge.v1, type);
         }
 
         private int GetLength(int count) {

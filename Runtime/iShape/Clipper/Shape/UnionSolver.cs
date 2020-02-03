@@ -7,6 +7,7 @@ namespace iShape.Clipper.Shape {
 
     public static class UnionSolver {
 
+        /*
         public static UnionSolution Union(this NativeArray<IntVector> master, NativeArray<IntVector> slave,
             IntGeom iGeom, Allocator allocator) {
             var navigator = CrossDetector.FindPins(master, slave, iGeom, PinPoint.PinType.in_out);
@@ -61,7 +62,7 @@ namespace iShape.Clipper.Shape {
 
             return new UnionSolution(pathList, UnionSolution.Nature.notOverlap);
         }
-
+*/
 
 
         private static IntVector any(this NativeArray<IntVector> self) {

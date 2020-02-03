@@ -64,6 +64,28 @@ namespace iShape.Clipper.Collision.Primitive {
             this.slaveMileStone = pin.slaveMileStone;
         }
 
+        public static bool operator== (PinPoint left, PinPoint right) {
+            return left.masterMileStone == right.masterMileStone && left.slaveMileStone == right.slaveMileStone;
+        }
+        
+        public static bool operator!= (PinPoint left, PinPoint right) {
+            return left.masterMileStone != right.masterMileStone || left.slaveMileStone != right.slaveMileStone;
+        }
+
+        private bool Equals(PinPoint other) {
+            return this == other;
+        }
+
+        public override bool Equals(object obj) {
+            return obj is PinPoint other && Equals(other);
+        }
+
+        public override int GetHashCode() {
+            unchecked {
+                return (masterMileStone.GetHashCode() * 397) ^ slaveMileStone.GetHashCode();
+            }
+        }
+
         internal static PinPoint BuildSimple(Def def) {
             bool isCW = PinPoint.IsClockWise(def.ms1, def.pt, def.sl1);
             var type = isCW ? PinType.outside : PinType.inside;

@@ -3,7 +3,7 @@
     "displayName": "iShape.Clipper",
     "version": "0.0.1",
     "unity": "2019.2",
-    "description": "Substarct and Union operations with polygons",
+    "description": "Subtract and Union operations with polygons",
     "keywords": [
         "iShape"
     ],
