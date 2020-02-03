@@ -19,7 +19,7 @@ namespace iShape.Clipper.Util {
                     var b1 = points[k + 1];
 
                     var bRect = new Rect(b0, b1);
-                    if (aRect.IsIntersecting(bRect) && CrossResolver.DefineType(a0, a1, b0, b1) != CrossType.not_cross) {
+                    if (aRect.IsIntersecting(bRect) && CrossResolver.DefineType(a0, a1, b0, b1,out var point) != CrossType.not_cross) {
                         return false;
                     }
                 }
@@ -42,7 +42,7 @@ namespace iShape.Clipper.Util {
                     var b1 = points[k + 1];
 
                     var bRect = new Rect(b0, b1);
-                    if (aRect.IsIntersecting(bRect) && CrossResolver.DefineType(a0, a1, b0, b1) != CrossType.not_cross) {
+                    if (aRect.IsIntersecting(bRect) && CrossResolver.DefineType(a0, a1, b0, b1,out var point) != CrossType.not_cross) {
                         return true;
                     }
                 }
@@ -74,7 +74,7 @@ namespace iShape.Clipper.Util {
                         var b1 = target[l];
 
                         var bRect = new Rect(b0, b1);
-                        if (aRect.IsIntersecting(bRect) && CrossResolver.DefineType(a0, a1, b0, b1) != CrossType.not_cross) {
+                        if (aRect.IsIntersecting(bRect) && CrossResolver.DefineType(a0, a1, b0, b1,out var point) != CrossType.not_cross) {
                             return true;
                         }
                     }

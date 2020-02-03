@@ -1,7 +1,7 @@
 namespace iShape.Clipper.Collision.Navigation {
  
     internal struct PinNode {
-        internal int isPinPath; // 0 - false, 1 - true
+        internal bool isPinPath;
         internal int masterIndex; // index in master path array
         internal int slaveIndex; // index in slave path array
         internal int marker; // 0 - present, 1 - removed

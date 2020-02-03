@@ -76,16 +76,6 @@ namespace iShape.Clipper.Collision.Primitive {
             return this == other;
         }
 
-        public override bool Equals(object obj) {
-            return obj is PinPoint other && Equals(other);
-        }
-
-        public override int GetHashCode() {
-            unchecked {
-                return (masterMileStone.GetHashCode() * 397) ^ slaveMileStone.GetHashCode();
-            }
-        }
-
         internal static PinPoint BuildSimple(Def def) {
             bool isCW = PinPoint.IsClockWise(def.ms1, def.pt, def.sl1);
             var type = isCW ? PinType.outside : PinType.inside;
@@ -108,16 +98,19 @@ namespace iShape.Clipper.Collision.Primitive {
         }
 
 
-        internal static PinPoint BuildOnSlave(Def def) {
-            bool isCCW0 = PinPoint.IsClockWise(def.pt,def.ms0,def.sl1);
-            bool isCCW1 = PinPoint.IsClockWise(def.pt,def.ms1,def.sl1);
+        internal static PinPoint BuildOnSlave(Def def, IntGeom iGeom) {
+            var corner = new Corner(def.pt,def.ms0,def.ms1, iGeom);
+
+            bool isSl0 = corner.IsBetween(def.sl0, true);
+            bool isSl1 = corner.IsBetween(def.sl1, true);
 
             PinType type;
-            if (isCCW0 == isCCW1) {
-                type = isCCW0 ? PinType.out_in : PinType.in_out;
-            }
-            else {
-                type = isCCW0 ? PinType.outside : PinType.inside;
+            if (isSl0 && isSl1) {
+                type = PinType.in_out;
+            } else if (!isSl0 && !isSl1) {
+                type = PinType.out_in;
+            } else {
+                type = isSl0 ? PinType.inside : PinType.outside;
             }
 
             return new PinPoint(def.pt, type, def.masterMileStone, def.slaveMileStone);

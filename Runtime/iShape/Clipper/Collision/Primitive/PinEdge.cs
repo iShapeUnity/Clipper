@@ -29,37 +29,34 @@ namespace iShape.Clipper.Collision.Primitive {
                 return a;
             }
 
-            return a switch {
-                PinPoint.PinType.outside => (b switch {
-                    PinPoint.PinType.outside => PinPoint.PinType.outside,
-                    PinPoint.PinType.in_out => PinPoint.PinType.outside,
-                    PinPoint.PinType.inside => PinPoint.PinType.out_in,
-                    PinPoint.PinType.out_in => PinPoint.PinType.out_in,
-                    _ => PinPoint.PinType.nil
-                }),
-                PinPoint.PinType.out_in => (b switch {
-                    PinPoint.PinType.outside => PinPoint.PinType.outside,
-                    PinPoint.PinType.in_out => PinPoint.PinType.outside,
-                    PinPoint.PinType.inside => PinPoint.PinType.out_in,
-                    PinPoint.PinType.out_in => PinPoint.PinType.out_in,
-                    _ => PinPoint.PinType.nil
-                }),
-                PinPoint.PinType.inside => (b switch {
-                    PinPoint.PinType.inside => PinPoint.PinType.inside,
-                    PinPoint.PinType.out_in => PinPoint.PinType.inside,
-                    PinPoint.PinType.outside => PinPoint.PinType.in_out,
-                    PinPoint.PinType.in_out => PinPoint.PinType.in_out,
-                    _ => PinPoint.PinType.nil
-                }),
-                PinPoint.PinType.in_out => (b switch {
-                    PinPoint.PinType.inside => PinPoint.PinType.inside,
-                    PinPoint.PinType.out_in => PinPoint.PinType.inside,
-                    PinPoint.PinType.outside => PinPoint.PinType.in_out,
-                    PinPoint.PinType.in_out => PinPoint.PinType.in_out,
-                    _ => PinPoint.PinType.nil
-                }),
-                _ => PinPoint.PinType.nil
-            };
+            switch (a) {
+                case PinPoint.PinType.outside:
+                case PinPoint.PinType.out_in:
+                    switch (b) {
+                        case PinPoint.PinType.outside:
+                        case PinPoint.PinType.in_out:
+                            return PinPoint.PinType.outside;
+                        case PinPoint.PinType.inside:
+                        case PinPoint.PinType.out_in:
+                            return PinPoint.PinType.out_in;
+                        default:
+                            return PinPoint.PinType.nil;
+                    }
+                case PinPoint.PinType.inside:
+                case PinPoint.PinType.in_out:
+                    switch (b) {
+                        case PinPoint.PinType.inside:
+                        case PinPoint.PinType.out_in:
+                            return PinPoint.PinType.inside;
+                        case PinPoint.PinType.outside:
+                        case PinPoint.PinType.in_out:
+                            return PinPoint.PinType.in_out;
+                        default:
+                            return PinPoint.PinType.nil;
+                    }
+                default:
+                    return PinPoint.PinType.nil;
+            }
         }
 
     }

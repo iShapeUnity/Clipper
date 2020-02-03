@@ -53,7 +53,7 @@ namespace iShape.Clipper.Collision.Navigation {
             var index = slavePath[nextSlaveIndex];
             var nextNode = nodeArray[index];
 
-            if (nextNode.isPinPath == 0) {
+            if (!nextNode.isPinPath) {
                 var pin = pinPointArray[nextNode.index];
                 return new Cursor(pin.type, index);
             }
@@ -70,7 +70,7 @@ namespace iShape.Clipper.Collision.Navigation {
             var index = nextMasterIndex;
             var nextNode = nodeArray[index];
 
-            if (nextNode.isPinPath == 0) {
+            if (!nextNode.isPinPath) {
                 var pin = pinPointArray[nextNode.index];
                 return new Cursor(pin.type, index);
             }
@@ -87,7 +87,7 @@ namespace iShape.Clipper.Collision.Navigation {
             int index = prevMasterIndex;
             var prevNode = nodeArray[index];
 
-            if (prevNode.isPinPath == 0) {
+            if (!prevNode.isPinPath) {
                 var pin = pinPointArray[prevNode.index];
                 return new Cursor(pin.type, index);
             }
@@ -98,7 +98,7 @@ namespace iShape.Clipper.Collision.Navigation {
 
         internal PathMileStone MasterStartStone(Cursor cursor) {
             var node = nodeArray[cursor.index];
-            if (node.isPinPath == 0) {
+            if (!node.isPinPath) {
                 var pin = pinPointArray[node.index];
                 return pin.masterMileStone;
             }
@@ -110,7 +110,7 @@ namespace iShape.Clipper.Collision.Navigation {
 
         internal PathMileStone MasterEndStone(Cursor cursor) {
             var node = nodeArray[cursor.index];
-            if (node.isPinPath == 0) {
+            if (!node.isPinPath) {
                 var pin = pinPointArray[node.index];
                 return pin.masterMileStone;
             }
@@ -121,7 +121,7 @@ namespace iShape.Clipper.Collision.Navigation {
 
         internal PathMileStone SlaveStartStone(Cursor cursor) {
             var node = nodeArray[cursor.index];
-            if (node.isPinPath == 0) {
+            if (!node.isPinPath) {
                 var pin = pinPointArray[node.index];
                 return pin.slaveMileStone;
             }
@@ -133,7 +133,7 @@ namespace iShape.Clipper.Collision.Navigation {
 
         internal IntVector SlaveStartPoint(Cursor cursor) {
             var node = nodeArray[cursor.index];
-            if (node.isPinPath == 0) {
+            if (!node.isPinPath) {
                 var pin = pinPointArray[node.index];
                 return pin.point;
             }
@@ -145,7 +145,7 @@ namespace iShape.Clipper.Collision.Navigation {
 
         internal PathMileStone SlaveEndStone(Cursor cursor) {
             var node = nodeArray[cursor.index];
-            if (node.isPinPath == 0) {
+            if (!node.isPinPath) {
                 var pin = pinPointArray[node.index];
                 return pin.slaveMileStone;
             }
@@ -157,7 +157,7 @@ namespace iShape.Clipper.Collision.Navigation {
 
         internal IntVector SlaveEndPoint(Cursor cursor) {
             var node = nodeArray[cursor.index];
-            if (node.isPinPath == 0) {
+            if (!node.isPinPath) {
                 var pin = pinPointArray[node.index];
                 return pin.point;
             }

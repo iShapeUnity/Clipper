@@ -49,7 +49,7 @@ namespace iShape.Clipper.Solver {
             for(int i = 0; i < n; ++i) {
                 var node = navigator.nodeArray[i];
                 PinPoint.PinType type;
-                if (node.isPinPath == 0) {
+                if (!node.isPinPath) {
                     var pin = navigator.pinPointArray[node.index];
                     type = pin.type;
                 } else {
