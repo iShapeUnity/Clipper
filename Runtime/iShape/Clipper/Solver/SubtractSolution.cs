@@ -1,17 +1,19 @@
 using iShape.Geometry;
 
-namespace iShape.Clipper.Shape {
-    
-    public struct UnionSolution {
+namespace iShape.Clipper.Solver {
+
+    public struct SubtractSolution {
         public enum Nature {
             notOverlap,
-            overlap
+            overlap,
+            empty,
+            hole
         }
 
         public PlainPathList pathList;
         public readonly Nature nature;
 
-        public UnionSolution(PlainPathList pathList, Nature nature) {
+        public SubtractSolution(PlainPathList pathList, Nature nature) {
             this.pathList = pathList;
             this.nature = nature;
         }

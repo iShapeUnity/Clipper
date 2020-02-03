@@ -3,10 +3,10 @@ using iShape.Geometry;
 namespace iShape.Clipper.Util {
 
     public struct Rect {
-        public long minX { get; private set; }
-        public long minY { get; private set; }
-        public long maxX { get; private set; }
-        public long maxY { get; private set; }
+        private long minX;
+        private long minY;
+        private long maxX;
+        private long maxY;
 
         public Rect(long minX, long minY, long maxX, long maxY) {
             this.minX = minX;
@@ -30,6 +30,30 @@ namespace iShape.Clipper.Util {
             } else {
                 minY = b.y;
                 maxY = a.y;
+            }
+        }
+        
+        public Rect(IntVector[] points) {
+            int n = points.Length;
+            var p0 = points[0];
+            minX = p0.x;
+            minY = p0.y;
+            maxX = p0.x;
+            maxY = p0.y;
+            for (int i = 0; i < n; ++i) {
+                var p = points[i];
+                if (minX > p.x) {
+                    minX = p.x;
+                }
+                if (maxX < p.x) {
+                    maxX = p.x;
+                }
+                if (minY > p.y) {
+                    minY = p.y;
+                }
+                if (maxY < p.y) {
+                    maxY = p.y;
+                }
             }
         }
 
@@ -58,6 +82,10 @@ namespace iShape.Clipper.Util {
 
         public bool IsIntersecting(Rect box) {
             return !(maxX < box.minX || minX > box.maxX || maxY < box.minY || minY > box.maxY);
+        }
+        
+        public bool IsNotIntersecting(Rect box) {
+            return maxX < box.minX || minX > box.maxX || maxY < box.minY || minY > box.maxY;
         }
     }
 
