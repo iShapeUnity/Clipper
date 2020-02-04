@@ -7,10 +7,10 @@ namespace iShape.Clipper.Collision {
 
         internal static CrossType DefineType(IntVector a0, IntVector a1, IntVector b0, IntVector b1,
             out IntVector cross) {
-            int d0 = CrossResolver.IsClockWise(a0, b0, b1);
-            int d1 = CrossResolver.IsClockWise(a1, b0, b1);
-            int d2 = CrossResolver.IsClockWise(a0, a1, b0);
-            int d3 = CrossResolver.IsClockWise(a0, a1, b1);
+            int d0 = IsClockWise(a0, b0, b1);
+            int d1 = IsClockWise(a1, b0, b1);
+            int d2 = IsClockWise(a0, a1, b0);
+            int d3 = IsClockWise(a0, a1, b1);
 
             if (d0 == 0 || d1 == 0 || d2 == 0 || d3 == 0) {
                 if (d0 == 0 && d1 == 0 && d2 == 0 && d3 == 0) {

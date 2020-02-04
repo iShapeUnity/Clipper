@@ -33,8 +33,8 @@ namespace iShape.Clipper.Collision.Primitive {
         public NativeArray<PinHandler> Extract(int index, int pathCount, Allocator allocator) {
             int n = pathCount;
 
-            var firstHandler = new PinHandler(v0.masterMileStone, index, true, 0, v0.type);
-            var lastHandler = new PinHandler(v1.masterMileStone, index, true, 1, v0.type);
+            var firstHandler = new PinHandler(v0.masterMileStone, index, true, true, v0.type);
+            var lastHandler = new PinHandler(v1.masterMileStone, index, true, false, v0.type);
 
             var length = GetLength(n);
 
@@ -45,7 +45,7 @@ namespace iShape.Clipper.Collision.Primitive {
             if (length == 2) {
                 var middleIndex = (v0.masterMileStone.index + 1) % n;
                 var middleSortFactor = new PathMileStone(middleIndex);
-                var middle = new PinHandler(middleSortFactor, index, true, 1, v0.type);
+                var middle = new PinHandler(middleSortFactor, index, true, false, v0.type);
                 return new NativeArray<PinHandler>(3, allocator) {[0] = firstHandler, [1] = middle, [2] = lastHandler};
             }
 
@@ -62,11 +62,11 @@ namespace iShape.Clipper.Collision.Primitive {
             }
 
             while (i != endIndex) {
-                handlers[j++] = new PinHandler(new PathMileStone(i), index, true, 1, v0.type);
+                handlers[j++] = new PinHandler(new PathMileStone(i), index, true, false, v0.type);
                 i = (i + 1) % n;
             }
 
-            handlers[j++] = new PinHandler(new PathMileStone(endIndex), index, true, 1, v0.type);
+            handlers[j++] = new PinHandler(new PathMileStone(endIndex), index, true, false, v0.type);
             handlers[j] = lastHandler;
 
             return handlers;

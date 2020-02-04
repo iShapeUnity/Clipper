@@ -1,5 +1,6 @@
 using iShape.Clipper.Collision.Primitive;
 using iShape.Clipper.Collision.Navigation;
+using iShape.Clipper.Collision.Sort;
 using iShape.Geometry;
 using iShape.Collections;
 using Unity.Collections;
@@ -323,15 +324,8 @@ namespace iShape.Clipper.Collision {
 
 
         private static DynamicArray<PinPath> Organize(ref DynamicArray<PinPoint> pinPoints, int masterCount, int slaveCount, Allocator allocator) {
-            /*
-            pinPoints.sort(by: { a, b in
-                if a.masterMileStone.index != b.masterMileStone.index {
-                    return a.masterMileStone.index < b.masterMileStone.index
-                }
-    
-                return a.masterMileStone.offset < b.masterMileStone.offset
-            })
-            */
+            pinPoints.SortByMaster();
+            
             RemoveDoubles(ref pinPoints);
 
             if (pinPoints.Count > 1) {
@@ -529,14 +523,9 @@ namespace iShape.Clipper.Collision {
                     hasContacts
                 );
             }
-/*
-            handlerArray.sort(by: {
-                a, b in
-                PathMileStone.compare(a: b.masterSortFactor, b: a.masterSortFactor)
-            })
-*/
+
             if (pinPathArray.Count > 0) {
-                CrossDetector.Compact(ref handlerArray, ref pinPointArray, ref pinPathArray);
+                Compact(ref handlerArray, ref pinPointArray, ref pinPathArray);
             }
 
             if (handlerArray.Count == 0) {
@@ -549,7 +538,7 @@ namespace iShape.Clipper.Collision {
                 );
             }
 
-            var slavePath = CrossDetector.BuildSlavePath(handlerArray, pinPointArray, pinPathArray);
+            var slavePath = Streamline(ref handlerArray, pinPointArray, pinPathArray);
 
             int n = slavePath.Length;
 
@@ -572,6 +561,7 @@ namespace iShape.Clipper.Collision {
         }
 
         private static void Compact(ref DynamicArray<PinHandler> handlerArray, ref DynamicArray<PinPoint> pinPointArray, ref DynamicArray<PinPath> pinPathArray) {
+            
             var paths = new DynamicArray<PinPath>(pinPathArray.Count, Allocator.Temp);
             var points = new DynamicArray<PinPoint>(pinPointArray.Count, Allocator.Temp);
             var handlers = new DynamicArray<PinHandler>(Allocator.Temp);
@@ -579,7 +569,7 @@ namespace iShape.Clipper.Collision {
             int n = handlerArray.Count;
             for (int i = 0; i < n; ++i) {
                 var pinHandler = handlerArray[i];
-                if (pinHandler.marker == 0) {
+                if (pinHandler.marker) {
                     int index = pinHandler.index;
                     if (pinHandler.isPinPath) {
                         var path = pinPathArray[index];
@@ -602,7 +592,9 @@ namespace iShape.Clipper.Collision {
             handlerArray = handlers;
         }
 
-        private static NativeArray<int> BuildSlavePath(DynamicArray<PinHandler> handlerArray, DynamicArray<PinPoint> pinPointArray, DynamicArray<PinPath> pinPathArray) {
+        private static NativeArray<int> Streamline(ref DynamicArray<PinHandler> handlerArray, DynamicArray<PinPoint> pinPointArray, DynamicArray<PinPath> pinPathArray) {
+            handlerArray.SortByMaster();
+            
             int n = handlerArray.Count;
 
             var iStones = new NativeArray<IndexMileStone>(n, Allocator.Temp);
@@ -618,31 +610,8 @@ namespace iShape.Clipper.Collision {
                     iStones[j] = new IndexMileStone(j, path.v0.slaveMileStone);
                 }
             }
-
-            bool isNotSorted;
-
-            var m = n;
-
-            do {
-                isNotSorted = false;
-                var a = iStones[0];
-                var i = 1;
-                while (i < m) {
-                    var b = iStones[i];
-                    if (PathMileStone.Compare(a.stone, b.stone)) {
-                        iStones[i - 1] = b;
-                        isNotSorted = true;
-                    } else {
-                        iStones[i - 1] = a;
-                        a = b;
-                    }
-
-                    i += 1;
-                }
-
-                m -= 1;
-                iStones[m] = a;
-            } while (isNotSorted);
+            
+            iStones.Sort();
 
             var indexArray = new NativeArray<int>(n, Allocator.Temp);
 
