@@ -166,7 +166,7 @@ namespace iShape.Clipper.Collision.Navigation {
             return path.v1.point;
         }
 
-        internal void Dispose() {
+        public void Dispose() {
             slavePath.Dispose();
             pinPathArray.Dispose();
             pinPointArray.Dispose();

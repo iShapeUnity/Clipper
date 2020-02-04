@@ -13,7 +13,7 @@ namespace iShape.Clipper.Collision.Primitive {
             this.v1 = new PinPoint(edge.v1, type);
         }
 
-        private int GetLength(int count) {
+        public int GetLength(int count) {
             var a = v0.masterMileStone;
             var b = v1.masterMileStone;
             int length = 0;

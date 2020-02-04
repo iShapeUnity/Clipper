@@ -455,7 +455,7 @@ namespace iShape.Clipper.Collision {
         }
 
         private static bool IsDirect(PathMileStone a, PathMileStone b, int module) {
-            if (a.index != b.index) {
+            if (a.index == b.index) {
                 return a.offset < b.offset;
             }
 

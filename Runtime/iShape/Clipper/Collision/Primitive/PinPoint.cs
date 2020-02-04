@@ -34,23 +34,19 @@ namespace iShape.Clipper.Collision.Primitive {
         public enum PinType {
             inside = 1,
             in_out = 2,
-            in_null = 3,
-            null_in = 4,
 
             nil = 0, // can be ignored
 
             outside = -1,
-            out_in = -2,
-            out_null = -3,
-            null_out = -4
+            out_in = -2
         }
 
-        public IntVector point;
+        public readonly IntVector point;
         internal readonly PinType type; // 1 - in, -1 - out, 2 in-out, -2 out-in
         public PathMileStone masterMileStone;
         public PathMileStone slaveMileStone;
 
-        internal PinPoint(IntVector point, PinType type, PathMileStone masterMileStone, PathMileStone slaveMileStone) {
+        private PinPoint(IntVector point, PinType type, PathMileStone masterMileStone, PathMileStone slaveMileStone) {
             this.point = point;
             this.type = type;
             this.masterMileStone = masterMileStone;
@@ -96,8 +92,7 @@ namespace iShape.Clipper.Collision.Primitive {
 
             return new PinPoint(def.pt, type, def.masterMileStone, def.slaveMileStone);
         }
-
-
+        
         internal static PinPoint BuildOnSlave(Def def, IntGeom iGeom) {
             var corner = new Corner(def.pt,def.ms0,def.ms1, iGeom);
 
@@ -115,7 +110,6 @@ namespace iShape.Clipper.Collision.Primitive {
 
             return new PinPoint(def.pt, type, def.masterMileStone, def.slaveMileStone);
         }
-
 
         internal static PinPoint BuildOnCross(Def def, IntGeom iGeom) {
             var corner = new Corner(def.pt,def.ms0,def.ms1, iGeom);
