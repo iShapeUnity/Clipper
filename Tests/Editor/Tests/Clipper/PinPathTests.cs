@@ -2,6 +2,7 @@
 using iShape.Clipper.Collision.Primitive;
 using iShape.Geometry;
 using NUnit.Framework;
+using Tests.Clipper.Data;
 using Unity.Collections;
 using UnityEngine;
 
@@ -13,23 +14,13 @@ namespace Tests.Clipper {
 
         [Test]
         public void Test_00() {
-            var master = new[] {
-                new Vector2(-10, 10),
-                new Vector2(10, 10),
-                new Vector2(10, -10),
-                new Vector2(-10, -10)
-            };
+            var data = PinTestData.data[0];
 
-            var iMaster = new NativeArray<IntVector>(iGeom.Int(master), Allocator.Temp);
-
-            var slave = new[] {
-                new Vector2(0, 0),
-                new Vector2(5, 10),
-                new Vector2(-5, 10)
-            };
-            var iSlave = new NativeArray<IntVector>(iGeom.Int(slave), Allocator.Temp);
-
-            var result = CrossDetector.FindPins(iMaster, iSlave, iGeom, PinPoint.PinType.nil);
+            var iMaster = new NativeArray<IntVector>(iGeom.Int(data[0]), Allocator.Temp);
+            var iSlave = new NativeArray<IntVector>(iGeom.Int(data[1]), Allocator.Temp);
+            
+        
+            var result = CrossDetector.FindPins(iMaster, iSlave, iGeom, exclusionPinType: PinPoint.PinType.nil);
 
             Assert.AreEqual(result.pinPathArray.Length, 1);
             Assert.AreEqual(result.pinPointArray.Length, 0);
@@ -44,19 +35,18 @@ namespace Tests.Clipper {
             Assert.AreEqual(path.v1.masterMileStone.index, 0);
             Assert.AreEqual(path.v1.masterMileStone.offset, z.SqrDistance(path.v1.point));
 
-
             Assert.AreEqual(path.v0.slaveMileStone.index, 2);
             Assert.AreEqual(path.v0.slaveMileStone.offset, 0);
 
             Assert.AreEqual(path.v1.slaveMileStone.index, 1);
             Assert.AreEqual(path.v1.slaveMileStone.offset, 0);
 
-
-            Assert.AreEqual(path.v0.point, iGeom.Int(new Vector2(-5, 10)));
+            Assert.AreEqual(path.v0.point, iGeom.Int(new Vector2( -5, 10)));
             Assert.AreEqual(path.v1.point, iGeom.Int(new Vector2(5, 10)));
-
-            iMaster.Dispose();
-            iSlave.Dispose();
+            Assert.AreEqual(path.GetTestLength(count: iMaster.Length), 1);
+        
+            var points = iGeom.Float(path.Extract(iMaster));
+            Assert.AreEqual(points.count, 2);
         }
 
         [Test]
