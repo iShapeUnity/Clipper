@@ -42,7 +42,7 @@ namespace iShape.Clipper.Collision.Primitive {
         }
 
         public readonly IntVector point;
-        internal readonly PinType type; // 1 - in, -1 - out, 2 in-out, -2 out-in
+        public readonly PinType type; // 1 - in, -1 - out, 2 in-out, -2 out-in
         public PathMileStone masterMileStone;
         public PathMileStone slaveMileStone;
 

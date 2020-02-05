@@ -895,8 +895,36 @@ namespace Tests.Clipper {
         
         [Test]
         public void Test_100() {
-            var data = PinTestData.data[28];
+            var iMaster = new NativeArray<IntVector>(new [] {
+                new IntVector(-2, 2),
+                new IntVector(2, 2),
+                new IntVector(2, -2),
+                new IntVector(-2, -2)
+            }, Allocator.Temp);
+            var iSlave = new NativeArray<IntVector>(new [] {
+                new IntVector(-4, 7),
+                new IntVector(-4, -7),
+                new IntVector(3, -7),
+                new IntVector(1, 7)
+            }, Allocator.Temp);
+        
+            var result = CrossDetector.FindPins(iMaster, iSlave, iGeom, PinPoint.PinType.nil);
+            
+            Assert.AreEqual(result.pinPathArray.Length, 1);
 
+            var path = result.pinPathArray[0];
+
+            Assert.AreEqual(path.Extract(iMaster), new[] {
+                new IntVector(2, 2), new IntVector(2, 0)
+            });
+            
+            result.Dispose();
+            iMaster.Dispose();
+            iSlave.Dispose();
+        }
+        
+        [Test]
+        public void Test_101() {
             var iMaster = new NativeArray<IntVector>(new [] {
                 new IntVector(-2, 2),
                 new IntVector(2, 2),
@@ -920,6 +948,88 @@ namespace Tests.Clipper {
                 new IntVector(2, 0), new IntVector(2, -2)
             });
             
+            result.Dispose();
+            iMaster.Dispose();
+            iSlave.Dispose();
+        }
+        
+        [Test]
+        public void Test_102() {
+            var iMaster = new NativeArray<IntVector>(new [] {
+                new IntVector(-2, 2),
+                new IntVector(2, 2),
+                new IntVector(2, 0),
+                new IntVector(-2, 0)
+            }, Allocator.Temp);
+            var iSlave = new NativeArray<IntVector>(new [] {
+                new IntVector(-4, 7),
+                new IntVector(-4, -7),
+                new IntVector(3, -7),
+                new IntVector(1, 7)
+            }, Allocator.Temp);
+        
+            var result = CrossDetector.FindPins(iMaster, iSlave, iGeom, PinPoint.PinType.nil);
+            
+            Assert.AreEqual(result.pinPathArray.Length, 1);
+
+            var path = result.pinPathArray[0];
+
+            Assert.AreEqual(path.Extract(iMaster), new[] {
+                new IntVector(2, 2), new IntVector(2, 0)
+            });
+            
+            result.Dispose();
+            iMaster.Dispose();
+            iSlave.Dispose();
+        }
+        
+        [Test]
+        public void Test_103() {
+            var iMaster = new NativeArray<IntVector>(new [] {
+                new IntVector(-2, 2),
+                new IntVector(2, 2),
+                new IntVector(2, 0),
+                new IntVector(-2, 0)
+            }, Allocator.Temp);
+            var iSlave = new NativeArray<IntVector>(new [] {
+                new IntVector(-4, 4),
+                new IntVector(-4, -4),
+                new IntVector(7, -4),
+                new IntVector(0, 4)
+            }, Allocator.Temp);
+        
+            var result = CrossDetector.FindPins(iMaster, iSlave, iGeom, PinPoint.PinType.nil);
+            
+            Assert.AreEqual(result.pinPointArray.Length, 1);
+            Assert.AreEqual(result.pinPointArray[0].point, new IntVector(2, 2));
+            Assert.AreEqual(result.pinPointArray[0].type, PinPoint.PinType.in_out);
+
+            result.Dispose();
+            iMaster.Dispose();
+            iSlave.Dispose();
+        }
+        
+        [Test]
+        public void Test_104() {
+            var iMaster = new NativeArray<IntVector>(new [] {
+                new IntVector(-2, 2),
+                new IntVector(2, 2),
+                new IntVector(2, 0),
+                new IntVector(-2, 0)
+            }, Allocator.Temp);
+            var iSlave = new NativeArray<IntVector>(new [] {
+                new IntVector(0, 4),
+                new IntVector(7, -4),
+                new IntVector(-4, -4),
+                new IntVector(-4, 4)
+            }, Allocator.Temp);
+        
+            var result = CrossDetector.FindPins(iMaster, iSlave, iGeom, PinPoint.PinType.nil);
+            
+            Assert.AreEqual(result.pinPointArray.Length, 1);
+            Assert.AreEqual(result.pinPointArray[0].point, new IntVector(2, 2));
+            Assert.AreEqual(result.pinPointArray[0].type, PinPoint.PinType.in_out);
+
             result.Dispose();
             iMaster.Dispose();
             iSlave.Dispose();

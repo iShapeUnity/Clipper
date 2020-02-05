@@ -19,7 +19,7 @@ namespace iShape.Clipper.Solver {
                 return new PlainShape(slave, false, allocator);
             }
             
-            var pathList = new DynamicPlainShape();
+            var pathList = new DynamicPlainShape(allocator);
             
             int masterCount = master.Length;
             int masterLastIndex = masterCount - 1;

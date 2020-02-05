@@ -187,7 +187,7 @@ namespace Tests.Clipper {
 
             var solution = master.Union(slave, iGeom, Allocator.Temp);
 
-            Assert.AreEqual(solution.nature, UnionSolution.Nature.overlap);
+            Assert.AreEqual(solution.nature, UnionSolution.Nature.masterIncludeSlave);
             Assert.AreEqual(solution.pathList.Count, 1);
 
             var path = solution.pathList.Get(0, Allocator.Temp).ToArray();
@@ -212,7 +212,7 @@ namespace Tests.Clipper {
 
             var solution = master.Union(slave, iGeom, Allocator.Temp);
 
-            Assert.AreEqual(solution.nature, UnionSolution.Nature.overlap);
+            Assert.AreEqual(solution.nature, UnionSolution.Nature.masterIncludeSlave);
             Assert.AreEqual(solution.pathList.Count, 1);
 
             var path = solution.pathList.Get(0, Allocator.Temp).ToArray();
@@ -237,7 +237,7 @@ namespace Tests.Clipper {
 
             var solution = master.Union(slave, iGeom, Allocator.Temp);
 
-            Assert.AreEqual(solution.nature, UnionSolution.Nature.overlap);
+            Assert.AreEqual(solution.nature, UnionSolution.Nature.masterIncludeSlave);
             Assert.AreEqual(solution.pathList.Count, 1);
 
             var path = solution.pathList.Get(0, Allocator.Temp).ToArray();
@@ -289,7 +289,7 @@ namespace Tests.Clipper {
 
             var solution = master.Union(slave, iGeom, Allocator.Temp);
 
-            Assert.AreEqual(solution.nature, UnionSolution.Nature.overlap);
+            Assert.AreEqual(solution.nature, UnionSolution.Nature.masterIncludeSlave);
             Assert.AreEqual(solution.pathList.Count, 1);
 
             var path = solution.pathList.Get(0, Allocator.Temp).ToArray();
@@ -342,7 +342,7 @@ namespace Tests.Clipper {
 
             var solution = master.Union(slave, iGeom, Allocator.Temp);
 
-            Assert.AreEqual(solution.nature, UnionSolution.Nature.overlap);
+            Assert.AreEqual(solution.nature, UnionSolution.Nature.masterIncludeSlave);
             Assert.AreEqual(solution.pathList.Count, 1);
 
             var path = solution.pathList.Get(0, Allocator.Temp).ToArray();
@@ -550,7 +550,7 @@ namespace Tests.Clipper {
 
             var solution = master.Union(slave, iGeom, Allocator.Temp);
 
-            Assert.AreEqual(solution.nature, UnionSolution.Nature.overlap);
+            Assert.AreEqual(solution.nature, UnionSolution.Nature.masterIncludeSlave);
             Assert.AreEqual(solution.pathList.Count, 1);
 
             var path = solution.pathList.Get(0, Allocator.Temp).ToArray();
@@ -576,7 +576,7 @@ namespace Tests.Clipper {
 
             var solution = master.Union(slave, iGeom, Allocator.Temp);
 
-            Assert.AreEqual(solution.nature, UnionSolution.Nature.overlap);
+            Assert.AreEqual(solution.nature, UnionSolution.Nature.masterIncludeSlave);
             Assert.AreEqual(solution.pathList.Count, 1);
 
             var path = solution.pathList.Get(0, Allocator.Temp).ToArray();
@@ -765,7 +765,7 @@ namespace Tests.Clipper {
 
             var solution = master.Union(slave, iGeom, Allocator.Temp);
 
-            Assert.AreEqual(solution.nature, UnionSolution.Nature.overlap);
+            Assert.AreEqual(solution.nature, UnionSolution.Nature.masterIncludeSlave);
             Assert.AreEqual(solution.pathList.Count, 1);
 
             var path = solution.pathList.Get(0, Allocator.Temp).ToArray();
@@ -1393,7 +1393,7 @@ namespace Tests.Clipper {
 
             var solution = master.Union(slave, iGeom, Allocator.Temp);
 
-            Assert.AreEqual(solution.nature, UnionSolution.Nature.overlap);
+            Assert.AreEqual(solution.nature, UnionSolution.Nature.masterIncludeSlave);
             Assert.AreEqual(solution.pathList.Count, 1);
 
             var path = solution.pathList.Get(0, Allocator.Temp).ToArray();
@@ -1418,7 +1418,7 @@ namespace Tests.Clipper {
 
             var solution = master.Union(slave, iGeom, Allocator.Temp);
 
-            Assert.AreEqual(solution.nature, UnionSolution.Nature.overlap);
+            Assert.AreEqual(solution.nature, UnionSolution.Nature.slaveIncludeMaster);
             Assert.AreEqual(solution.pathList.Count, 1);
 
             var path = solution.pathList.Get(0, Allocator.Temp).ToArray();
