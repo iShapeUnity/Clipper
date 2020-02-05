@@ -2,9 +2,9 @@ using UnityEngine;
 
 namespace Tests.Clipper.Data {
     
-     public struct UnionTestData {
+    internal struct UnionTestData {
          
-        public static readonly Vector2[][][] data = {
+        internal static readonly Vector2[][][] data = {
             // 0
             new[] {
                 new[] {
