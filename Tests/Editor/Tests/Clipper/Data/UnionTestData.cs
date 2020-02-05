@@ -837,6 +837,27 @@ namespace Tests.Clipper.Data {
                     new Vector2(10.0f, -10.0f),
                     new Vector2(-10.0f, -10.0f)
                 }
+            },
+            // 43
+            new[] {
+                new[] {
+                    new Vector2(20, 0),
+                    new Vector2(20, -20),
+                    new Vector2(5, -20),
+                    new Vector2(5, 0)
+                },
+                new[] {
+                    new Vector2(x: 5, y: 0),
+                    new Vector2(x: -10, y: 0),
+                    new Vector2(x: -10, y: -10),
+                    new Vector2(x: 10, y: -10),
+                    new Vector2(x: 10, y: 10),
+                    new Vector2(x: 15, y: 10),
+                    new Vector2(x: 15, y: -15),
+                    new Vector2(x: -15, y: -15),
+                    new Vector2(x: -15, y: 5),
+                    new Vector2(x: 5, y: 5)
+                }
             }
         };
     }

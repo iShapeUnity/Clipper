@@ -259,7 +259,7 @@ namespace iShape.Clipper.Collision {
                 if (pinPaths.Count > 0) {
                     // test for same shapes
                     if (pinPaths.Count == 1 && iMaster.Length == iSlave.Length && pinPaths[0].isClosed) {
-                        return new PinNavigator();
+                        return new PinNavigator(true);
                     }
 
                     hasExclusion = RemoveExclusion(ref pinPaths, exclusionPinType);
