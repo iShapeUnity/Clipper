@@ -1,6 +1,7 @@
 using iShape.Clipper.Collision;
 using iShape.Clipper.Collision.Primitive;
 using iShape.Geometry;
+using iShape.Geometry.Container;
 using Unity.Collections;
 
 namespace iShape.Clipper.Solver {
@@ -12,12 +13,8 @@ namespace iShape.Clipper.Solver {
         ) {
             var navigator = CrossDetector.FindPins(master, slave, iGeom, PinPoint.PinType.in_out);
 
-            PlainPathList restPathList;
-            PlainPathList bitePathList;
             if (navigator.isEqual) {
-                restPathList = new PlainPathList(0, allocator);
-                bitePathList = new PlainPathList(0, allocator);
-                return new CutSolution(restPathList, bitePathList, SubtractSolution.Nature.empty);
+                return new CutSolution(new PlainShape(allocator), new PlainShape(allocator), SubtractSolution.Nature.empty);
             }
 
             var filterNavigator = new FilterNavigator(navigator, PinPoint.PinType.inside, PinPoint.PinType.out_in, Allocator.Temp);
@@ -25,17 +22,15 @@ namespace iShape.Clipper.Solver {
             var cursor = filterNavigator.First();
 
             if (cursor.isEmpty) {
-                restPathList = new PlainPathList(0, allocator);
-                bitePathList = new PlainPathList(0, allocator);
-                return new CutSolution(restPathList, bitePathList, SubtractSolution.Nature.notOverlap);
+                return new CutSolution(new PlainShape(allocator), new PlainShape(allocator), SubtractSolution.Nature.notOverlap);
             }
 
-            restPathList = SubtractSolver.Subtract(filterNavigator, master, slave, allocator);
+            var restPathList = SubtractSolver.Subtract(filterNavigator, master, slave, allocator);
 
             filterNavigator.Reset();
-            bitePathList = IntersectSolver.Intersect(filterNavigator, master, slave, allocator);
+            var bitePathList = IntersectSolver.Intersect(filterNavigator, master, slave, allocator);
 
-            var nature = restPathList.Count > 0 ? SubtractSolution.Nature.overlap : SubtractSolution.Nature.notOverlap;
+            var nature = restPathList.layouts.Length > 0 ? SubtractSolution.Nature.overlap : SubtractSolution.Nature.notOverlap;
 
             return new CutSolution(restPathList, bitePathList, nature);
         }

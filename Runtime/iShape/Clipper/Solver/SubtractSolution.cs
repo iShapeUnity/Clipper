@@ -1,4 +1,4 @@
-using iShape.Geometry;
+using iShape.Geometry.Container;
 
 namespace iShape.Clipper.Solver {
 
@@ -10,10 +10,10 @@ namespace iShape.Clipper.Solver {
             hole
         }
 
-        public PlainPathList pathList;
+        public PlainShape pathList;
         public readonly Nature nature;
 
-        public SubtractSolution(PlainPathList pathList, Nature nature) {
+        public SubtractSolution(PlainShape pathList, Nature nature) {
             this.pathList = pathList;
             this.nature = nature;
         }

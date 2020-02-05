@@ -1,14 +1,14 @@
-using iShape.Geometry;
+using iShape.Geometry.Container;
 
 namespace iShape.Clipper.Solver {
 
     public struct CutSolution {
 
-        public PlainPathList restPathList;
-        public PlainPathList bitePathList;
+        public PlainShape restPathList;
+        public PlainShape bitePathList;
         public readonly SubtractSolution.Nature nature;
 
-        public CutSolution(PlainPathList restPathList, PlainPathList bitePathList, SubtractSolution.Nature nature) {
+        public CutSolution(PlainShape restPathList, PlainShape bitePathList, SubtractSolution.Nature nature) {
             this.restPathList = restPathList;
             this.bitePathList = bitePathList;
             this.nature = nature;

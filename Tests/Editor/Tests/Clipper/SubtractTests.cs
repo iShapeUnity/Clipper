@@ -23,7 +23,7 @@ namespace Tests.Clipper {
             Assert.AreEqual(solution.nature, SubtractSolution.Nature.overlap);
             Assert.AreEqual(solution.pathList.Count, 1);
 
-            var path = solution.pathList.GetPath(0, Allocator.Temp).ToArray();
+            var path = solution.pathList.Get(0, Allocator.Temp).ToArray();
             var sample = iGeom.Int(new[] {
                 new Vector2(5, -10),
                 new Vector2(5, 0),
@@ -52,7 +52,7 @@ namespace Tests.Clipper {
             Assert.AreEqual(solution.nature, SubtractSolution.Nature.overlap);
             Assert.AreEqual(solution.pathList.Count, 1);
 
-            var path = solution.pathList.GetPath(0, Allocator.Temp).ToArray();
+            var path = solution.pathList.Get(0, Allocator.Temp).ToArray();
             var sample = iGeom.Int(new[] {
                 new Vector2(-5,10),
                 new Vector2(-5,-10),
@@ -77,7 +77,7 @@ namespace Tests.Clipper {
             Assert.AreEqual(solution.nature, SubtractSolution.Nature.overlap);
             Assert.AreEqual(solution.pathList.Count, 1);
 
-            var path = solution.pathList.GetPath(0, Allocator.Temp).ToArray();
+            var path = solution.pathList.Get(0, Allocator.Temp).ToArray();
             var sample = iGeom.Int(new[] {
                 new Vector2(-5,10),
                 new Vector2(-5,-10),
@@ -102,7 +102,7 @@ namespace Tests.Clipper {
             Assert.AreEqual(solution.nature, SubtractSolution.Nature.overlap);
             Assert.AreEqual(solution.pathList.Count, 1);
 
-            var path = solution.pathList.GetPath(0, Allocator.Temp).ToArray();
+            var path = solution.pathList.Get(0, Allocator.Temp).ToArray();
             var sample = iGeom.Int(new[] {
                 new Vector2(-5,10),
                 new Vector2(-5,-10),
@@ -126,7 +126,7 @@ namespace Tests.Clipper {
             Assert.AreEqual(solution.nature, SubtractSolution.Nature.overlap);
             Assert.AreEqual(solution.pathList.Count, 1);
 
-            var path = solution.pathList.GetPath(0, Allocator.Temp).ToArray();
+            var path = solution.pathList.Get(0, Allocator.Temp).ToArray();
             var sample = iGeom.Int(new[] {
                 new Vector2(-10,10),
                 new Vector2(-5,-10),
@@ -150,7 +150,7 @@ namespace Tests.Clipper {
             Assert.AreEqual(solution.nature, SubtractSolution.Nature.overlap);
             Assert.AreEqual(solution.pathList.Count, 1);
 
-            var path = solution.pathList.GetPath(0, Allocator.Temp).ToArray();
+            var path = solution.pathList.Get(0, Allocator.Temp).ToArray();
             var sample = iGeom.Int(new[] {
                 new Vector2(-10,0),
                 new Vector2(0,-10),
@@ -174,7 +174,7 @@ namespace Tests.Clipper {
             Assert.AreEqual(solution.nature, SubtractSolution.Nature.overlap);
             Assert.AreEqual(solution.pathList.Count, 2);
 
-            var path0 = solution.pathList.GetPath(0, Allocator.Temp).ToArray();
+            var path0 = solution.pathList.Get(0, Allocator.Temp).ToArray();
             var sample0 = iGeom.Int(new[] {
                 new Vector2(5,10),
                 new Vector2(-10,2.5f),
@@ -183,7 +183,7 @@ namespace Tests.Clipper {
 
             Assert.AreEqual(path0, sample0);
 
-            var path1 = solution.pathList.GetPath(1, Allocator.Temp).ToArray();
+            var path1 = solution.pathList.Get(1, Allocator.Temp).ToArray();
             var sample1 = iGeom.Int(new[] {
                 new Vector2(-10,-2.5f),
                 new Vector2(5,-10),
@@ -207,7 +207,7 @@ namespace Tests.Clipper {
             Assert.AreEqual(solution.nature, SubtractSolution.Nature.overlap);
             Assert.AreEqual(solution.pathList.Count, 2);
 
-            var path0 = solution.pathList.GetPath(0, Allocator.Temp).ToArray();
+            var path0 = solution.pathList.Get(0, Allocator.Temp).ToArray();
             var sample0 = iGeom.Int(new[] {
                 new Vector2(0,-10),
                 new Vector2(0,0),
@@ -219,7 +219,7 @@ namespace Tests.Clipper {
 
             Assert.AreEqual(path0, sample0);
 
-            var path1 = solution.pathList.GetPath(1, Allocator.Temp).ToArray();
+            var path1 = solution.pathList.Get(1, Allocator.Temp).ToArray();
             var sample1 = iGeom.Int(new[] {
                 new Vector2(-10,-5),
                 new Vector2(-5,-10),
@@ -243,7 +243,7 @@ namespace Tests.Clipper {
             Assert.AreEqual(solution.nature, SubtractSolution.Nature.overlap);
             Assert.AreEqual(solution.pathList.Count, 2);
 
-            var path0 = solution.pathList.GetPath(0, Allocator.Temp).ToArray();
+            var path0 = solution.pathList.Get(0, Allocator.Temp).ToArray();
             var sample0 = iGeom.Int(new[] {
                 new Vector2(0,10),
                 new Vector2(0,0),
@@ -255,7 +255,7 @@ namespace Tests.Clipper {
 
             Assert.AreEqual(path0, sample0);
 
-            var path1 = solution.pathList.GetPath(1, Allocator.Temp).ToArray();
+            var path1 = solution.pathList.Get(1, Allocator.Temp).ToArray();
             var sample1 = iGeom.Int(new[] {
                 new Vector2(10,0),
                 new Vector2(0,10),
@@ -279,7 +279,7 @@ namespace Tests.Clipper {
             Assert.AreEqual(solution.nature, SubtractSolution.Nature.overlap);
             Assert.AreEqual(solution.pathList.Count, 2);
 
-            var path0 = solution.pathList.GetPath(0, Allocator.Temp).ToArray();
+            var path0 = solution.pathList.Get(0, Allocator.Temp).ToArray();
             var sample0 = iGeom.Int(new[] {
                 new Vector2(0,10),
                 new Vector2(-5,-10),
@@ -289,7 +289,7 @@ namespace Tests.Clipper {
 
             Assert.AreEqual(path0, sample0);
 
-            var path1 = solution.pathList.GetPath(1, Allocator.Temp).ToArray();
+            var path1 = solution.pathList.Get(1, Allocator.Temp).ToArray();
             var sample1 = iGeom.Int(new[] {
                 new Vector2(5,-10),
                 new Vector2(0,10),
@@ -314,7 +314,7 @@ namespace Tests.Clipper {
             Assert.AreEqual(solution.nature, SubtractSolution.Nature.overlap);
             Assert.AreEqual(solution.pathList.Count, 2);
 
-            var path0 = solution.pathList.GetPath(0, Allocator.Temp).ToArray();
+            var path0 = solution.pathList.Get(0, Allocator.Temp).ToArray();
             var sample0 = iGeom.Int(new[] {
                 new Vector2(10,10),
                 new Vector2(-5,5),
@@ -325,7 +325,7 @@ namespace Tests.Clipper {
 
             Assert.AreEqual(path0, sample0);
 
-            var path1 = solution.pathList.GetPath(1, Allocator.Temp).ToArray();
+            var path1 = solution.pathList.Get(1, Allocator.Temp).ToArray();
             var sample1 = iGeom.Int(new[] {
                 new Vector2(0,-10),
                 new Vector2(10,10),
@@ -349,7 +349,7 @@ namespace Tests.Clipper {
             Assert.AreEqual(solution.nature, SubtractSolution.Nature.overlap);
             Assert.AreEqual(solution.pathList.Count, 2);
 
-            var path0 = solution.pathList.GetPath(0, Allocator.Temp).ToArray();
+            var path0 = solution.pathList.Get(0, Allocator.Temp).ToArray();
             var sample0 = iGeom.Int(new[] {
                 new Vector2(10,-10),
                 new Vector2(20,10),
@@ -358,7 +358,7 @@ namespace Tests.Clipper {
 
             Assert.AreEqual(path0, sample0);
 
-            var path1 = solution.pathList.GetPath(1, Allocator.Temp).ToArray();
+            var path1 = solution.pathList.Get(1, Allocator.Temp).ToArray();
             var sample1 = iGeom.Int(new[] {
                 new Vector2(20,10),
                 new Vector2(0,0),
@@ -382,7 +382,7 @@ namespace Tests.Clipper {
             Assert.AreEqual(solution.nature, SubtractSolution.Nature.overlap);
             Assert.AreEqual(solution.pathList.Count, 1);
 
-            var path = solution.pathList.GetPath(0, Allocator.Temp).ToArray();
+            var path = solution.pathList.Get(0, Allocator.Temp).ToArray();
             var sample = iGeom.Int(new[] {
                 new Vector2(10,5),
                 new Vector2(0,0),
@@ -424,7 +424,7 @@ namespace Tests.Clipper {
             Assert.AreEqual(solution.nature, SubtractSolution.Nature.overlap);
             Assert.AreEqual(solution.pathList.Count, 4);
 
-            var path0 = solution.pathList.GetPath(0, Allocator.Temp).ToArray();
+            var path0 = solution.pathList.Get(0, Allocator.Temp).ToArray();
             var sample0 = iGeom.Int(new[] {
                 new Vector2(-5,10),
                 new Vector2(-10,5),
@@ -433,7 +433,7 @@ namespace Tests.Clipper {
 
             Assert.AreEqual(path0, sample0);
 
-            var path1 = solution.pathList.GetPath(1, Allocator.Temp).ToArray();
+            var path1 = solution.pathList.Get(1, Allocator.Temp).ToArray();
             var sample1 = iGeom.Int(new[] {
                 new Vector2(10,5),
                 new Vector2(5,10),
@@ -442,7 +442,7 @@ namespace Tests.Clipper {
 
             Assert.AreEqual(path1, sample1);
             
-            var path2 = solution.pathList.GetPath(2, Allocator.Temp).ToArray();
+            var path2 = solution.pathList.Get(2, Allocator.Temp).ToArray();
             var sample2 = iGeom.Int(new[] {
                 new Vector2(5,-10),
                 new Vector2(10,-5),
@@ -451,7 +451,7 @@ namespace Tests.Clipper {
 
             Assert.AreEqual(path2, sample2);
             
-            var path3 = solution.pathList.GetPath(3, Allocator.Temp).ToArray();
+            var path3 = solution.pathList.Get(3, Allocator.Temp).ToArray();
             var sample3 = iGeom.Int(new[] {
                 new Vector2(-10,-5),
                 new Vector2(-5,-10),
@@ -475,7 +475,7 @@ namespace Tests.Clipper {
             Assert.AreEqual(solution.nature, SubtractSolution.Nature.overlap);
             Assert.AreEqual(solution.pathList.Count, 1);
 
-            var path = solution.pathList.GetPath(0, Allocator.Temp).ToArray();
+            var path = solution.pathList.Get(0, Allocator.Temp).ToArray();
             var sample = iGeom.Int(new[] {
                 new Vector2(0,10),
                 new Vector2(0,-5),
@@ -519,7 +519,7 @@ namespace Tests.Clipper {
             Assert.AreEqual(solution.nature, SubtractSolution.Nature.overlap);
             Assert.AreEqual(solution.pathList.Count, 3);
 
-            var path0 = solution.pathList.GetPath(0, Allocator.Temp).ToArray();
+            var path0 = solution.pathList.Get(0, Allocator.Temp).ToArray();
             var sample0 = iGeom.Int(new[] {
                 new Vector2(-5,10),
                 new Vector2(-5,5),
@@ -529,7 +529,7 @@ namespace Tests.Clipper {
 
             Assert.AreEqual(path0, sample0);
 
-            var path1 = solution.pathList.GetPath(1, Allocator.Temp).ToArray();
+            var path1 = solution.pathList.Get(1, Allocator.Temp).ToArray();
             var sample1 = iGeom.Int(new[] {
                 new Vector2(5,10),
                 new Vector2(5,5),
@@ -539,7 +539,7 @@ namespace Tests.Clipper {
 
             Assert.AreEqual(path1, sample1);
             
-            var path2 = solution.pathList.GetPath(2, Allocator.Temp).ToArray();
+            var path2 = solution.pathList.Get(2, Allocator.Temp).ToArray();
             var sample2 = iGeom.Int(new[] {
                 new Vector2(10,5),
                 new Vector2(10,10),
@@ -564,7 +564,7 @@ namespace Tests.Clipper {
             Assert.AreEqual(solution.nature, SubtractSolution.Nature.overlap);
             Assert.AreEqual(solution.pathList.Count, 2);
 
-            var path0 = solution.pathList.GetPath(0, Allocator.Temp).ToArray();
+            var path0 = solution.pathList.Get(0, Allocator.Temp).ToArray();
             var sample0 = iGeom.Int(new[] {
                 new Vector2(-5,2.5f),
                 new Vector2(-5,0),
@@ -578,7 +578,7 @@ namespace Tests.Clipper {
 
             Assert.AreEqual(path0, sample0);
 
-            var path1 = solution.pathList.GetPath(1, Allocator.Temp).ToArray();
+            var path1 = solution.pathList.Get(1, Allocator.Temp).ToArray();
             var sample1 = iGeom.Int(new[] {
                 new Vector2(10,-2.5f),
                 new Vector2(10,2.5f),
@@ -603,7 +603,7 @@ namespace Tests.Clipper {
             Assert.AreEqual(solution.nature, SubtractSolution.Nature.overlap);
             Assert.AreEqual(solution.pathList.Count, 1);
 
-            var path = solution.pathList.GetPath(0, Allocator.Temp).ToArray();
+            var path = solution.pathList.Get(0, Allocator.Temp).ToArray();
             var sample = iGeom.Int(new[] {
                 new Vector2(10,0),
                 new Vector2(0,5),
@@ -632,7 +632,7 @@ namespace Tests.Clipper {
             Assert.AreEqual(solution.nature, SubtractSolution.Nature.overlap);
             Assert.AreEqual(solution.pathList.Count, 1);
 
-            var path = solution.pathList.GetPath(0, Allocator.Temp).ToArray();
+            var path = solution.pathList.Get(0, Allocator.Temp).ToArray();
             var sample = iGeom.Int(new[] {
                 new Vector2(10,10),
                 new Vector2(0,5),
@@ -660,7 +660,7 @@ namespace Tests.Clipper {
             Assert.AreEqual(solution.nature, SubtractSolution.Nature.overlap);
             Assert.AreEqual(solution.pathList.Count, 1);
 
-            var path = solution.pathList.GetPath(0, Allocator.Temp).ToArray();
+            var path = solution.pathList.Get(0, Allocator.Temp).ToArray();
             var sample = iGeom.Int(new[] {
                 new Vector2(10,5),
                 new Vector2(0,5),
@@ -689,7 +689,7 @@ namespace Tests.Clipper {
             Assert.AreEqual(solution.nature, SubtractSolution.Nature.overlap);
             Assert.AreEqual(solution.pathList.Count, 1);
 
-            var path = solution.pathList.GetPath(0, Allocator.Temp).ToArray();
+            var path = solution.pathList.Get(0, Allocator.Temp).ToArray();
             var sample = iGeom.Int(new[] {
                 new Vector2(0,-5),
                 new Vector2(0,0),
@@ -714,7 +714,7 @@ namespace Tests.Clipper {
             Assert.AreEqual(solution.nature, SubtractSolution.Nature.overlap);
             Assert.AreEqual(solution.pathList.Count, 1);
 
-            var path = solution.pathList.GetPath(0, Allocator.Temp).ToArray();
+            var path = solution.pathList.Get(0, Allocator.Temp).ToArray();
             var sample = iGeom.Int(new[] {
                 new Vector2(5,-5),
                 new Vector2(5,-10),
@@ -745,7 +745,7 @@ namespace Tests.Clipper {
             Assert.AreEqual(solution.nature, SubtractSolution.Nature.overlap);
             Assert.AreEqual(solution.pathList.Count, 2);
 
-            var path0 = solution.pathList.GetPath(0, Allocator.Temp).ToArray();
+            var path0 = solution.pathList.Get(0, Allocator.Temp).ToArray();
             var sample0 = iGeom.Int(new[] {
                 new Vector2(5,-5),
                 new Vector2(15,-5),
@@ -756,7 +756,7 @@ namespace Tests.Clipper {
 
             Assert.AreEqual(path0, sample0);
 
-            var path1 = solution.pathList.GetPath(1, Allocator.Temp).ToArray();
+            var path1 = solution.pathList.Get(1, Allocator.Temp).ToArray();
             var sample1 = iGeom.Int(new[] {
                 new Vector2(15,5),
                 new Vector2(5,5),
@@ -781,7 +781,7 @@ namespace Tests.Clipper {
             Assert.AreEqual(solution.nature, SubtractSolution.Nature.overlap);
             Assert.AreEqual(solution.pathList.Count, 2);
 
-            var path0 = solution.pathList.GetPath(0, Allocator.Temp).ToArray();
+            var path0 = solution.pathList.Get(0, Allocator.Temp).ToArray();
             var sample0 = iGeom.Int(new[] {
                 new Vector2(15,5),
                 new Vector2(5,5),
@@ -791,7 +791,7 @@ namespace Tests.Clipper {
 
             Assert.AreEqual(path0, sample0);
 
-            var path1 = solution.pathList.GetPath(1, Allocator.Temp).ToArray();
+            var path1 = solution.pathList.Get(1, Allocator.Temp).ToArray();
             var sample1 = iGeom.Int(new[] {
                 new Vector2(5,-5),
                 new Vector2(15,-2.5f),
@@ -817,7 +817,7 @@ namespace Tests.Clipper {
             Assert.AreEqual(solution.nature, SubtractSolution.Nature.overlap);
             Assert.AreEqual(solution.pathList.Count, 2);
 
-            var path0 = solution.pathList.GetPath(0, Allocator.Temp).ToArray();
+            var path0 = solution.pathList.Get(0, Allocator.Temp).ToArray();
             var sample0 = iGeom.Int(new[] {
                 new Vector2(15,5),
                 new Vector2(5,15),
@@ -826,7 +826,7 @@ namespace Tests.Clipper {
 
             Assert.AreEqual(path0, sample0);
 
-            var path1 = solution.pathList.GetPath(1, Allocator.Temp).ToArray();
+            var path1 = solution.pathList.Get(1, Allocator.Temp).ToArray();
             var sample1 = iGeom.Int(new[] {
                 new Vector2(5,-5),
                 new Vector2(5,-10),
@@ -853,7 +853,7 @@ namespace Tests.Clipper {
             Assert.AreEqual(solution.nature, SubtractSolution.Nature.overlap);
             Assert.AreEqual(solution.pathList.Count, 1);
 
-            var path = solution.pathList.GetPath(0, Allocator.Temp).ToArray();
+            var path = solution.pathList.Get(0, Allocator.Temp).ToArray();
             var sample = iGeom.Int(new[] {
                 new Vector2(-10,-5),
                 new Vector2(-10,-10),
@@ -884,7 +884,7 @@ namespace Tests.Clipper {
             Assert.AreEqual(solution.nature, SubtractSolution.Nature.overlap);
             Assert.AreEqual(solution.pathList.Count, 2);
 
-            var path0 = solution.pathList.GetPath(0, Allocator.Temp).ToArray();
+            var path0 = solution.pathList.Get(0, Allocator.Temp).ToArray();
             var sample0 = iGeom.Int(new[] {
                 new Vector2(-10,0),
                 new Vector2(-5,0),
@@ -894,7 +894,7 @@ namespace Tests.Clipper {
 
             Assert.AreEqual(path0, sample0);
 
-            var path1 = solution.pathList.GetPath(1, Allocator.Temp).ToArray();
+            var path1 = solution.pathList.Get(1, Allocator.Temp).ToArray();
             var sample1 = iGeom.Int(new[] {
                 new Vector2(-10,10),
                 new Vector2(-5,10),
@@ -934,7 +934,7 @@ namespace Tests.Clipper {
             Assert.AreEqual(solution.nature, SubtractSolution.Nature.overlap);
             Assert.AreEqual(solution.pathList.Count, 1);
 
-            var path = solution.pathList.GetPath(0, Allocator.Temp).ToArray();
+            var path = solution.pathList.Get(0, Allocator.Temp).ToArray();
             var sample = iGeom.Int(new[] {
                 new Vector2(0,5),
                 new Vector2(-5,5),
@@ -959,7 +959,7 @@ namespace Tests.Clipper {
             Assert.AreEqual(solution.nature, SubtractSolution.Nature.overlap);
             Assert.AreEqual(solution.pathList.Count, 1);
 
-            var path = solution.pathList.GetPath(0, Allocator.Temp).ToArray();
+            var path = solution.pathList.Get(0, Allocator.Temp).ToArray();
             var sample = iGeom.Int(new[] {
                 new Vector2(5,15),
                 new Vector2(5,-5),
@@ -988,7 +988,7 @@ namespace Tests.Clipper {
             Assert.AreEqual(solution.nature, SubtractSolution.Nature.overlap);
             Assert.AreEqual(solution.pathList.Count, 1);
 
-            var path = solution.pathList.GetPath(0, Allocator.Temp).ToArray();
+            var path = solution.pathList.Get(0, Allocator.Temp).ToArray();
             var sample = iGeom.Int(new[] {
                 new Vector2(5,15),
                 new Vector2(5,-5),
@@ -1017,7 +1017,7 @@ namespace Tests.Clipper {
             Assert.AreEqual(solution.nature, SubtractSolution.Nature.overlap);
             Assert.AreEqual(solution.pathList.Count, 2);
 
-            var path0 = solution.pathList.GetPath(0, Allocator.Temp).ToArray();
+            var path0 = solution.pathList.Get(0, Allocator.Temp).ToArray();
             var sample0 = iGeom.Int(new[] {
                 new Vector2(5,20),
                 new Vector2(5,-5),
@@ -1031,7 +1031,7 @@ namespace Tests.Clipper {
 
             Assert.AreEqual(path0, sample0);
 
-            var path1 = solution.pathList.GetPath(1, Allocator.Temp).ToArray();
+            var path1 = solution.pathList.Get(1, Allocator.Temp).ToArray();
             var sample1 = iGeom.Int(new[] {
                 new Vector2(7,-15),
                 new Vector2(-20,-15),
@@ -1058,11 +1058,11 @@ namespace Tests.Clipper {
             Assert.AreEqual(solution.nature, SubtractSolution.Nature.overlap);
             Assert.AreEqual(solution.pathList.Count, 2);
 
-            var path0 = solution.pathList.GetPath(0, Allocator.Temp);
+            var path0 = solution.pathList.Get(0, Allocator.Temp);
             Assert.AreEqual(path0.Length, 9);
             path0.Dispose();
             
-            var path1 = solution.pathList.GetPath(1, Allocator.Temp);
+            var path1 = solution.pathList.Get(1, Allocator.Temp);
             Assert.AreEqual(path1.Length, 6);
             path1.Dispose();
 
@@ -1081,10 +1081,10 @@ namespace Tests.Clipper {
             Assert.AreEqual(solution.nature, SubtractSolution.Nature.overlap);
             Assert.AreEqual(solution.pathList.Count, 2);
 
-            var path0 = solution.pathList.GetPath(0, Allocator.Temp).ToArray();
+            var path0 = solution.pathList.Get(0, Allocator.Temp).ToArray();
             Assert.AreEqual(path0.Length, 4);
 
-            var path1 = solution.pathList.GetPath(1, Allocator.Temp).ToArray();
+            var path1 = solution.pathList.Get(1, Allocator.Temp).ToArray();
             var sample1 = iGeom.Int(new[] {
                 new Vector2(10,-10),
                 new Vector2(10,-5.625f),
@@ -1109,7 +1109,7 @@ namespace Tests.Clipper {
             Assert.AreEqual(solution.nature, SubtractSolution.Nature.overlap);
             Assert.AreEqual(solution.pathList.Count, 2);
 
-            var path0 = solution.pathList.GetPath(0, Allocator.Temp).ToArray();
+            var path0 = solution.pathList.Get(0, Allocator.Temp).ToArray();
             var sample0 = iGeom.Int(new[] {
                 new Vector2(5,0),
                 new Vector2(0,0),
@@ -1119,7 +1119,7 @@ namespace Tests.Clipper {
 
             Assert.AreEqual(path0, sample0);
 
-            var path1 = solution.pathList.GetPath(1, Allocator.Temp).ToArray();
+            var path1 = solution.pathList.Get(1, Allocator.Temp).ToArray();
             var sample1 = iGeom.Int(new[] {
                 new Vector2(-5,10),
                 new Vector2(-5,5),
@@ -1143,7 +1143,7 @@ namespace Tests.Clipper {
             Assert.AreEqual(solution.nature, SubtractSolution.Nature.overlap);
             Assert.AreEqual(solution.pathList.Count, 1);
 
-            var path = solution.pathList.GetPath(0, Allocator.Temp).ToArray();
+            var path = solution.pathList.Get(0, Allocator.Temp).ToArray();
             var sample = iGeom.Int(new[] {
                 new Vector2(5,0),
                 new Vector2(0,0),
@@ -1171,7 +1171,7 @@ namespace Tests.Clipper {
             Assert.AreEqual(solution.nature, SubtractSolution.Nature.overlap);
             Assert.AreEqual(solution.pathList.Count, 5);
 
-            var path0 = solution.pathList.GetPath(0, Allocator.Temp).ToArray();
+            var path0 = solution.pathList.Get(0, Allocator.Temp).ToArray();
             var sample0 = iGeom.Int(new[] {
                 new Vector2(5,0),
                 new Vector2(5,-5),
@@ -1181,7 +1181,7 @@ namespace Tests.Clipper {
 
             Assert.AreEqual(path0, sample0);
 
-            var path1 = solution.pathList.GetPath(1, Allocator.Temp).ToArray();
+            var path1 = solution.pathList.Get(1, Allocator.Temp).ToArray();
             var sample1 = iGeom.Int(new[] {
                 new Vector2(0,10),
                 new Vector2(0,15),
@@ -1191,7 +1191,7 @@ namespace Tests.Clipper {
 
             Assert.AreEqual(path1, sample1);
             
-            var path2 = solution.pathList.GetPath(2, Allocator.Temp).ToArray();
+            var path2 = solution.pathList.Get(2, Allocator.Temp).ToArray();
             var sample2 = iGeom.Int(new[] {
                 new Vector2(-10,10),
                 new Vector2(-10,15),
@@ -1201,7 +1201,7 @@ namespace Tests.Clipper {
 
             Assert.AreEqual(path2, sample2);
             
-            var path3 = solution.pathList.GetPath(3, Allocator.Temp).ToArray();
+            var path3 = solution.pathList.Get(3, Allocator.Temp).ToArray();
             var sample3 = iGeom.Int(new[] {
                 new Vector2(-15,-10),
                 new Vector2(10,-10),
@@ -1212,7 +1212,7 @@ namespace Tests.Clipper {
 
             Assert.AreEqual(path3, sample3);
             
-            var path4 = solution.pathList.GetPath(4, Allocator.Temp).ToArray();
+            var path4 = solution.pathList.Get(4, Allocator.Temp).ToArray();
             var sample4 = iGeom.Int(new[] {
                 new Vector2(10,-5),
                 new Vector2(10,15),
@@ -1238,7 +1238,7 @@ namespace Tests.Clipper {
             Assert.AreEqual(solution.nature, SubtractSolution.Nature.overlap);
             Assert.AreEqual(solution.pathList.Count, 2);
 
-            var path0 = solution.pathList.GetPath(0, Allocator.Temp).ToArray();
+            var path0 = solution.pathList.Get(0, Allocator.Temp).ToArray();
             var sample0 = iGeom.Int(new[] {
                 new Vector2(15,15),
                 new Vector2(5,10),
@@ -1247,7 +1247,7 @@ namespace Tests.Clipper {
 
             Assert.AreEqual(path0, sample0);
 
-            var path1 = solution.pathList.GetPath(1, Allocator.Temp).ToArray();
+            var path1 = solution.pathList.Get(1, Allocator.Temp).ToArray();
             var sample1 = iGeom.Int(new[] {
                 new Vector2(-15,-10),
                 new Vector2(15,-10),
@@ -1287,7 +1287,7 @@ namespace Tests.Clipper {
             Assert.AreEqual(solution.nature, SubtractSolution.Nature.overlap);
             Assert.AreEqual(solution.pathList.Count, 1);
 
-            var path = solution.pathList.GetPath(0, Allocator.Temp).ToArray();
+            var path = solution.pathList.Get(0, Allocator.Temp).ToArray();
             var sample = iGeom.Int(new[] {
                 new Vector2(-5,5),
                 new Vector2(-5,-5),
@@ -1312,7 +1312,7 @@ namespace Tests.Clipper {
             Assert.AreEqual(solution.nature, SubtractSolution.Nature.overlap);
             Assert.AreEqual(solution.pathList.Count, 1);
 
-            var path = solution.pathList.GetPath(0, Allocator.Temp).ToArray();
+            var path = solution.pathList.Get(0, Allocator.Temp).ToArray();
             var sample = iGeom.Int(new[] {
                 new Vector2(-5,5),
                 new Vector2(-5,-5),
@@ -1337,7 +1337,7 @@ namespace Tests.Clipper {
             Assert.AreEqual(solution.nature, SubtractSolution.Nature.overlap);
             Assert.AreEqual(solution.pathList.Count, 1);
 
-            var path = solution.pathList.GetPath(0, Allocator.Temp).ToArray();
+            var path = solution.pathList.Get(0, Allocator.Temp).ToArray();
             var sample = iGeom.Int(new[] {
                 new Vector2(10, 5),
                 new Vector2(0, 5),
@@ -1366,7 +1366,7 @@ namespace Tests.Clipper {
             Assert.AreEqual(solution.nature, SubtractSolution.Nature.overlap);
             Assert.AreEqual(solution.pathList.Count, 1);
 
-            var path = solution.pathList.GetPath(0, Allocator.Temp).ToArray();
+            var path = solution.pathList.Get(0, Allocator.Temp).ToArray();
             var sample = iGeom.Int(new[] {
                 new Vector2(-10, -5),
                 new Vector2(-5, -5),

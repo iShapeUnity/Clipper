@@ -1,55 +1,25 @@
-using iShape.Clipper.Collision;
 using iShape.Clipper.Collision.Navigation;
 using iShape.Clipper.Collision.Primitive;
 using iShape.Collections;
 using iShape.Geometry;
+using iShape.Geometry.Container;
 using Unity.Collections;
 
 namespace iShape.Clipper.Solver {
 
     public static class IntersectSolver {
-        
-        public static SubtractSolution Intersect(
-            this NativeArray<IntVector> master, NativeArray<IntVector> slave,
-            IntGeom iGeom, Allocator allocator
-        ) {
-            var navigator = CrossDetector.FindPins(master, slave, iGeom, PinPoint.PinType.in_out);
 
-            PlainPathList pathList;
-            if (navigator.isEqual) {
-                pathList = new PlainPathList(0, allocator);
-                return new SubtractSolution(pathList, SubtractSolution.Nature.empty);
-            }
-
-            var filterNavigator = new FilterNavigator(navigator, PinPoint.PinType.inside, PinPoint.PinType.out_in, Allocator.Temp);
-
-            var cursor = filterNavigator.First();
-
-            if (cursor.isEmpty) {
-                return new SubtractSolution(new PlainPathList(0, allocator), SubtractSolution.Nature.notOverlap);
-            }
-
-            pathList = Intersect(filterNavigator, master, slave, allocator);
-
-            navigator.Dispose();
-
-            var nature = pathList.Count > 0 ? SubtractSolution.Nature.overlap : SubtractSolution.Nature.notOverlap;
-
-            return new SubtractSolution(pathList, nature);
-        }
-
-
-        internal static PlainPathList Intersect(
+        internal static PlainShape Intersect(
             FilterNavigator filterNavigator, NativeArray<IntVector> master,
             NativeArray<IntVector> slave, Allocator allocator
         ) {
             var cursor = filterNavigator.Next();
-            var pathList = new PlainPathList(1, allocator);
 
             if (cursor.isEmpty || cursor.type != PinPoint.PinType.inside) {
-                pathList.Add(slave, false);
-                return pathList;
+                return new PlainShape(slave, false, allocator);
             }
+            
+            var pathList = new DynamicPlainShape();
             
             int masterCount = master.Length;
             int masterLastIndex = masterCount - 1;
@@ -184,7 +154,7 @@ namespace iShape.Clipper.Solver {
                 cursor = filterNavigator.Next();
             }
 
-            return pathList;
+            return pathList.Convert();
         }
 
         private static Cursor nextSlaveOut(this ref PinNavigator self, Cursor cursor) {
