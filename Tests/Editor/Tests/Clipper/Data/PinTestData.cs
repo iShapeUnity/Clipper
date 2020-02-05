@@ -402,36 +402,6 @@ namespace Tests.Clipper.Data {
                     new Vector2(-20, 10),
                     new Vector2(-20, 0)
                 }
-            },
-            // 27
-            new[] {
-                new[] {
-                    new Vector2(-10, 10),
-                    new Vector2(10, 10),
-                    new Vector2(10, 0),
-                    new Vector2(-10, 0)
-                },
-                new[] {
-                    new Vector2(-15, -30),
-                    new Vector2(-15, 30),
-                    new Vector2(10 - IntGeom.DefGeom.Float(1), 30),
-                    new Vector2(10 + IntGeom.DefGeom.Float(1), -30)
-                }
-            },
-            // 28
-            new[] {
-                new[] {
-                    new Vector2(-10, 10),
-                    new Vector2(10, 10),
-                    new Vector2(10, -10),
-                    new Vector2(-10, -10)
-                },
-                new[] {
-                    new Vector2(-15, -30),
-                    new Vector2(-15, 30),
-                    new Vector2(10 - IntGeom.DefGeom.Float(1), 30),
-                    new Vector2(10 + IntGeom.DefGeom.Float(1), -30)
-                }
             }
         };
     }
