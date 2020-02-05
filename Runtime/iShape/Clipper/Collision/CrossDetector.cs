@@ -255,25 +255,25 @@ namespace iShape.Clipper.Collision {
             DynamicArray<PinPath> pinPaths;
             var hasExclusion = false;
             if (endsCount > 0) {
-                pinPaths = CrossDetector.Organize(ref pinPoints, masterCount, slaveCount, Allocator.Temp);
+                pinPaths = Organize(ref pinPoints, masterCount, slaveCount, Allocator.Temp);
                 if (pinPaths.Count > 0) {
                     // test for same shapes
                     if (pinPaths.Count == 1 && iMaster.Length == iSlave.Length && pinPaths[0].isClosed) {
                         return new PinNavigator();
                     }
 
-                    hasExclusion = CrossDetector.RemoveExclusion(ref pinPaths, exclusionPinType);
+                    hasExclusion = RemoveExclusion(ref pinPaths, exclusionPinType);
                 }
             } else {
                 pinPaths = new DynamicArray<PinPath>(0, Allocator.Temp);
             }
 
             if (pinPoints.Count > 0) {
-                bool pinExclusion = CrossDetector.RemoveExclusion(ref pinPoints, exclusionPinType);
+                bool pinExclusion = RemoveExclusion(ref pinPoints, exclusionPinType);
                 hasExclusion = pinExclusion || hasExclusion;
             }
 
-            var navigator = CrossDetector.BuildNavigator(ref pinPoints, ref pinPaths, iMaster.Length, hasExclusion);
+            var navigator = BuildNavigator(ref pinPoints, ref pinPaths, iMaster.Length, hasExclusion);
 
             return navigator;
         }
