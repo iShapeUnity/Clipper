@@ -1,6 +1,5 @@
 using iShape.Clipper.Collision;
 using iShape.Clipper.Collision.Primitive;
-using iShape.Clipper.Shape;
 using iShape.Clipper.Util;
 using iShape.Geometry;
 using iShape.Geometry.Container;
@@ -10,10 +9,36 @@ namespace iShape.Clipper.Solver {
 
     public static class RootSolver {
         
-        public static SubtractSolution Intersect(
-            this NativeArray<IntVector> master, NativeArray<IntVector> slave,
-            IntGeom iGeom, Allocator allocator
-        ) {
+        public static CutSolution Cut(this NativeArray<IntVector> master, NativeArray<IntVector> slave, IntGeom iGeom, Allocator allocator) {
+            var navigator = CrossDetector.FindPins(master, slave, iGeom, PinPoint.PinType.in_out);
+
+            if (navigator.isEqual) {
+                return new CutSolution(new PlainShape(allocator), new PlainShape(allocator), SubtractSolution.Nature.empty);
+            }
+
+            var filterNavigator = new FilterNavigator(navigator, PinPoint.PinType.inside, PinPoint.PinType.out_in, Allocator.Temp);
+
+            var cursor = filterNavigator.First();
+
+            if (cursor.isEmpty) {
+                if (master.IsContain(slave, false)) {
+                    return new CutSolution(new PlainShape(allocator), new PlainShape(allocator), SubtractSolution.Nature.hole);
+                } else {
+                    return new CutSolution(new PlainShape(allocator), new PlainShape(allocator), SubtractSolution.Nature.empty);
+                }
+            }
+
+            var restPathList = SubtractSolver.Subtract(filterNavigator, master, slave, allocator);
+            var bitePathList = IntersectSolver.Intersect(filterNavigator, master, slave, allocator);
+
+            if (restPathList.layouts.Length > 0) {
+                return new CutSolution(restPathList, bitePathList, nature: SubtractSolution.Nature.overlap);
+            } else {
+                return new CutSolution(restPathList, bitePathList, nature: SubtractSolution.Nature.notOverlap);
+            }
+        }
+        
+        public static SubtractSolution Intersect(this NativeArray<IntVector> master, NativeArray<IntVector> slave, IntGeom iGeom, Allocator allocator) {
             var navigator = CrossDetector.FindPins(master, slave, iGeom, PinPoint.PinType.in_out);
 
             if (navigator.isEqual) {
@@ -36,11 +61,8 @@ namespace iShape.Clipper.Solver {
 
             return new SubtractSolution(pathList, nature);
         }
-        
-        public static SubtractSolution Subtract(
-            this NativeArray<IntVector> master, NativeArray<IntVector> slave,
-            IntGeom iGeom, Allocator allocator
-        ) {
+
+        public static SubtractSolution Subtract(this NativeArray<IntVector> master, NativeArray<IntVector> slave, IntGeom iGeom, Allocator allocator) {
             var navigator = CrossDetector.FindPins(master, slave, iGeom, PinPoint.PinType.in_out);
 
             if (navigator.isEqual) {
@@ -63,11 +85,8 @@ namespace iShape.Clipper.Solver {
 
             return new SubtractSolution(pathList, nature);
         }
-        
-                public static UnionSolution Union(
-            this NativeArray<IntVector> master, NativeArray<IntVector> slave,
-            IntGeom iGeom, Allocator allocator
-        ) {
+
+        public static UnionSolution Union(this NativeArray<IntVector> master, NativeArray<IntVector> slave, IntGeom iGeom, Allocator allocator) {
             var navigator = CrossDetector.FindPins(master, slave, iGeom, PinPoint.PinType.out_in);
 
             if (navigator.isEqual) {
@@ -99,14 +118,13 @@ namespace iShape.Clipper.Solver {
             }
 
             var pathList = UnionSolver.Union(filterNavigator, master, slave, allocator);
-            
+
             navigator.Dispose();
 
             var nature = pathList.layouts.Length > 0 ? UnionSolution.Nature.overlap : UnionSolution.Nature.notOverlap;
 
             return new UnionSolution(pathList, nature);
         }
-        
     }
 
 }
