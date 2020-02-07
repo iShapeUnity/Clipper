@@ -1,3 +1,4 @@
+using iShape.Clipper.Util;
 using iShape.Collections;
 using iShape.Geometry;
 using iShape.Geometry.Container;
@@ -22,6 +23,9 @@ namespace iShape.Clipper.Solver {
                 case SubtractSolution.Nature.overlap:
                     return self.OverlapCase(cutHullSolution, iGeom, allocator);
             }
+            
+            // impossible case
+            return new BiteSolution(new PlainShapeList(allocator), new PlainShapeList(allocator), false);
         }
 
         // если дыра находится внутри полигона
@@ -206,7 +210,7 @@ namespace iShape.Clipper.Solver {
             }
 
             if (islands.layouts.Count == 0) {
-                var mainShape = new DynamicPlainShape(self.Get(0, allocator), allocator);
+                var mainShape = new DynamicPlainShape(self.Get(0, allocator), true, allocator);
                 mainShape.Add(rootHole, true);
                 i = 0;
                 while (i < notInteractedHoles.Count) {
@@ -271,7 +275,7 @@ namespace iShape.Clipper.Solver {
                 i += 1;
             } while (i < islands.layouts.Count);
 
-            var rootShape = new DynamicPlainShape(self.Get(0, allocator), allocator);
+            var rootShape = new DynamicPlainShape(self.Get(0, allocator), true, allocator);
             rootHole.Reverse();
             rootShape.Add(rootHole, false);
 
@@ -288,7 +292,7 @@ namespace iShape.Clipper.Solver {
             return shapeParts.Convert();
         }
 
-        private static PlainShapeList holeCaseBiteList(this PlainShape self, NativeArray<IntVector> cutPath, IntGeom iGeom, Allocator allocator) {
+        private static PlainShapeList HoleCaseBiteList(this PlainShape self, NativeArray<IntVector> cutPath, IntGeom iGeom, Allocator allocator) {
             var subPaths = new DynamicPlainShape(cutPath.Reverse(), true, allocator);
             return self.BiteList(ref subPaths, iGeom, allocator);
         }
@@ -317,14 +321,14 @@ namespace iShape.Clipper.Solver {
                                 if (solution.pathList.layouts[k].isClockWise) {
                                     var subPath = solution.pathList.Get(k, allocator);
                                     if (newSubPathCount == 0) {
-                                        subPaths.Replace(j, subPath);
+                                        subPaths.ReplaceAt(j, subPath);
                                     } else {
                                         subPaths.Add(subPath, true);
                                     }
 
                                     newSubPathCount += 1;
                                 } else {
-                                    var holePath = solution.pathList.Get(k);
+                                    var holePath = solution.pathList.Get(k, allocator);
                                     holes.Add(holePath, false);
                                 }
                             }

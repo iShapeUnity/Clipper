@@ -10,7 +10,7 @@ namespace iShape.Clipper.Solver {
     public static class RootSolver {
         
         public static CutSolution Cut(this NativeArray<IntVector> master, NativeArray<IntVector> slave, IntGeom iGeom, Allocator allocator) {
-            var navigator = CrossDetector.FindPins(master, slave, iGeom, PinPoint.PinType.in_out);
+            var navigator = CrossDetector.FindPins(master, slave, iGeom, PinPoint.PinType.in_out, allocator);
 
             if (navigator.isEqual) {
                 return new CutSolution(new PlainShape(allocator), new PlainShape(allocator), SubtractSolution.Nature.empty);
@@ -39,7 +39,7 @@ namespace iShape.Clipper.Solver {
         }
         
         public static SubtractSolution Intersect(this NativeArray<IntVector> master, NativeArray<IntVector> slave, IntGeom iGeom, Allocator allocator) {
-            var navigator = CrossDetector.FindPins(master, slave, iGeom, PinPoint.PinType.in_out);
+            var navigator = CrossDetector.FindPins(master, slave, iGeom, PinPoint.PinType.in_out, allocator);
 
             if (navigator.isEqual) {
                 return new SubtractSolution(new PlainShape(allocator), SubtractSolution.Nature.empty);
@@ -63,7 +63,7 @@ namespace iShape.Clipper.Solver {
         }
 
         public static SubtractSolution Subtract(this NativeArray<IntVector> master, NativeArray<IntVector> slave, IntGeom iGeom, Allocator allocator) {
-            var navigator = CrossDetector.FindPins(master, slave, iGeom, PinPoint.PinType.in_out);
+            var navigator = CrossDetector.FindPins(master, slave, iGeom, PinPoint.PinType.in_out, allocator);
 
             if (navigator.isEqual) {
                 return new SubtractSolution(new PlainShape(allocator), SubtractSolution.Nature.empty);
@@ -87,7 +87,7 @@ namespace iShape.Clipper.Solver {
         }
 
         public static UnionSolution Union(this NativeArray<IntVector> master, NativeArray<IntVector> slave, IntGeom iGeom, Allocator allocator) {
-            var navigator = CrossDetector.FindPins(master, slave, iGeom, PinPoint.PinType.out_in);
+            var navigator = CrossDetector.FindPins(master, slave, iGeom, PinPoint.PinType.out_in, allocator);
 
             if (navigator.isEqual) {
                 return new UnionSolution(new PlainShape(master, true, allocator), UnionSolution.Nature.overlap);

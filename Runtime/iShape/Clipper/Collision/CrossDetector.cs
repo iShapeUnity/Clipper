@@ -8,15 +8,15 @@ using Unity.Collections;
 namespace iShape.Clipper.Collision {
 
     public struct CrossDetector {
-        public static PinNavigator FindPins(NativeArray<IntVector> iMaster, NativeArray<IntVector> iSlave, IntGeom iGeom, PinPoint.PinType exclusionPinType) {
-            var posMatrix = CreatePossibilityMatrix(iMaster, iSlave, Allocator.Temp);
+        public static PinNavigator FindPins(NativeArray<IntVector> iMaster, NativeArray<IntVector> iSlave, IntGeom iGeom, PinPoint.PinType exclusionPinType, Allocator allocator) {
+            var posMatrix = CreatePossibilityMatrix(iMaster, iSlave, allocator);
 
-            var masterIndices = posMatrix.masterIndices.ToArray(Allocator.Temp);
-            var slaveIndices = posMatrix.slaveIndices.ToArray(Allocator.Temp);
+            var masterIndices = posMatrix.masterIndices.ToArray(allocator);
+            var slaveIndices = posMatrix.slaveIndices.ToArray(allocator);
 
             posMatrix.Dispose();
 
-            var pinPoints = new DynamicArray<PinPoint>(0, Allocator.Temp);
+            var pinPoints = new DynamicArray<PinPoint>(0, allocator);
 
             int masterCount = iMaster.Length;
             int slaveCount = iSlave.Length;
@@ -252,20 +252,27 @@ namespace iShape.Clipper.Collision {
                 i = j;
             }
 
+            masterIndices.Dispose();
+            slaveIndices.Dispose();
+
             DynamicArray<PinPath> pinPaths;
             var hasExclusion = false;
             if (endsCount > 0) {
-                pinPaths = Organize(ref pinPoints, masterCount, slaveCount, Allocator.Temp);
+                pinPaths = Organize(ref pinPoints, masterCount, slaveCount, allocator);
                 if (pinPaths.Count > 0) {
                     // test for same shapes
                     if (pinPaths.Count == 1 && iMaster.Length == iSlave.Length && pinPaths[0].isClosed) {
+                        
+                        pinPoints.Dispose();
+                        pinPaths.Dispose();
+                        
                         return new PinNavigator(true);
                     }
 
                     hasExclusion = RemoveExclusion(ref pinPaths, exclusionPinType);
                 }
             } else {
-                pinPaths = new DynamicArray<PinPath>(0, Allocator.Temp);
+                pinPaths = new DynamicArray<PinPath>(0, allocator);
             }
 
             if (pinPoints.Count > 0) {
@@ -273,15 +280,18 @@ namespace iShape.Clipper.Collision {
                 hasExclusion = pinExclusion || hasExclusion;
             }
 
-            var navigator = BuildNavigator(ref pinPoints, ref pinPaths, iMaster.Length, hasExclusion);
+            var navigator = BuildNavigator(ref pinPoints, ref pinPaths, iMaster.Length, hasExclusion, allocator);
 
+            pinPoints.Dispose();
+            pinPaths.Dispose();
+            
             return navigator;
         }
 
         private static AdjacencyMatrix CreatePossibilityMatrix(NativeArray<IntVector> master, NativeArray<IntVector> slave, Allocator allocator) {
             var slaveBoxArea = new Util.Rect(long.MaxValue, long.MaxValue, long.MinValue, long.MinValue);
 
-            var slaveSegmentsBoxAreas = new DynamicArray<Util.Rect>(8, Allocator.Temp);
+            var slaveSegmentsBoxAreas = new DynamicArray<Util.Rect>(8, allocator);
 
             int lastSlaveIndex = slave.Length - 1;
 
@@ -326,7 +336,7 @@ namespace iShape.Clipper.Collision {
         private static DynamicArray<PinPath> Organize(ref DynamicArray<PinPoint> pinPoints, int masterCount, int slaveCount, Allocator allocator) {
             pinPoints.SortByMaster();
             
-            RemoveDoubles(ref pinPoints);
+            RemoveDoubles(ref pinPoints, allocator);
 
             if (pinPoints.Count > 1) {
                 return FindEdges(ref pinPoints, masterCount, slaveCount, allocator);
@@ -335,11 +345,11 @@ namespace iShape.Clipper.Collision {
             return new DynamicArray<PinPath>(0, allocator);
         }
 
-        private static void RemoveDoubles(ref DynamicArray<PinPoint> pinPoints) {
+        private static void RemoveDoubles(ref DynamicArray<PinPoint> pinPoints, Allocator allocator) {
             int n = pinPoints.Count;
             var a = pinPoints[0];
             var i = 1;
-            var removeIndex = new DynamicArray<int>(n >> 1, Allocator.Temp);
+            var removeIndex = new DynamicArray<int>(n >> 1, allocator);
             while (i < n) {
                 var b = pinPoints[i];
                 if (a == b) {
@@ -357,10 +367,12 @@ namespace iShape.Clipper.Collision {
                     j -= 1;
                 }
             }
+            
+            removeIndex.Dispose();
         }
 
         private static DynamicArray<PinPath> FindEdges(ref DynamicArray<PinPoint> pinPoints, int masterCount, int slaveCount, Allocator allocator) {
-            var edges = new DynamicArray<PinEdge>(8, Allocator.Temp);
+            var edges = new DynamicArray<PinEdge>(8, allocator);
             int n = pinPoints.Count;
 
             var isPrevEdge = false;
@@ -369,7 +381,7 @@ namespace iShape.Clipper.Collision {
             int j = n - 1;
 
             var a = pinPoints[j];
-            var removeMark = new NativeArray<bool>(n, Allocator.Temp);
+            var removeMark = new NativeArray<bool>(n, allocator);
 
             while (i < n) {
                 var b = pinPoints[i];
@@ -380,15 +392,14 @@ namespace iShape.Clipper.Collision {
                 bool isSameMaster = aMi == bMi || b.masterMileStone.offset == 0 && (aMi + 1) % masterCount == bMi;
 
                 if (isSameMaster &&
-                    CrossDetector.IsDirect(a.masterMileStone, b.masterMileStone, masterCount) &&
-                    CrossDetector.Same(a.slaveMileStone, b.slaveMileStone, slaveCount)) {
+                    IsDirect(a.masterMileStone, b.masterMileStone, masterCount) &&
+                    Same(a.slaveMileStone, b.slaveMileStone, slaveCount)) {
                     if (isPrevEdge) {
                         var prevEdge = edges[edges.Count - 1];
                         prevEdge.v1 = b;
                         edges[edges.Count - 1] = prevEdge;
                     } else {
-                        bool isDirectSlave =
-                            CrossDetector.IsDirect(a.slaveMileStone, b.slaveMileStone, slaveCount);
+                        bool isDirectSlave = IsDirect(a.slaveMileStone, b.slaveMileStone, slaveCount);
                         edges.Add(new PinEdge(a, b, isDirectSlave));
                     }
 
@@ -434,6 +445,9 @@ namespace iShape.Clipper.Collision {
             } else {
                 pinPaths = new DynamicArray<PinPath>(0, allocator);
             }
+
+            edges.Dispose();
+            removeMark.Dispose();
 
             return pinPaths;
         }
@@ -495,14 +509,15 @@ namespace iShape.Clipper.Collision {
         }
 
         /// Build  Navigator section
-        private static PinNavigator BuildNavigator(ref DynamicArray<PinPoint> pinPointArray, ref DynamicArray<PinPath> pinPathArray, int masterCount, bool hasExclusion) {
-            var handlerArray = new DynamicArray<PinHandler>(pinPathArray.Count + pinPointArray.Count, Allocator.Temp);
+        private static PinNavigator BuildNavigator(ref DynamicArray<PinPoint> pinPointArray, ref DynamicArray<PinPath> pinPathArray, int masterCount, bool hasExclusion, Allocator allocator) {
+            var handlerArray = new DynamicArray<PinHandler>(pinPathArray.Count + pinPointArray.Count, allocator);
             int i = 0;
             while (i < pinPathArray.Count) {
                 var path = pinPathArray[i];
-                var pathHandlers = path.Extract(i, masterCount, Allocator.Temp);
+                var pathHandlers = path.Extract(i, masterCount, allocator);
                 handlerArray.Add(pathHandlers);
-
+                pathHandlers.Dispose();
+                
                 i += 1;
             }
 
@@ -515,34 +530,36 @@ namespace iShape.Clipper.Collision {
             bool hasContacts = hasExclusion || handlerArray.Count > 0;
 
             if (handlerArray.Count == 0) {
+                handlerArray.Dispose();
                 return new PinNavigator(
-                    new NativeArray<int>(0, Allocator.Temp),
-                    new NativeArray<PinPath>(0, Allocator.Temp),
-                    new NativeArray<PinPoint>(0, Allocator.Temp),
-                    new NativeArray<PinNode>(0, Allocator.Temp),
+                    new NativeArray<int>(0, allocator),
+                    new NativeArray<PinPath>(0, allocator),
+                    new NativeArray<PinPoint>(0, allocator),
+                    new NativeArray<PinNode>(0, allocator),
                     hasContacts
                 );
             }
 
             if (pinPathArray.Count > 0) {
-                Compact(ref handlerArray, ref pinPointArray, ref pinPathArray);
+                Compact(ref handlerArray, ref pinPointArray, ref pinPathArray, allocator);
             }
 
             if (handlerArray.Count == 0) {
+                handlerArray.Dispose();
                 return new PinNavigator(
-                    new NativeArray<int>(0, Allocator.Temp),
-                    new NativeArray<PinPath>(0, Allocator.Temp),
-                    new NativeArray<PinPoint>(0, Allocator.Temp),
-                    new NativeArray<PinNode>(0, Allocator.Temp),
+                    new NativeArray<int>(0, allocator),
+                    new NativeArray<PinPath>(0, allocator),
+                    new NativeArray<PinPoint>(0, allocator),
+                    new NativeArray<PinNode>(0, allocator),
                     hasContacts
                 );
             }
 
-            var slavePath = Streamline(ref handlerArray, pinPointArray, pinPathArray);
+            var slavePath = Streamline(ref handlerArray, pinPointArray, pinPathArray, allocator);
 
             int n = slavePath.Length;
 
-            var nodes = new NativeArray<PinNode>(n, Allocator.Temp);
+            var nodes = new NativeArray<PinNode>(n, allocator);
             for (int j = 0; j < n; ++j) {
                 var node = nodes[j];
                 var handler = handlerArray[j];
@@ -556,15 +573,17 @@ namespace iShape.Clipper.Collision {
                 node.slaveIndex = j;
                 nodes[slaveIndex] = node;
             }
+            
+            handlerArray.Dispose();
 
-            return new PinNavigator(slavePath, pinPathArray.Convert(), pinPointArray.Convert(), nodes, hasContacts);
+            return new PinNavigator(slavePath, pinPathArray.ToArray(allocator), pinPointArray.ToArray(allocator), nodes, hasContacts);
         }
 
-        private static void Compact(ref DynamicArray<PinHandler> handlerArray, ref DynamicArray<PinPoint> pinPointArray, ref DynamicArray<PinPath> pinPathArray) {
+        private static void Compact(ref DynamicArray<PinHandler> handlerArray, ref DynamicArray<PinPoint> pinPointArray, ref DynamicArray<PinPath> pinPathArray, Allocator allocator) {
             
-            var paths = new DynamicArray<PinPath>(pinPathArray.Count, Allocator.Temp);
-            var points = new DynamicArray<PinPoint>(pinPointArray.Count, Allocator.Temp);
-            var handlers = new DynamicArray<PinHandler>(Allocator.Temp);
+            var paths = new DynamicArray<PinPath>(pinPathArray.Count, allocator);
+            var points = new DynamicArray<PinPoint>(pinPointArray.Count, allocator);
+            var handlers = new DynamicArray<PinHandler>(allocator);
 
             int n = handlerArray.Count;
             for (int i = 0; i < n; ++i) {
@@ -587,17 +606,21 @@ namespace iShape.Clipper.Collision {
                 }
             }
 
+            pinPathArray.Dispose();
+            pinPointArray.Dispose();
+            handlerArray.Dispose();
+            
             pinPathArray = paths;
             pinPointArray = points;
             handlerArray = handlers;
         }
 
-        private static NativeArray<int> Streamline(ref DynamicArray<PinHandler> handlerArray, DynamicArray<PinPoint> pinPointArray, DynamicArray<PinPath> pinPathArray) {
+        private static NativeArray<int> Streamline(ref DynamicArray<PinHandler> handlerArray, DynamicArray<PinPoint> pinPointArray, DynamicArray<PinPath> pinPathArray, Allocator allocator) {
             handlerArray.SortByMaster();
             
             int n = handlerArray.Count;
 
-            var iStones = new NativeArray<IndexMileStone>(n, Allocator.Temp);
+            var iStones = new NativeArray<IndexMileStone>(n, allocator);
 
             for (int j = 0; j < n; ++j) {
                 var handler = handlerArray[j];
@@ -613,11 +636,13 @@ namespace iShape.Clipper.Collision {
             
             iStones.Sort();
 
-            var indexArray = new NativeArray<int>(n, Allocator.Temp);
+            var indexArray = new NativeArray<int>(n, allocator);
 
             for (int j = 0; j < n; ++j) {
                 indexArray[j] = iStones[j].index;
             }
+
+            iStones.Dispose();
 
             return indexArray;
         }
