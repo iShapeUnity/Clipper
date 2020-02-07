@@ -43,6 +43,11 @@ namespace iShape.Clipper.Solver {
             }
         }
 
+        internal void Dispose() {
+            this.navigator.Dispose();
+            this.nextCursors.Dispose();
+        }
+
         private static NativeArray<Cursor> getCursors(PinNavigator navigator, PinPoint.PinType primary, PinPoint.PinType secondary, Allocator allocator) {
             var n = navigator.nodeArray.Length;
             var cursors = new DynamicArray<Cursor>(n, Allocator.Temp);
