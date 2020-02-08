@@ -12,6 +12,11 @@ namespace iShape.Clipper.Solver {
             this.bitePathList = bitePathList;
             this.nature = nature;
         }
+
+        public void Dispose() {
+            this.restPathList.Dispose();
+            this.bitePathList.Dispose();            
+        }
     }
 
 }
