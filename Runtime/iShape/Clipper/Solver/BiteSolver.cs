@@ -9,7 +9,7 @@ namespace iShape.Clipper.Solver {
     public static class CutSolver {
         private const Allocator tempAllocator = Allocator.TempJob;
 
-        public static BiteSolution Cut(this PlainShape self, NativeArray<IntVector> path, IntGeom iGeom, Allocator allocator) {
+        public static BiteSolution Bite(this PlainShape self, NativeArray<IntVector> path, IntGeom iGeom, Allocator allocator) {
             var hull = self.Get(0, Allocator.Temp);
 
             var cutSolution = hull.Cut(path, iGeom, tempAllocator);
@@ -148,7 +148,7 @@ namespace iShape.Clipper.Solver {
                         int index = usedHoles[k];
                         int holeIndex = holes[index];
                         var hole = self.Get(holeIndex, tempAllocator);
-                        islandShape.Add(hole, true);
+                        islandShape.Add(hole, false);
                     }
                 }
                 usedHoles.Dispose();
@@ -252,12 +252,12 @@ namespace iShape.Clipper.Solver {
 
             if (islands.layouts.Count == 0) {
                 var mainShape = self.Get(0, allocator).ToDynamicShape(true, allocator);
-                mainShape.Add(rootHole, true);
+                mainShape.Add(rootHole, false);
                 i = 0;
                 while (i < notInteractedHoles.Count) {
                     int index = notInteractedHoles[i];
                     var hole = self.Get(index, tempAllocator);
-                    mainShape.Add(hole, true);
+                    mainShape.Add(hole, false);
                 }
                 
                 // return
@@ -355,7 +355,7 @@ namespace iShape.Clipper.Solver {
                 for (int j = 0; j < notInteractedHoles.Count; ++j) {
                     int index = notInteractedHoles[j];
                     var hole = self.Get(index, tempAllocator);
-                    rootShape.Add(hole, true);
+                    rootShape.Add(hole, false);
                 }
             }
 
@@ -453,7 +453,7 @@ namespace iShape.Clipper.Solver {
                 for (int j = 0; j < holes.layouts.Count; ++j) {
                     var hole = holes.Get(j, allocator);
                     if (subPath.IsContain(hole, false)) {
-                        subShape.Add(hole, true);
+                        subShape.Add(hole, false);
                     }
                 }
 
