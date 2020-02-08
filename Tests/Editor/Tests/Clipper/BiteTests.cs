@@ -7,7 +7,7 @@ using UnityEngine;
 
 namespace Tests.Clipper {
 
-    public class CutTests {
+    public class BiteTests {
         
         private IntGeom iGeom = IntGeom.DefGeom;
 
