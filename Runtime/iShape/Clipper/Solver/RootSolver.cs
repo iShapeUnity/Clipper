@@ -82,7 +82,18 @@ namespace iShape.Clipper.Solver {
 
             if (cursor.isEmpty) {
                 filterNavigator.Dispose();
-                return new SubtractSolution(new PlainShape(allocator), SubtractSolution.Nature.notOverlap);
+                bool isSlaveHole = master.IsContain(slave, false);
+                // TODO add tests for this cases
+                if (isSlaveHole) {
+                    return new SubtractSolution(new PlainShape(allocator), SubtractSolution.Nature.hole);
+                } else {
+                    bool isMasterHole = slave.IsContain(master, true);
+                    if (isMasterHole) {
+                        return new SubtractSolution(new PlainShape(allocator), SubtractSolution.Nature.empty);
+                    } else {
+                        return new SubtractSolution(new PlainShape(allocator), SubtractSolution.Nature.notOverlap);
+                    }
+                }
             }
 
             var pathList = SubtractSolver.Subtract(filterNavigator, master, slave, allocator);

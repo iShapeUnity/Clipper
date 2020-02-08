@@ -10,9 +10,11 @@ namespace iShape.Clipper.Solver {
         private const Allocator tempAllocator = Allocator.TempJob;
 
         public static BiteSolution Bite(this PlainShape self, NativeArray<IntVector> path, IntGeom iGeom, Allocator allocator) {
-            var hull = self.Get(0, Allocator.Temp);
+            var hull = self.Get(0, tempAllocator);
 
             var cutSolution = hull.Cut(path, iGeom, tempAllocator);
+            hull.Dispose();
+            
             BiteSolution biteSolution;
 
             switch (cutSolution.nature) {
@@ -277,7 +279,7 @@ namespace iShape.Clipper.Solver {
             do {
                 // must be direct in a clockwise direction
                 var island = islands.Get(i, tempAllocator);
-                var islandHoles = new DynamicArray<int>(Allocator.Temp);
+                var islandHoles = new DynamicArray<int>(tempAllocator);
                 for (int j = 0; j < interactedHoles.Count; ++j) {
                     int index = interactedHoles[j];
                     var hole = self.Get(index, tempAllocator);
@@ -300,8 +302,7 @@ namespace iShape.Clipper.Solver {
                             // not touche
                             // goto
                             subtractSolution.Dispose();
-                            
-                            goto endHoles;
+                            continue;
                         case SubtractSolution.Nature.overlap:
                             island.Dispose();
                             island = subtractSolution.pathList.Get(0, tempAllocator);
@@ -322,7 +323,6 @@ namespace iShape.Clipper.Solver {
                     
                 }
 
-                endHoles:
                 var islandShape = island.ToDynamicShape(true, tempAllocator);
                 if (islandHoles.Count > 0) {
                     for (int k = 0; k < islandHoles.Count; ++k) {
