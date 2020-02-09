@@ -9,10 +9,7 @@ namespace iShape.Clipper.Solver {
 
     public static class SubtractSolver {
 
-        internal static PlainShape Subtract(
-            FilterNavigator filterNavigator, NativeArray<IntVector> master,
-            NativeArray<IntVector> slave, Allocator allocator
-        ) {
+        internal static PlainShape Subtract(FilterNavigator filterNavigator, NativeArray<IntVector> master, NativeArray<IntVector> slave, Allocator allocator) {
             var cursor = filterNavigator.Next();
             var pathList = new DynamicPlainShape(allocator);
 
