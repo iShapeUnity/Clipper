@@ -8,19 +8,15 @@ using Unity.Collections;
 namespace iShape.Clipper.Solver {
 
     public static class IntersectSolver {
-
-        internal static PlainShape Intersect(
-            FilterNavigator filterNavigator, NativeArray<IntVector> master,
-            NativeArray<IntVector> slave, Allocator allocator
-        ) {
+        internal static PlainShape Intersect(FilterNavigator filterNavigator, NativeArray<IntVector> master, NativeArray<IntVector> slave, Allocator allocator) {
             var cursor = filterNavigator.Next();
 
             if (cursor.isEmpty || cursor.type != PinPoint.PinType.inside) {
                 return new PlainShape(slave, false, allocator);
             }
-            
+
             var pathList = new DynamicPlainShape(allocator);
-            
+
             int masterCount = master.Length;
             int masterLastIndex = masterCount - 1;
 
@@ -101,7 +97,7 @@ namespace iShape.Clipper.Solver {
 
                     bool isOutMasterNotOverflow;
                     int outMasterIndex;
-                
+
                     if (outMasterEnd.offset != 0) {
                         isOutMasterNotOverflow = true;
                         outMasterIndex = outMasterEnd.index;
@@ -117,7 +113,7 @@ namespace iShape.Clipper.Solver {
 
                     bool isInMasterNotOverflow;
                     int inMasterIndex;
-                
+
                     if (inMasterStart.index + 1 < masterCount) {
                         isInMasterNotOverflow = true;
                         inMasterIndex = inMasterStart.index + 1;
@@ -133,6 +129,7 @@ namespace iShape.Clipper.Solver {
                             path.Add(sliceB);
                             sliceB.Dispose();
                         }
+
                         if (isInMasterNotOverflow) {
                             var sliceA = master.Slice(inMasterIndex, masterLastIndex - inMasterIndex + 1).Reversed(Allocator.Temp);
                             path.Add(sliceA);
