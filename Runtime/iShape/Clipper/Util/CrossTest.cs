@@ -5,6 +5,7 @@ using Unity.Collections;
 namespace iShape.Clipper.Util {
 
     public static class CrossTest {
+        
         public static bool IsSelfIntersected(this NativeArray<IntVector> points) {
             int n = points.Length;
 

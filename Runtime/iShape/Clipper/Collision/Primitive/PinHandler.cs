@@ -1,7 +1,7 @@
 namespace iShape.Clipper.Collision.Primitive {
     public struct PinHandler {
 
-        internal PathMileStone masterSortFactor;
+        internal readonly PathMileStone masterSortFactor;
 
         internal readonly bool isPinPath;            
         internal readonly int index;                  // index in outside array
@@ -34,16 +34,27 @@ namespace iShape.Clipper.Collision.Primitive {
             this.marker = true;
         }
 
-
         public static bool operator ==(PinHandler left, PinHandler right) {
-            return left.masterSortFactor.index == right.masterSortFactor.index &&
-                   left.masterSortFactor.offset == right.masterSortFactor.offset;
+            return left.masterSortFactor == right.masterSortFactor;
         }
 
         public static bool operator !=(PinHandler left, PinHandler right) {
-            return left.masterSortFactor.index != right.masterSortFactor.index ||
-                   left.masterSortFactor.offset != right.masterSortFactor.offset;
+            return left.masterSortFactor != right.masterSortFactor;
         }
 
+        public override bool Equals(object obj) {
+            if(obj is PinHandler pinHandler) {
+                return pinHandler == this;
+            }
+            return false;
+        }
+        
+        public bool Equals(PinHandler other) {
+            return other == this;
+        }
+
+        public override int GetHashCode() {
+            return masterSortFactor.GetHashCode();
+        }
     }
 }

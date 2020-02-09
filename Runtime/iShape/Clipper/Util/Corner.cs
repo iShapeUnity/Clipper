@@ -20,14 +20,14 @@ namespace iShape.Clipper.Util {
             var satellite = new IntVector(o.x - b.x, o.y - b.y).Normal(iGeom);
 
             this.projection = basis.ScalarMultiply(satellite);
-            this.isCWS = Corner.IsClockWiseDirection(a, o, b);
+            this.isCWS = IsClockWiseDirection(a, o, b);
             this.iGeom = iGeom;
         }
 
         public bool IsBetween(IntVector p, bool clockwise = false) {
             var target = new IntVector(o.x - p.x,o.y - p.y).Normal(iGeom);
             var targetProjection = basis.ScalarMultiply(target);
-            var isTargetCws = Corner.IsClockWiseDirection(a,o,p);
+            var isTargetCws = IsClockWiseDirection(a,o,p);
 
             bool result;
 
@@ -44,8 +44,8 @@ namespace iShape.Clipper.Util {
 
         public bool IsOnBorder(IntVector p) {
             var dir = p - o;
-            var testA = Corner.IsSameDirection(a - o, dir);
-            var testB = Corner.IsSameDirection(b - o, dir);
+            var testA = IsSameDirection(a - o, dir);
+            var testB = IsSameDirection(b - o, dir);
 
             return testA || testB;
         }

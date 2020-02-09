@@ -4,6 +4,7 @@ using iShape.Geometry;
 namespace iShape.Clipper.Collision.Primitive {
     public struct PinPoint {
         internal struct Def {
+            
             internal readonly IntVector pt;
             internal readonly IntVector ms0;
             internal readonly IntVector ms1;
@@ -43,8 +44,8 @@ namespace iShape.Clipper.Collision.Primitive {
 
         public readonly IntVector point;
         public readonly PinType type; // 1 - in, -1 - out, 2 in-out, -2 out-in
-        public PathMileStone masterMileStone;
-        public PathMileStone slaveMileStone;
+        public readonly PathMileStone masterMileStone;
+        public readonly PathMileStone slaveMileStone;
 
         private PinPoint(IntVector point, PinType type, PathMileStone masterMileStone, PathMileStone slaveMileStone) {
             this.point = point;
@@ -68,8 +69,21 @@ namespace iShape.Clipper.Collision.Primitive {
             return left.masterMileStone != right.masterMileStone || left.slaveMileStone != right.slaveMileStone;
         }
 
-        private bool Equals(PinPoint other) {
-            return this == other;
+        public override bool Equals(object obj) {
+            if(obj is PinPoint pinPoint) {
+                return pinPoint == this;
+            }
+            return false;
+        }
+
+        public bool Equals(PinPoint other) {
+            return masterMileStone.Equals(other.masterMileStone) && slaveMileStone.Equals(other.slaveMileStone);
+        }
+
+        public override int GetHashCode() {
+            unchecked {
+                return (masterMileStone.GetHashCode() * 397) ^ slaveMileStone.GetHashCode();
+            }
         }
 
         internal static PinPoint BuildSimple(Def def) {

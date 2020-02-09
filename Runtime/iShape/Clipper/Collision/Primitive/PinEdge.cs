@@ -1,12 +1,9 @@
-using iShape.Geometry;
-
 namespace iShape.Clipper.Collision.Primitive {
 
     internal struct PinEdge {
         internal PinPoint v0;
         internal PinPoint v1;
         private readonly bool isDirect;
-        internal bool isZeroLength => v0.point == v1.point;
 
         internal PinPoint.PinType type {
             get {

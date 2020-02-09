@@ -5,8 +5,8 @@ namespace iShape.Clipper.Solver {
     public struct BiteSolution {
 
         public readonly bool isInteract;
-        public readonly PlainShapeList mainList;
-        public readonly PlainShapeList biteList;
+        public PlainShapeList mainList;
+        public PlainShapeList biteList;
 
         public BiteSolution(PlainShapeList mainList, PlainShapeList biteList, bool isInteract) {
             this.mainList = mainList;
