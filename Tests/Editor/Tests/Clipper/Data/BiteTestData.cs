@@ -7,19 +7,48 @@ namespace Tests.Clipper.Data {
 
     internal struct BiteTestData {
 
+        internal struct PackData {
+            internal PlainShape shape;
+            internal NativeArray<IntVector> path;
+
+            internal PackData(PlainShape shape, NativeArray<IntVector> path) {
+                this.shape = shape;
+                this.path = path;
+            }
+            
+            internal void Dispose() {
+                this.shape.Dispose();
+                this.path.Dispose();
+            }
+        }
+
         internal struct TestData {
 
-            internal readonly PlainShape shape;
-            internal readonly NativeArray<IntVector> path;
+            private readonly Vector2[] hull;
+            private readonly Vector2[][] holes;
+            private readonly Vector2[] path;
 
             internal TestData(Vector2[] hull, Vector2[][] holes, Vector2[] path) {
+                this.hull = hull;
+                this.holes = holes;
+                this.path = path;
+            }
+
+            internal PackData Allocate(Allocator allocator) {
                 var iHull = IntGeom.DefGeom.Int(hull);
                 var iHoles = IntGeom.DefGeom.Int(holes);
                 var iShape = new IntShape(iHull, iHoles);
-                this.shape = new PlainShape(iShape, Allocator.Persistent);
+
                 var iPath = IntGeom.DefGeom.Int(path);
-                this.path = new NativeArray<IntVector>(iPath, Allocator.Persistent);
+
+                var packData = new PackData(
+                    new PlainShape(iShape, allocator),
+                    new NativeArray<IntVector>(iPath, allocator)
+                    );
+                
+                return packData;
             }
+
         }
 
 
@@ -50,7 +79,7 @@ namespace Tests.Clipper.Data {
                     new Vector2(-10, 10),
                     new Vector2(10, 10),
                     new Vector2(10, -10)
-                }, 
+                },
                 new Vector2[0][],
                 new[] {
                     new Vector2(-5, 5),
@@ -207,7 +236,7 @@ namespace Tests.Clipper.Data {
                     new Vector2(-10, 10),
                     new Vector2(10, 10),
                     new Vector2(10, -10)
-                }, 
+                },
                 new Vector2[0][],
                 new[] {
                     new Vector2(-15, 15),
@@ -222,7 +251,7 @@ namespace Tests.Clipper.Data {
                     new Vector2(-10, 10),
                     new Vector2(10, 10),
                     new Vector2(10, -10)
-                }, 
+                },
                 new Vector2[0][],
                 new[] {
                     new Vector2(-10, 10),
@@ -257,7 +286,7 @@ namespace Tests.Clipper.Data {
                     new Vector2(-10, 10),
                     new Vector2(10, 10),
                     new Vector2(10, -10)
-                }, 
+                },
                 new Vector2[0][],
                 new[] {
                     new Vector2(-5, 15),
@@ -454,7 +483,7 @@ namespace Tests.Clipper.Data {
                     new Vector2(-10, 10),
                     new Vector2(10, 10),
                     new Vector2(10, 5)
-                }, 
+                },
                 new Vector2[0][],
                 new[] {
                     new Vector2(0, 15),
@@ -473,7 +502,7 @@ namespace Tests.Clipper.Data {
                     new Vector2(-10, 20),
                     new Vector2(10, 20),
                     new Vector2(10, 5)
-                }, 
+                },
                 new Vector2[0][],
                 new[] {
                     new Vector2(0, 15),

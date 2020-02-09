@@ -10,13 +10,15 @@ namespace Tests.Clipper {
 
     public class BiteTests {
         
+        private const Allocator allocator = Allocator.Temp;
         private IntGeom iGeom = IntGeom.DefGeom;
 
         [Test]
         public void Test_00() {
-            var data = BiteTestData.data[0];
-            var solution = data.shape.Bite(data.path, iGeom, Allocator.Temp);
-
+            var data = BiteTestData.data[0].Allocate(allocator);
+            var solution = data.shape.Bite(data.path, iGeom, allocator);
+            data.Dispose();
+            
             Assert.AreEqual(solution.isInteract, true);
 
             Assert.AreEqual(solution.mainList.layouts.ToArray(),
@@ -47,8 +49,9 @@ namespace Tests.Clipper {
         
         [Test]
         public void Test_01() {
-            var data = BiteTestData.data[1];
-            var solution = data.shape.Bite(data.path, iGeom, Allocator.Temp);
+            var data = BiteTestData.data[1].Allocate(allocator);
+            var solution = data.shape.Bite(data.path, iGeom, allocator);
+            data.Dispose();
 
             Assert.AreEqual(solution.isInteract, true);
 
@@ -92,8 +95,9 @@ namespace Tests.Clipper {
         
         [Test]
         public void Test_02() {
-            var data = BiteTestData.data[2];
-            var solution = data.shape.Bite(data.path, iGeom, Allocator.Temp);
+            var data = BiteTestData.data[2].Allocate(allocator);
+            var solution = data.shape.Bite(data.path, iGeom, allocator);
+            data.Dispose();
 
             Assert.AreEqual(solution.isInteract, true);
 
@@ -143,8 +147,9 @@ namespace Tests.Clipper {
         
         [Test]
         public void Test_03() {
-            var data = BiteTestData.data[3];
-            var solution = data.shape.Bite(data.path, iGeom, Allocator.Temp);
+            var data = BiteTestData.data[3].Allocate(allocator);
+            var solution = data.shape.Bite(data.path, iGeom, allocator);
+            data.Dispose();
 
             Assert.AreEqual(solution.isInteract, true);
 
@@ -199,8 +204,9 @@ namespace Tests.Clipper {
         
         [Test]
         public void Test_04() {
-            var data = BiteTestData.data[4];
-            var solution = data.shape.Bite(data.path, iGeom, Allocator.Temp);
+            var data = BiteTestData.data[4].Allocate(allocator);
+            var solution = data.shape.Bite(data.path, iGeom, allocator);
+            data.Dispose();
 
             Assert.AreEqual(solution.isInteract, true);
 
@@ -293,8 +299,9 @@ namespace Tests.Clipper {
         
         [Test]
         public void Test_05() {
-            var data = BiteTestData.data[5];
-            var solution = data.shape.Bite(data.path, iGeom, Allocator.Temp);
+            var data = BiteTestData.data[5].Allocate(allocator);
+            var solution = data.shape.Bite(data.path, iGeom, allocator);
+            data.Dispose();
 
             Assert.AreEqual(solution.isInteract, true);
 
@@ -396,8 +403,9 @@ namespace Tests.Clipper {
         
         [Test]
         public void Test_06() {
-            var data = BiteTestData.data[6];
-            var solution = data.shape.Bite(data.path, iGeom, Allocator.Temp);
+            var data = BiteTestData.data[6].Allocate(allocator);
+            var solution = data.shape.Bite(data.path, iGeom, allocator);
+            data.Dispose();
 
             Assert.AreEqual(solution.isInteract, true);
 
@@ -425,8 +433,8 @@ namespace Tests.Clipper {
         
         [Test]
         public void Test_07() {
-            var data = BiteTestData.data[7];
-            var solution = data.shape.Bite(data.path, iGeom, Allocator.Temp);
+            var data = BiteTestData.data[7].Allocate(allocator);
+            var solution = data.shape.Bite(data.path, iGeom, allocator);
 
             Assert.AreEqual(solution.isInteract, true);
 
@@ -454,8 +462,9 @@ namespace Tests.Clipper {
         
         [Test]
         public void Test_08() {
-            var data = BiteTestData.data[8];
-            var solution = data.shape.Bite(data.path, iGeom, Allocator.Temp);
+            var data = BiteTestData.data[8].Allocate(allocator);
+            var solution = data.shape.Bite(data.path, iGeom, allocator);
+            data.Dispose();
 
             Assert.AreEqual(solution.isInteract, true);
 
@@ -488,8 +497,9 @@ namespace Tests.Clipper {
         
         [Test]
         public void Test_09() {
-            var data = BiteTestData.data[9];
-            var solution = data.shape.Bite(data.path, iGeom, Allocator.Temp);
+            var data = BiteTestData.data[9].Allocate(allocator);
+            var solution = data.shape.Bite(data.path, iGeom, allocator);
+            data.Dispose();
 
             Assert.AreEqual(solution.isInteract, true);
 
@@ -532,8 +542,8 @@ namespace Tests.Clipper {
         
         [Test]
         public void Test_10() {
-            var data = BiteTestData.data[10];
-            var solution = data.shape.Bite(data.path, iGeom, Allocator.Temp);
+            var data = BiteTestData.data[10].Allocate(allocator);
+            var solution = data.shape.Bite(data.path, iGeom, allocator);
 
             Assert.AreEqual(solution.isInteract, true);
 
@@ -581,8 +591,9 @@ namespace Tests.Clipper {
         
         [Test]
         public void Test_11() {
-            var data = BiteTestData.data[11];
-            var solution = data.shape.Bite(data.path, iGeom, Allocator.Temp);
+            var data = BiteTestData.data[11].Allocate(allocator);
+            var solution = data.shape.Bite(data.path, iGeom, allocator);
+            data.Dispose();
 
             Assert.AreEqual(solution.isInteract, true);
 
@@ -631,8 +642,9 @@ namespace Tests.Clipper {
         
         [Test]
         public void Test_12() {
-            var data = BiteTestData.data[12];
-            var solution = data.shape.Bite(data.path, iGeom, Allocator.Temp);
+            var data = BiteTestData.data[12].Allocate(allocator);
+            var solution = data.shape.Bite(data.path, iGeom, allocator);
+            data.Dispose();
 
             Assert.AreEqual(solution.isInteract, true);
 
@@ -706,8 +718,9 @@ namespace Tests.Clipper {
         
         [Test]
         public void Test_13() {
-            var data = BiteTestData.data[13];
-            var solution = data.shape.Bite(data.path, iGeom, Allocator.Temp);
+            var data = BiteTestData.data[13].Allocate(allocator);
+            var solution = data.shape.Bite(data.path, iGeom, allocator);
+            data.Dispose();
 
             Assert.AreEqual(solution.isInteract, true);
 
@@ -774,8 +787,9 @@ namespace Tests.Clipper {
         
         [Test]
         public void Test_14() {
-            var data = BiteTestData.data[14];
-            var solution = data.shape.Bite(data.path, iGeom, Allocator.Temp);
+            var data = BiteTestData.data[14].Allocate(allocator);
+            var solution = data.shape.Bite(data.path, iGeom, allocator);
+            data.Dispose();
 
             Assert.AreEqual(solution.isInteract, true);
 
@@ -835,8 +849,9 @@ namespace Tests.Clipper {
         
         [Test]
         public void Test_15() {
-            var data = BiteTestData.data[15];
-            var solution = data.shape.Bite(data.path, iGeom, Allocator.Temp);
+            var data = BiteTestData.data[15].Allocate(allocator);
+            var solution = data.shape.Bite(data.path, iGeom, allocator);
+            data.Dispose();
 
             Assert.AreEqual(solution.isInteract, true);
 
@@ -901,8 +916,9 @@ namespace Tests.Clipper {
         
                 [Test]
         public void Test_16() {
-            var data = BiteTestData.data[16];
-            var solution = data.shape.Bite(data.path, iGeom, Allocator.Temp);
+            var data = BiteTestData.data[16].Allocate(allocator);
+            var solution = data.shape.Bite(data.path, iGeom, allocator);
+            data.Dispose();
 
             Assert.AreEqual(solution.isInteract, true);
 
@@ -960,8 +976,9 @@ namespace Tests.Clipper {
         
         [Test]
         public void Test_17() {
-            var data = BiteTestData.data[17];
-            var solution = data.shape.Bite(data.path, iGeom, Allocator.Temp);
+            var data = BiteTestData.data[17].Allocate(allocator);
+            var solution = data.shape.Bite(data.path, iGeom, allocator);
+            data.Dispose();
 
             Assert.AreEqual(solution.isInteract, true);
 
@@ -1018,8 +1035,9 @@ namespace Tests.Clipper {
         
         [Test]
         public void Test_18() {
-            var data = BiteTestData.data[18];
-            var solution = data.shape.Bite(data.path, iGeom, Allocator.Temp);
+            var data = BiteTestData.data[18].Allocate(allocator);
+            var solution = data.shape.Bite(data.path, iGeom, allocator);
+            data.Dispose();
 
             Assert.AreEqual(solution.isInteract, true);
 
@@ -1088,8 +1106,9 @@ namespace Tests.Clipper {
         
         [Test]
         public void Test_19() {
-            var data = BiteTestData.data[19];
-            var solution = data.shape.Bite(data.path, iGeom, Allocator.Temp);
+            var data = BiteTestData.data[19].Allocate(allocator);
+            var solution = data.shape.Bite(data.path, iGeom, allocator);
+            data.Dispose();
 
             Assert.AreEqual(solution.isInteract, true);
 
@@ -1151,8 +1170,9 @@ namespace Tests.Clipper {
         
         [Test]
         public void Test_20() {
-            var data = BiteTestData.data[20];
-            var solution = data.shape.Bite(data.path, iGeom, Allocator.Temp);
+            var data = BiteTestData.data[20].Allocate(allocator);
+            var solution = data.shape.Bite(data.path, iGeom, allocator);
+            data.Dispose();
 
             Assert.AreEqual(solution.isInteract, true);
 
@@ -1237,8 +1257,9 @@ namespace Tests.Clipper {
         
         [Test]
         public void Test_21() {
-            var data = BiteTestData.data[21];
-            var solution = data.shape.Bite(data.path, iGeom, Allocator.Temp);
+            var data = BiteTestData.data[21].Allocate(allocator);
+            var solution = data.shape.Bite(data.path, iGeom, allocator);
+            data.Dispose();
 
             Assert.AreEqual(solution.isInteract, true);
 
@@ -1287,8 +1308,9 @@ namespace Tests.Clipper {
         
         [Test]
         public void Test_22() {
-            var data = BiteTestData.data[22];
-            var solution = data.shape.Bite(data.path, iGeom, Allocator.Temp);
+            var data = BiteTestData.data[22].Allocate(allocator);
+            var solution = data.shape.Bite(data.path, iGeom, allocator);
+            data.Dispose();
 
             Assert.AreEqual(solution.isInteract, true);
 
@@ -1385,8 +1407,9 @@ namespace Tests.Clipper {
         
         [Test]
         public void Test_23() {
-            var data = BiteTestData.data[23];
-            var solution = data.shape.Bite(data.path, iGeom, Allocator.Temp);
+            var data = BiteTestData.data[23].Allocate(allocator);
+            var solution = data.shape.Bite(data.path, iGeom, allocator);
+            data.Dispose();
 
             Assert.AreEqual(solution.isInteract, true);
 
@@ -1505,8 +1528,9 @@ namespace Tests.Clipper {
         
         [Test]
         public void Test_24() {
-            var data = BiteTestData.data[24];
-            var solution = data.shape.Bite(data.path, iGeom, Allocator.Temp);
+            var data = BiteTestData.data[24].Allocate(allocator);
+            var solution = data.shape.Bite(data.path, iGeom, allocator);
+            data.Dispose();
 
             Assert.AreEqual(solution.isInteract, true);
 
