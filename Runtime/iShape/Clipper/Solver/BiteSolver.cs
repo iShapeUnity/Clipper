@@ -88,7 +88,7 @@ namespace iShape.Clipper.Solver {
             nextIsland:
             while (i < shapePaths.layouts.Count) {
                 var island = shapePaths.Get(i, tempAllocator);
-                var usedHoles = new DynamicArray<int>();
+                var usedHoles = new DynamicArray<int>(tempAllocator);
                 for (int j = 0; j < holes.Length; ++j) {
                     int holeIndex = holes[j];
                     var hole = self.Get(holeIndex, tempAllocator);
@@ -99,12 +99,15 @@ namespace iShape.Clipper.Solver {
                             shapePaths.RemoveAt(i);
 
                             // goto nextIsland
+                            usedHoles.Dispose();
                             hole.Dispose();
                             subtractSolution.Dispose();
                             island.Dispose();
                             goto nextIsland;
                             
                         case SubtractSolution.Nature.notOverlap:
+                            hole.Dispose();
+                            subtractSolution.Dispose();
                             continue;
                         case SubtractSolution.Nature.overlap:
                             int islandsCount = 0;
@@ -127,6 +130,7 @@ namespace iShape.Clipper.Solver {
                                 }
 
                                 // goto nextIsland
+                                usedHoles.Dispose();
                                 hole.Dispose();
                                 subtractSolution.Dispose();
                                 island.Dispose();
@@ -149,7 +153,7 @@ namespace iShape.Clipper.Solver {
                     for (int k = 0; k < usedHoles.Count; ++k) {
                         int index = usedHoles[k];
                         int holeIndex = holes[index];
-                        var hole = self.Get(holeIndex, tempAllocator);
+                        var hole = self.Get(holeIndex);
                         islandShape.Add(hole, false);
                     }
                 }
