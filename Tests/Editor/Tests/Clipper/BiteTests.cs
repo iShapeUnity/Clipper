@@ -466,7 +466,7 @@ namespace Tests.Clipper {
             Assert.AreEqual(solution.biteList.layouts.ToArray(),
                 new[] {
                     new PathLayout(0, 4, true),
-                    new PathLayout(4, 4, true)
+                    new PathLayout(4, 4, false)
                 });
 
             Assert.AreEqual(solution.biteList.points.ToArray(),
