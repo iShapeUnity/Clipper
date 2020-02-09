@@ -1270,6 +1270,7 @@ namespace Tests.Clipper {
             Assert.AreEqual(solution.biteList.points.ToArray(),
                 iGeom.Int(
                     new[] {
+                        new Vector2(5, -5),
                         new Vector2(5, 5),
                         new Vector2(10, 5),
                         new Vector2(10, -5),
