@@ -79,7 +79,7 @@ namespace iShape.Clipper.Solver {
 
             var holes = new NativeArray<int>(n - 1, tempAllocator);
 
-            int i = 0;
+            int i = 1;
             while (i < n) {
                 holes[i - 1] = i++;
             }
@@ -154,7 +154,7 @@ namespace iShape.Clipper.Solver {
                     }
                 }
                 usedHoles.Dispose();
-                holes.Dispose();
+                
                 
                 result.Add(islandShape);
                 
@@ -162,6 +162,8 @@ namespace iShape.Clipper.Solver {
 
                 i += 1;
             }
+            
+            holes.Dispose();
             
             shapePaths.Dispose();
 
@@ -354,7 +356,7 @@ namespace iShape.Clipper.Solver {
             if (notInteractedHoles.Count > 0) {
                 for (int j = 0; j < notInteractedHoles.Count; ++j) {
                     int index = notInteractedHoles[j];
-                    var hole = self.Get(index, tempAllocator);
+                    var hole = self.Get(index);
                     rootShape.Add(hole, false);
                 }
             }
@@ -436,12 +438,12 @@ namespace iShape.Clipper.Solver {
             }
 
             if (subPaths.layouts.Count == 0) {
+                holes.Dispose();
                 return new PlainShapeList(allocator);
             }
 
             if (holes.layouts.Count == 0) {
                 holes.Dispose();
-                
                 return new PlainShapeList(subPaths, allocator);
             }
 
