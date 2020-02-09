@@ -7,7 +7,7 @@ using Unity.Collections;
 namespace iShape.Clipper.Solver {
 
     public static class CutSolver {
-        private const Allocator tempAllocator = Allocator.TempJob;
+        private const Allocator tempAllocator = Allocator.Temp;
 
         public static BiteSolution Bite(this PlainShape self, NativeArray<IntVector> path, IntGeom iGeom, Allocator allocator) {
             var hull = self.Get(0, tempAllocator);
