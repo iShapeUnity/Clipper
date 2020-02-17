@@ -43,8 +43,11 @@ namespace iShape.Clipper.Util {
                     var b1 = points[k + 1];
 
                     var bRect = new Rect(b0, b1);
-                    if (aRect.IsIntersecting(bRect) && CrossResolver.DefineType(a0, a1, b0, b1,out var point) != CrossType.not_cross) {
-                        return true;
+                    if (aRect.IsIntersecting(bRect)) {
+                        var crossTest = CrossResolver.DefineType(a0, a1, b0, b1, out _);
+                        if (crossTest == CrossType.pure || crossTest == CrossType.same_line) {
+                            return true;
+                        }
                     }
                 }
             }
