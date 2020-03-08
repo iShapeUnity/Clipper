@@ -34,7 +34,7 @@ namespace iShape.Clipper.Util {
             float ny = dx * l;
 
             var n0x = (long)Mathf.Round(nx);
-            var n0y = (long) Mathf.Round(ny);
+            var n0y = (long)Mathf.Round(ny);
 
             if (isClockWise) {
                 n0x = -n0x;

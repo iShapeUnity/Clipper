@@ -114,18 +114,21 @@ namespace iShape.Clipper.Collision {
             long dyA = a0.y - a1.y;
             long dxB = b0.x - b1.x;
 
-            double divider = dxA * dyB - dyA * dxB;
+            long divider = dxA * dyB - dyA * dxB;
 
-            double xyA = a0.x * a1.y - a0.y * a1.x;
-            double xyB = b0.x * b1.y - b0.y * b1.x;
-
+            long xyA = a0.x * a1.y - a0.y * a1.x;
+            long xyB = b0.x * b1.y - b0.y * b1.x;
+            
             double invert_divider = 1.0 / divider;
 
-            double x = xyA * (b0.x - b1.x) - (a0.x - a1.x) * xyB;
-            double y = xyA * (b0.y - b1.y) - (a0.y - a1.y) * xyB;
+            double x = xyA * (double)(b0.x - b1.x) - (double)(a0.x - a1.x) * xyB;
+            double y = xyA * (double)(b0.y - b1.y) - (double)(a0.y - a1.y) * xyB;
 
-            long cx = (long) Math.Round(x * invert_divider);
-            long cy = (long) Math.Round(y * invert_divider);
+            double dx = x * invert_divider;
+            double dy = y * invert_divider;
+            
+            long cx = (long) Math.Round(dx, MidpointRounding.AwayFromZero);
+            long cy = (long) Math.Round(dy, MidpointRounding.AwayFromZero);
 
             return new IntVector(cx, cy);
         }
