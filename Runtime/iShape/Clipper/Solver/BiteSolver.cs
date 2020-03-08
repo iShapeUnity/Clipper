@@ -71,7 +71,17 @@ namespace iShape.Clipper.Solver {
         private static PlainShapeList OverlapCaseMainList(this PlainShape self, PlainShape restPathList, IntGeom iGeom, Allocator allocator) {
             int n = self.layouts.Length;
             if (n == 1) {
-                return new PlainShapeList(restPathList, allocator);
+                int partsCount = restPathList.Count;
+                var points = new NativeArray<IntVector>(restPathList.points, allocator);
+                var layouts = new NativeArray<PathLayout>(partsCount, allocator);
+                var segments = new NativeArray<Segment>(partsCount, allocator);
+                for (int j = 0; j < partsCount; ++j) {
+                    int length = restPathList.layouts[j].length;
+                    layouts[j] = new PathLayout(0, length, true);
+                    segments[j] = new Segment(j, 1);
+                }
+
+                return new PlainShapeList(points, layouts, segments);
             }
 
             var shapePaths = new DynamicPlainShape(restPathList, tempAllocator);
