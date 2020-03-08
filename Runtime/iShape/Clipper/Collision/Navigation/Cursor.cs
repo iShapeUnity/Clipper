@@ -3,7 +3,7 @@ using iShape.Clipper.Collision.Primitive;
 namespace iShape.Clipper.Collision.Navigation {
 
     internal struct Cursor {
-        internal static Cursor empty = new Cursor(0, -1);
+        internal static readonly Cursor empty = new Cursor(0, -1);
 
         internal readonly PinPoint.PinType type;
         internal readonly int index;
