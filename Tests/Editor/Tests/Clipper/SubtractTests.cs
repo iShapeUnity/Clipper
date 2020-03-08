@@ -1382,6 +1382,36 @@ namespace Tests.Clipper {
 
             solution.Dispose();
         }
+        
+        [Test]
+        public void Test_45() {
+            var data = SubtractTestData.data[45];
+
+            var master = new NativeArray<IntVector>(iGeom.Int(data[0]), Allocator.Temp);
+            var slave = new NativeArray<IntVector>(iGeom.Int(data[1]), Allocator.Temp);
+
+            var solution = master.Subtract(slave, iGeom, Allocator.Temp);
+
+            Assert.AreEqual(solution.nature, SubtractSolution.Nature.overlap);
+            Assert.AreEqual(solution.pathList.Count, 1);
+
+            var path = solution.pathList.Get(0, Allocator.Temp).ToArray();
+            var sample = iGeom.Int(new[] {
+                new Vector2(1.0f, -0.0001f),
+                new Vector2(1.0f, 0.0f),
+                new Vector2(0.0f, 1.0f),
+                new Vector2(-1.0f, 0.0f),
+                new Vector2(-1.0f, -0.0001f),
+                new Vector2(-3.0f, -0.0001f),
+                new Vector2(-3.0f, 2.9998999f),
+                new Vector2(3.0f, 2.9998999f),
+                new Vector2(3.0f, -0.0001f)
+            });
+
+            Assert.AreEqual(path, sample);
+
+            solution.Dispose();
+        }
     }
 
 }
