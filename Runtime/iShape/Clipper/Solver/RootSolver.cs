@@ -25,8 +25,10 @@ namespace iShape.Clipper.Solver {
                 filterNavigator.Dispose();
                 if (master.IsContain(slave, false)) {
                     return new CutSolution(new PlainShape(allocator), new PlainShape(allocator), SubtractSolution.Nature.hole);
-                } else {
+                } else if (slave.IsContain(master, true)) {
                     return new CutSolution(new PlainShape(allocator), new PlainShape(allocator), SubtractSolution.Nature.empty);
+                } else {
+                    return new CutSolution(new PlainShape(allocator), new PlainShape(allocator), SubtractSolution.Nature.notOverlap);
                 }
             }
 
