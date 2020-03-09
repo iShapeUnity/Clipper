@@ -914,7 +914,7 @@ namespace Tests.Clipper {
             solution.Dispose();
         }
         
-                [Test]
+        [Test]
         public void Test_16() {
             var data = BiteTestData.data[16].Allocate(allocator);
             var solution = data.shape.Bite(data.path, iGeom, allocator);
@@ -925,8 +925,8 @@ namespace Tests.Clipper {
             Assert.AreEqual(solution.mainList.layouts.ToArray(),
                 new[] {
                     new PathLayout(0, 8, true),
-                    new PathLayout(8, 4, true),
-                    new PathLayout(12, 4, true)
+                    new PathLayout(0, 4, true),
+                    new PathLayout(0, 4, true)
                 });
 
             Assert.AreEqual(solution.mainList.points.ToArray(),

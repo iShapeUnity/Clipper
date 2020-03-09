@@ -769,7 +769,7 @@ namespace Tests.Clipper {
             var path0 = solution.pathList.Get(0, Allocator.Temp).ToArray();
             var sample0 = iGeom.Int(new[] {
                 new Vector2(-15, 10),
-                new Vector2(-8.125f, y: 10),
+                new Vector2(-8.125f, 10),
                 new Vector2(-5, 15)
             });
 
@@ -777,9 +777,9 @@ namespace Tests.Clipper {
 
             var path1 = solution.pathList.Get(1, Allocator.Temp).ToArray();
             var sample1 = iGeom.Int(new[] {
-                new Vector2(-11.619f, y: 5),
-                new Vector2(-16.2963f, y: 5),
-                new Vector2(-18.5f, y: -3.5f)
+                new Vector2(-11.619f, 5),
+                new Vector2(-16.2963f, 5),
+                new Vector2(-18.5f, -3.5f)
             });
 
             Assert.AreEqual(path1, sample1);
@@ -979,7 +979,7 @@ namespace Tests.Clipper {
 
             var path1 = solution.pathList.Get(1, Allocator.Temp).ToArray();
             var sample1 = iGeom.Int(new[] {
-                new Vector2(4.91675f, y: -5),
+                new Vector2(4.9167f, -5),
                 new Vector2(-10, -5),
                 new Vector2(-10, 15),
                 new Vector2(-5, 15),
@@ -988,14 +988,14 @@ namespace Tests.Clipper {
                 new Vector2(0, 20),
                 new Vector2(-15, 20),
                 new Vector2(-15, -10),
-                new Vector2(4.5f, y: -10)
+                new Vector2(4.5f,-10)
             });
 
             Assert.AreEqual(path1, sample1);
             
             var path2 = solution.pathList.Get(2, Allocator.Temp).ToArray();
             var sample2 = iGeom.Int(new[] {
-                new Vector2(4.0833f, y: -15),
+                new Vector2(4.0833f, -15),
                 new Vector2(-20, -15),
                 new Vector2(4, -16)
             });
@@ -1038,7 +1038,7 @@ namespace Tests.Clipper {
             var path1 = solution.pathList.Get(1, Allocator.Temp).ToArray();
             var sample1 = iGeom.Int(new[] {
                 new Vector2(-10, -14),
-                new Vector2(-16.80001f, y: -14),
+                new Vector2(-16.80001f, -14),
                 new Vector2(-20, -15),
                 new Vector2(-15, -15)
             });

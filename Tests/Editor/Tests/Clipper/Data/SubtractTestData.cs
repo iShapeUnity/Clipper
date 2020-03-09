@@ -876,13 +876,13 @@ namespace Tests.Clipper.Data {
             // 45
             new[] {
                 new[] {
-                    new Vector2(1f, -0.00015f),
-                    new Vector2(0f, 0.99995f),
-                    new Vector2(-1f, -0.00015f),
-                    new Vector2(-3f,  -0.00015f),
+                    new Vector2(1f, -0.0001f),
+                    new Vector2(0f, 0.9999f),
+                    new Vector2(-1f, -0.0001f),
+                    new Vector2(-3f,  -0.0001f),
                     new Vector2(-3f,  2.9999f),
                     new Vector2(3f,  2.9999f),
-                    new Vector2(3f,  -0.00015f)
+                    new Vector2(3f,  -0.0001f)
                 },
                 new[] {
                     new Vector2(1f, 0f),
