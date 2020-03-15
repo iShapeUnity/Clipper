@@ -52,7 +52,7 @@ namespace iShape.Clipper.Solver {
                 shape.Add(cutPath, false);
 
                 mainList = shape.ToShapeList(allocator);
-                biteList = new PlainShapeList(cutPath, true, allocator);
+                biteList = new PlainShapeList(cutPath.Reverse(), true, allocator);
             } else {
                 mainList = self.HoleCaseMainList(cutPath, iGeom, allocator);
                 biteList = self.HoleCaseBiteList(cutPath, iGeom, allocator);
