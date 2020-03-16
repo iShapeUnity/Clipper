@@ -13,7 +13,7 @@ namespace iShape.Clipper.Util {
         }
 
         internal static PlainShapeList ToShapeList(this DynamicPlainShape shape, Allocator allocator) {
-            var segments = new NativeArray<Segment>(1, allocator) {[0] = new Segment(0, 1)};
+            var segments = new NativeArray<Segment>(1, allocator) {[0] = new Segment(0, shape.layouts.Count)};
             return new PlainShapeList(shape.points.Convert(), shape.layouts.Convert(), segments);
         }
     }

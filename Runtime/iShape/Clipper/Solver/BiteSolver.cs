@@ -270,7 +270,7 @@ namespace iShape.Clipper.Solver {
 
             if (islands.layouts.Count == 0) {
                 var mainShape = self.Get(0, allocator).ToDynamicShape(true, allocator);
-                mainShape.Add(rootHole, false);
+                mainShape.Add(rootHole.Reverse(), false);
                 i = 0;
                 while (i < notInteractedHoles.Count) {
                     int index = notInteractedHoles[i];
