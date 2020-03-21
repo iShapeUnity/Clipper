@@ -456,12 +456,15 @@ namespace iShape.Clipper.Solver {
                 return new PlainShapeList(allocator);
             }
 
+            var biteList = new DynamicPlainShapeList(allocator);
+            
             if (holes.layouts.Count == 0) {
                 holes.Dispose();
-                return new PlainShapeList(subPaths, allocator);
+                for (int i = 0; i < subPaths.layouts.Count; ++i) {
+                    biteList.Add(subPaths.Get(i));
+                }
+                return biteList.Convert();
             }
-
-            var biteList = new DynamicPlainShapeList(allocator);
 
             for (int i = 0; i < subPaths.layouts.Count; ++i) {
                 var subPath = subPaths.Get(i, allocator);
