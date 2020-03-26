@@ -847,16 +847,63 @@ namespace Tests.Clipper.Data {
                     new Vector2(5, 0)
                 },
                 new[] {
-                    new Vector2(x: 5, y: 0),
-                    new Vector2(x: -10, y: 0),
-                    new Vector2(x: -10, y: -10),
-                    new Vector2(x: 10, y: -10),
-                    new Vector2(x: 10, y: 10),
-                    new Vector2(x: 15, y: 10),
-                    new Vector2(x: 15, y: -15),
-                    new Vector2(x: -15, y: -15),
-                    new Vector2(x: -15, y: 5),
-                    new Vector2(x: 5, y: 5)
+                    new Vector2(5, 0),
+                    new Vector2(-10, 0),
+                    new Vector2(-10, -10),
+                    new Vector2(10, -10),
+                    new Vector2(10, 10),
+                    new Vector2(15, 10),
+                    new Vector2(15, -15),
+                    new Vector2(-15, -15),
+                    new Vector2(-15, 5),
+                    new Vector2(5, 5)
+                }
+            },
+            // 44
+            new[] {
+                new[] {
+                    new Vector2(-3.3332999f, 0),
+                    new Vector2(-10, 0),
+                    new Vector2(-10, 10),
+                    new Vector2(10, 10),
+                    new Vector2(10, -10),
+                    new Vector2(-6.5f, -9.5f)
+                },
+                new[] {
+                    new Vector2(5, -5),
+                    new Vector2(5, -15),
+                    new Vector2(-5, -15),
+                    new Vector2(-5, -5)
+                }
+            },
+            // 45
+            new[] {
+                new[] {
+                    new Vector2(5, 5),
+                    new Vector2(5, -10),
+                    new Vector2(-5, -5),
+                    new Vector2(-5, 5)
+                },
+                new[] {
+                    new Vector2(-10, 10),
+                    new Vector2(10, 10),
+                    new Vector2(10, -10),
+                    new Vector2(-10, -10)
+                }
+            },
+            // 46
+            new[] {
+                new[] {
+                    new Vector2(0, 10),
+                    new Vector2(10, 0),
+                    new Vector2(0, -10),
+                    new Vector2(-10, 0)
+                },
+                new[] {
+                    new Vector2(-10, 10),
+                    new Vector2(10, 10),
+                    new Vector2(10, -10),
+                    new Vector2(-10, -10)
                 }
             }
         };

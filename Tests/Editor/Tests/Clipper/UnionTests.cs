@@ -1476,5 +1476,86 @@ namespace Tests.Clipper {
 
             solution.Dispose();
         }
+        
+        [Test]
+        public void Test_44() {
+            var data = UnionTestData.data[44];
+
+            var master = new NativeArray<IntVector>(iGeom.Int(data[0]), Allocator.Temp);
+            var slave = new NativeArray<IntVector>(iGeom.Int(data[1]), Allocator.Temp);
+
+            var solution = master.Union(slave, iGeom, Allocator.Temp);
+
+            Assert.AreEqual(solution.nature, UnionSolution.Nature.overlap);
+            Assert.AreEqual(solution.pathList.Count, 1);
+
+            var path = solution.pathList.Get(0, Allocator.Temp).ToArray();
+            var sample = iGeom.Int(new[] {
+                new Vector2(5, -9.848499f),
+                new Vector2(5, -15),
+                new Vector2(-5, -15),
+                new Vector2(-5, -9.5455f),
+                new Vector2(-6.5f, -9.5f),
+                new Vector2(-3.3332999f, 0),
+                new Vector2(-10, 0),
+                new Vector2(-10, 10),
+                new Vector2(10, 10),
+                new Vector2(10, -10)
+            });
+
+            Assert.AreEqual(path, sample);
+
+            solution.Dispose();
+        }
+        
+        [Test]
+        public void Test_45() {
+            var data = UnionTestData.data[45];
+
+            var master = new NativeArray<IntVector>(iGeom.Int(data[0]), Allocator.Temp);
+            var slave = new NativeArray<IntVector>(iGeom.Int(data[1]), Allocator.Temp);
+
+            var solution = master.Union(slave, iGeom, Allocator.Temp);
+
+            Assert.AreEqual(solution.nature, UnionSolution.Nature.slaveIncludeMaster);
+            Assert.AreEqual(solution.pathList.Count, 1);
+
+            var path = solution.pathList.Get(0, Allocator.Temp).ToArray();
+            var sample = iGeom.Int(new[] {
+                new Vector2(-10, 10),
+                new Vector2(10, 10),
+                new Vector2(10, -10),
+                new Vector2(-10, -10)
+            });
+
+            Assert.AreEqual(path, sample);
+
+            solution.Dispose();
+        }
+        
+        [Test]
+        public void Test_46() {
+            var data = UnionTestData.data[46];
+
+            var master = new NativeArray<IntVector>(iGeom.Int(data[0]), Allocator.Temp);
+            var slave = new NativeArray<IntVector>(iGeom.Int(data[1]), Allocator.Temp);
+
+            var solution = master.Union(slave, iGeom, Allocator.Temp);
+
+            Assert.AreEqual(solution.nature, UnionSolution.Nature.slaveIncludeMaster);
+            Assert.AreEqual(solution.pathList.Count, 1);
+
+            var path = solution.pathList.Get(0, Allocator.Temp).ToArray();
+            var sample = iGeom.Int(new[] {
+                new Vector2(-10, 10),
+                new Vector2(10, 10),
+                new Vector2(10, -10),
+                new Vector2(-10, -10)
+            });
+
+            Assert.AreEqual(path, sample);
+
+            solution.Dispose();
+        }
     }
 }

@@ -124,23 +124,23 @@ namespace iShape.Clipper.Solver {
             if (cursor.isEmpty) {
                 filterNavigator.Dispose();
                 if (navigator.hasContacts) {
-                    if (master.IsOverlap(slave)) {
+                    if (master.IsContain(slave.AnyInside(true))) {
                         return new UnionSolution(new PlainShape(master, true, allocator), UnionSolution.Nature.masterIncludeSlave);
-                    } else if (slave.IsOverlap(slave)) {
-                        return new UnionSolution(new PlainShape(slave, true, allocator), UnionSolution.Nature.slaveIncludeMaster);
-                    } else {
-                        return new UnionSolution(new PlainShape(allocator), UnionSolution.Nature.notOverlap);
                     }
-                } else {
-                    if (master.IsContain(slave.Any())) {
-                        return new UnionSolution(new PlainShape(master, true, allocator), UnionSolution.Nature.masterIncludeSlave);
-                    } else if (slave.IsContain(master.Any())) {
-                        return new UnionSolution(new PlainShape(slave, true, allocator), UnionSolution.Nature.slaveIncludeMaster);
-                    } else {
-                        return new UnionSolution(new PlainShape(allocator), UnionSolution.Nature.notOverlap);
-                    }
+                } else if (master.IsContain(slave.Any())) {
+                    return new UnionSolution(new PlainShape(master, true, allocator), UnionSolution.Nature.masterIncludeSlave);
+                } else if (slave.IsContain(master.Any())) {
+                    return new UnionSolution(new PlainShape(slave, true, allocator), UnionSolution.Nature.slaveIncludeMaster);
                 }
+                
+                return new UnionSolution(new PlainShape(allocator), UnionSolution.Nature.notOverlap);
             }
+
+            if (cursor.type == PinPoint.PinType.in_out && slave.IsContain(master.AnyInside(true))) {
+                filterNavigator.Dispose();
+                return new UnionSolution(new PlainShape(slave, true, allocator), UnionSolution.Nature.slaveIncludeMaster);
+            }
+
 
             var pathList = UnionSolver.Union(filterNavigator, master, slave, allocator);
 
