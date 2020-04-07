@@ -12,30 +12,31 @@ namespace iShape.Clipper.Solver {
         public static BiteSolution Bite(this PlainShape self, NativeArray<IntVector> path, IntGeom iGeom, Allocator allocator) {
             var hull = self.Get(0, tempAllocator);
 
-            var cutSolution = hull.Cut(path, iGeom, tempAllocator);
+            var solution = hull.Cut(path, iGeom, tempAllocator);
             hull.Dispose();
             
             BiteSolution biteSolution;
 
-            switch (cutSolution.nature) {
-                case SubtractSolution.Nature.notOverlap:
+            switch (solution.nature) {
+                case Solution.Nature.notOverlap:
                     biteSolution = new BiteSolution(new PlainShapeList(allocator), new PlainShapeList(allocator), false);
                     break;
-                case SubtractSolution.Nature.empty:
+                case Solution.Nature.equal:
+                case Solution.Nature.slaveIncludeMaster:
                     biteSolution = new BiteSolution(new PlainShapeList(allocator), new PlainShapeList(self, allocator), true);
                     break;
-                case SubtractSolution.Nature.hole:
+                case Solution.Nature.masterIncludeSlave:
                     biteSolution = self.HoleCase(path, iGeom, allocator);
                     break;
-                case SubtractSolution.Nature.overlap:
-                    biteSolution = self.OverlapCase(cutSolution, iGeom, allocator);
+                case Solution.Nature.overlap:
+                    biteSolution = self.OverlapCase(solution, iGeom, allocator);
                     break;
                 default:
                     biteSolution = new BiteSolution(new PlainShapeList(allocator), new PlainShapeList(allocator), false);
                     break;
             }
 
-            cutSolution.Dispose();
+            solution.Dispose();
 
             // impossible case
             return biteSolution;
@@ -61,7 +62,7 @@ namespace iShape.Clipper.Solver {
             return new BiteSolution(mainList, biteList, true);
         }
 
-        private static BiteSolution OverlapCase(this PlainShape self, CutSolution cutHullSolution, IntGeom iGeom, Allocator allocator) {
+        private static BiteSolution OverlapCase(this PlainShape self, ComplexSolution cutHullSolution, IntGeom iGeom, Allocator allocator) {
             var mainList = self.OverlapCaseMainList(cutHullSolution.restPathList, iGeom, allocator);
             var biteList = self.OverlapCaseBiteList(cutHullSolution.bitePathList, iGeom, allocator);
 
@@ -102,39 +103,40 @@ namespace iShape.Clipper.Solver {
                 for (int j = 0; j < holes.Length; ++j) {
                     int holeIndex = holes[j];
                     var hole = self.Get(holeIndex, tempAllocator);
-                    var subtractSolution = island.Subtract(hole, iGeom, tempAllocator);
-                    switch (subtractSolution.nature) {
-                        case SubtractSolution.Nature.empty:
+                    var subtract = island.Subtract(hole, iGeom, tempAllocator);
+                    switch (subtract.nature) {
+                        case Solution.Nature.equal:
+                        case Solution.Nature.slaveIncludeMaster:
                             // island is equal to hole
                             shapePaths.RemoveAt(i);
 
                             // goto nextIsland
                             usedHoles.Dispose();
                             hole.Dispose();
-                            subtractSolution.Dispose();
+                            subtract.Dispose();
                             island.Dispose();
                             goto nextIsland;
                             
-                        case SubtractSolution.Nature.notOverlap:
+                        case Solution.Nature.notOverlap:
                             hole.Dispose();
-                            subtractSolution.Dispose();
+                            subtract.Dispose();
                             continue;
-                        case SubtractSolution.Nature.overlap:
+                        case Solution.Nature.overlap:
                             int islandsCount = 0;
-                            for (int k = 0; k < subtractSolution.pathList.layouts.Length; ++k) {
-                                if (subtractSolution.pathList.layouts[k].isClockWise) {
+                            for (int k = 0; k < subtract.pathList.layouts.Length; ++k) {
+                                if (subtract.pathList.layouts[k].isClockWise) {
                                     islandsCount += 1;
                                 }
                             }
 
                             if (islandsCount == 1) {
                                 island.Dispose();
-                                island = subtractSolution.pathList.Get(0, tempAllocator);
+                                island = subtract.pathList.Get(0, tempAllocator);
                             } else {
                                 shapePaths.RemoveAt(i);
-                                for (int k = 0; k < subtractSolution.pathList.layouts.Length; ++k) {
-                                    if (subtractSolution.pathList.layouts[k].isClockWise) {
-                                        var newIsland = subtractSolution.pathList.Get(i);
+                                for (int k = 0; k < subtract.pathList.layouts.Length; ++k) {
+                                    if (subtract.pathList.layouts[k].isClockWise) {
+                                        var newIsland = subtract.pathList.Get(i);
                                         shapePaths.Add(newIsland, true);
                                     }
                                 }
@@ -142,19 +144,19 @@ namespace iShape.Clipper.Solver {
                                 // goto nextIsland
                                 usedHoles.Dispose();
                                 hole.Dispose();
-                                subtractSolution.Dispose();
+                                subtract.Dispose();
                                 island.Dispose();
                                 goto nextIsland;
                             }
 
                             break;
-                        case SubtractSolution.Nature.hole:
+                        case Solution.Nature.masterIncludeSlave:
                             usedHoles.Add(j);
                             break;
                     }
                     
                     hole.Dispose();
-                    subtractSolution.Dispose();
+                    subtract.Dispose();
                 }
                 
                 var islandShape = island.ToDynamicShape(true, tempAllocator);
@@ -217,19 +219,26 @@ namespace iShape.Clipper.Solver {
             while (i < n) {
                 var nextHole = self.Get(i, tempAllocator).Reverse();
 
-                var unionSolution = rootHole.Union(nextHole, iGeom, tempAllocator);
+                var union = rootHole.Union(nextHole, iGeom, tempAllocator);
 
-                switch (unionSolution.nature) {
-                    case UnionSolution.Nature.notOverlap:
+                switch (union.nature) {
+                    case Solution.Nature.notOverlap:
                         notInteractedHoles.Add(i);
+                        nextHole.Dispose();
                         break;
-                    case UnionSolution.Nature.masterIncludeSlave:
+                    case Solution.Nature.equal:
+                    case Solution.Nature.masterIncludeSlave:
                         interactedHoles.Add(i);
+                        nextHole.Dispose();
                         break;
-                    case UnionSolution.Nature.overlap:
-                    case UnionSolution.Nature.slaveIncludeMaster:
+                    case Solution.Nature.slaveIncludeMaster:
                         interactedHoles.Add(i);
-                        var uShape = unionSolution.pathList;
+                        rootHole.Dispose();
+                        rootHole = nextHole;
+                        break;
+                    case Solution.Nature.overlap:
+                        interactedHoles.Add(i);
+                        var uShape = union.pathList;
                         for (int j = 0; j < uShape.layouts.Length; ++j) {
                             if (uShape.layouts[j].isClockWise) {
                                 rootHole.Dispose();
@@ -241,13 +250,11 @@ namespace iShape.Clipper.Solver {
                             }
                         }
 
+                        nextHole.Dispose();
                         break;
                 }
 
-                unionSolution.Dispose();
-
-                nextHole.Dispose();
-
+                union.Dispose();
                 ++i;
             }
 
@@ -299,42 +306,43 @@ namespace iShape.Clipper.Solver {
                     int index = interactedHoles[j];
                     var hole = self.Get(index, tempAllocator);
 
-                    var subtractSolution = island.Subtract(hole, iGeom, tempAllocator);
+                    var subtract = island.Subtract(hole, iGeom, tempAllocator);
                     hole.Dispose();
                     
-                    switch (subtractSolution.nature) {
-                        case SubtractSolution.Nature.empty:
+                    switch (subtract.nature) {
+                        case Solution.Nature.equal:
+                        case Solution.Nature.slaveIncludeMaster:
                             // island is equal to hole
                             i += 1;
                             
                             // goto
                             island.Dispose();
                             islandHoles.Dispose();
-                            subtractSolution.Dispose();
+                            subtract.Dispose();
                             
                             goto nextIsland;
-                        case SubtractSolution.Nature.notOverlap:
+                        case Solution.Nature.notOverlap:
                             // not touche
                             // goto
-                            subtractSolution.Dispose();
+                            subtract.Dispose();
                             continue;
-                        case SubtractSolution.Nature.overlap:
+                        case Solution.Nature.overlap:
                             island.Dispose();
-                            island = subtractSolution.pathList.Get(0, tempAllocator);
-                            if (subtractSolution.pathList.layouts.Length > 1) {
-                                for (int k = 1; k < subtractSolution.pathList.layouts.Length; ++k) {
-                                    var part = subtractSolution.pathList.Get(k);
+                            island = subtract.pathList.Get(0, tempAllocator);
+                            if (subtract.pathList.layouts.Length > 1) {
+                                for (int k = 1; k < subtract.pathList.layouts.Length; ++k) {
+                                    var part = subtract.pathList.Get(k);
                                     islands.Add(part, true);
                                 }
                             }
 
                             break;
-                        case SubtractSolution.Nature.hole:
+                        case Solution.Nature.masterIncludeSlave:
                             islandHoles.Add(index);
                             break;
                     }
                     
-                    subtractSolution.Dispose();
+                    subtract.Dispose();
                     
                 }
 
@@ -403,18 +411,18 @@ namespace iShape.Clipper.Solver {
                 var j = 0;
                 while (j < subPaths.layouts.Count) {
                     var bitPath = subPaths.Get(j, tempAllocator);
-                    var subtractSolution = bitPath.Subtract(nextHole, iGeom, tempAllocator);
+                    var subtract = bitPath.Subtract(nextHole, iGeom, tempAllocator);
                     bitPath.Dispose();
                     
-                    switch (subtractSolution.nature) {
-                        case SubtractSolution.Nature.notOverlap:
+                    switch (subtract.nature) {
+                        case Solution.Nature.notOverlap:
                             j += 1;
                             break;
-                        case SubtractSolution.Nature.overlap:
+                        case Solution.Nature.overlap:
                             var newSubPathCount = 0;
-                            for (int k = 0; k < subtractSolution.pathList.layouts.Length; ++k) {
-                                if (subtractSolution.pathList.layouts[k].isClockWise) {
-                                    var subPath = subtractSolution.pathList.Get(k);
+                            for (int k = 0; k < subtract.pathList.layouts.Length; ++k) {
+                                if (subtract.pathList.layouts[k].isClockWise) {
+                                    var subPath = subtract.pathList.Get(k);
                                     if (newSubPathCount == 0) {
                                         subPaths.ReplaceAt(j, subPath);
                                     } else {
@@ -423,7 +431,7 @@ namespace iShape.Clipper.Solver {
 
                                     newSubPathCount += 1;
                                 } else {
-                                    var holePath = subtractSolution.pathList.Get(k);
+                                    var holePath = subtract.pathList.Get(k);
                                     holes.Add(holePath, false);
                                 }
                             }
@@ -435,16 +443,17 @@ namespace iShape.Clipper.Solver {
                             }
 
                             break;
-                        case SubtractSolution.Nature.empty:
+                        case Solution.Nature.equal:
+                        case Solution.Nature.slaveIncludeMaster:
                             subPaths.RemoveAt(j);
                             break;
-                        case SubtractSolution.Nature.hole:
+                        case Solution.Nature.masterIncludeSlave:
                             holes.Add(nextHole, false);
                             j += 1;
                             break;
                     }
                     
-                    subtractSolution.Dispose();
+                    subtract.Dispose();
                 }
 
                 nextHole.Dispose();

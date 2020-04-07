@@ -80,12 +80,16 @@ namespace iShape.Clipper.Util {
                    a.y < minY && b.y < minY || a.y > maxY && b.y > maxY;
         }
 
-        public bool IsIntersecting(Rect box) {
-            return !(maxX < box.minX || minX > box.maxX || maxY < box.minY || minY > box.maxY);
+        public bool IsIntersecting(Rect rect) {
+            return !(maxX < rect.minX || minX > rect.maxX || maxY < rect.minY || minY > rect.maxY);
         }
         
-        public bool IsNotIntersecting(Rect box) {
-            return maxX < box.minX || minX > box.maxX || maxY < box.minY || minY > box.maxY;
+        public bool IsNotIntersecting(Rect rect) {
+            return maxX < rect.minX || minX > rect.maxX || maxY < rect.minY || minY > rect.maxY;
+        }
+        
+        public bool IsInside(Rect rect) {
+            return maxX >= rect.maxX && minX <= rect.minX && maxY >= rect.maxY && minY <= rect.minY;
         }
     }
 

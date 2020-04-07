@@ -1,3 +1,4 @@
+using iShape.Geometry;
 using UnityEngine;
 
 namespace Tests.Clipper.Data {
@@ -890,6 +891,58 @@ namespace Tests.Clipper.Data {
                     new Vector2(-1f, 0f),
                     new Vector2(0f, -1f)
                 }
+            },
+            // 46
+            new[] {
+                new[] {
+                    new Vector2(10, -10),
+                    new Vector2(-10, -10),
+                    new Vector2(-10, 5),
+                    new Vector2(10,  5)
+                },
+                new[] {
+                    new Vector2(-20, 15),
+                    new Vector2(-20, 5),
+                    new Vector2(20, 5),
+                    new Vector2(20, 15)
+                }
+            },
+            // 47
+            new[] {
+                new[] {
+                    new IntVector(20173, -7262),
+                    new IntVector(19201, -7433),
+                    new IntVector(17047, -10000),
+                    new IntVector(-30000, -10000),
+                    new IntVector(-30000, 40000),
+                    new IntVector(30000, 40000),
+                    new IntVector(30000, -5388),
+                    new IntVector(23624, -6512),
+                    new IntVector(23617, -6520),
+                    new IntVector(23317, -6573),
+                    new IntVector(23299, -6595),
+                    new IntVector(23071, -6635),
+                    new IntVector(23054, -6656),
+                    new IntVector(22826, -6696),
+                    new IntVector(22798, -6729),
+                    new IntVector(22641, -6757),
+                    new IntVector(22602, -6804),
+                    new IntVector(22518, -6819),
+                    new IntVector(20430, -7187),
+                    new IntVector(20412, -7209),
+                    new IntVector(20184, -7249)
+                }.toVectors(1),
+                new[] {
+                    new IntVector(34140, -16093),
+                    new IntVector(31800, -9665),
+                    new IntVector(25877, -6245),
+                    new IntVector(19140, -7433),
+                    new IntVector(14743, -12673),
+                    new IntVector(14743, -19514),
+                    new IntVector(19140, -24754),
+                    new IntVector(25877, -25941),
+                    new IntVector(31800, -22521)
+                }.toVectors(1)
             }
         };
     }

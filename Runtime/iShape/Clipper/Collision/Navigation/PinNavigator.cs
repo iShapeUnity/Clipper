@@ -19,14 +19,18 @@ namespace iShape.Clipper.Collision.Navigation {
 
         internal readonly bool isEqual;
         internal readonly bool hasContacts;
+        internal readonly Util.Rect masterBox;
+        internal readonly Util.Rect slaveBox;
 
-        internal PinNavigator(NativeArray<int> slavePath, NativeArray<PinPath> pinPathArray, NativeArray<PinPoint> pinPointArray, NativeArray<PinNode> nodeArray, bool hasContacts) {
+        internal PinNavigator(NativeArray<int> slavePath, NativeArray<PinPath> pinPathArray, NativeArray<PinPoint> pinPointArray, NativeArray<PinNode> nodeArray, bool hasContacts, Util.Rect masterBox, Util.Rect slaveBox) {
             this.slavePath = slavePath;
             this.pinPathArray = pinPathArray;
             this.pinPointArray = pinPointArray;
             this.nodeArray = nodeArray;
             this.isEqual = false;
             this.hasContacts = hasContacts;
+            this.masterBox = masterBox;
+            this.slaveBox = slaveBox;
         }
         
         internal PinNavigator(bool isEqual) {
@@ -36,6 +40,8 @@ namespace iShape.Clipper.Collision.Navigation {
             this.nodeArray = new NativeArray<PinNode>(0, Allocator.Temp);
             this.isEqual = isEqual;
             this.hasContacts = true;
+            this.masterBox = new Util.Rect();
+            this.slaveBox = new Util.Rect();
         }
 
         internal void Mark(Cursor cursor) {

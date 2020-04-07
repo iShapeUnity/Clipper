@@ -62,12 +62,12 @@ namespace iShape.Clipper.Util {
             return isContain;
         }
         
-        public static bool IsContain(this NativeArray<IntVector> self, NativeArray<IntVector> hole, bool isClockWise) {
-            if (hole.Length == 0) {
+        public static bool IsContain(this NativeArray<IntVector> self, NativeArray<IntVector> path, bool isClockWise) {
+            if (path.Length == 0) {
                 return false;
             }
 
-            var p = hole.AnyInside(isClockWise);
+            var p = path.AnyInside(isClockWise);
 
             int n = self.Length;
             var isContain = false;
@@ -90,22 +90,50 @@ namespace iShape.Clipper.Util {
 
             return isContain;
         }
+        
+        public static bool IsContain(this NativeArray<IntVector> self, NativeArray<IntVector> path, int probeCount = 5) {
+            int length = path.Length; 
+            if (path.Length == 0) {
+                return false;
+            }
+             
+            int count = length > probeCount ? probeCount : length;
+            int step = length / count;
+            for (int j = 0; j < length; j += step) {
+                var p = path[j];
 
-        public static bool IsOverlap(this NativeArray<IntVector> self, NativeArray<IntVector> points) {
-            int n = points.Length;
-            var a = points[n - 1];
-            for (int i = 0; i < n; ++i) {
-                var b = points[i];
-                var c = new IntVector((a.x + b.x) >> 1, (a.y + b.y) >> 1);
-                if (self.IsContain(c)) {
-                    return true;
+                int n = self.Length;
+                var isContain = false;
+                var b = self[n - 1];
+                for(int i = 0; i < n; ++i) {
+                    var a = self[i];
+                    bool isInRange = a.y > p.y != b.y > p.y;
+                    if (isInRange) {
+                        long dx = b.x - a.x;
+                        long dy = b.y - a.y;
+                        long sx = (p.y - a.y) * dx / dy + a.x;
+                        if (p.x < sx) {
+                            isContain = !isContain;
+                        }
+                    }
+                
+                    if (Edge.IsContain(a, b, p)) {
+                        isContain = true;
+                        break;
+                    }
+
+                    b = a;
+                }
+            
+                if (!isContain) {
+                    return false;
                 }
 
-                a = b;
+                j += step;
             }
-
-            return false;
+            return true;
         }
+
     }
 
 }

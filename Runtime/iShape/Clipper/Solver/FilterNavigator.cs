@@ -1,6 +1,8 @@
 using iShape.Clipper.Collision.Navigation;
 using iShape.Clipper.Collision.Primitive;
+using iShape.Clipper.Util;
 using iShape.Collections;
+using iShape.Geometry;
 using Unity.Collections;
 
 namespace iShape.Clipper.Solver {
@@ -31,6 +33,34 @@ namespace iShape.Clipper.Solver {
     
         internal Cursor First() {
             return nextCursors.Length > 0 ? this.nextCursors[0] : Cursor.empty;
+        }
+        
+        
+        internal Solution.Nature Nature(NativeArray<IntVector> master, NativeArray<IntVector> slave, bool isSlaveClockWise) {
+            if (navigator.isEqual) {
+                return Solution.Nature.equal;
+            }
+
+            var cursor = this.First();
+            if (cursor.isNotEmpty) {
+                return Solution.Nature.overlap;
+            } else if (this.navigator.hasContacts) {
+                var masterBox = this.navigator.masterBox;
+                var slaveBox = this.navigator.slaveBox;
+                if (masterBox.IsInside(slaveBox) && master.IsContain(slave, isSlaveClockWise)) {
+                    return Solution.Nature.masterIncludeSlave;
+                }
+                if (slaveBox.IsInside(masterBox) && slave.IsContain(master, true)) {
+                    return Solution.Nature.slaveIncludeMaster;
+                }
+                return Solution.Nature.notOverlap;
+            } else if (master.IsContain(slave[0])) {
+                return Solution.Nature.masterIncludeSlave;
+            } else if (slave.IsContain(master[0])) {
+                return Solution.Nature.slaveIncludeMaster;
+            } else {
+                return Solution.Nature.notOverlap;
+            }
         }
         
         internal void Reset() {

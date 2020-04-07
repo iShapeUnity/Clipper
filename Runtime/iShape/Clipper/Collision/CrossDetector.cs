@@ -8,13 +8,26 @@ using Unity.Collections;
 namespace iShape.Clipper.Collision {
 
     public struct CrossDetector {
+        private struct AdjacencyMatrix {
+        
+            internal NativeArray<int> masterIndices;
+            internal NativeArray<int> slaveIndices;
+            internal readonly Util.Rect masterBox;
+            internal readonly Util.Rect slaveBox;
+        
+            internal AdjacencyMatrix(NativeArray<int> masterIndices, NativeArray<int> slaveIndices, Util.Rect masterBox, Util.Rect slaveBox) {
+                this.masterIndices = masterIndices;
+                this.slaveIndices = slaveIndices;
+                this.masterBox = masterBox;
+                this.slaveBox = slaveBox;
+            }
+        }
+        
         public static PinNavigator FindPins(NativeArray<IntVector> iMaster, NativeArray<IntVector> iSlave, IntGeom iGeom, PinPoint.PinType exclusionPinType, Allocator allocator) {
             var posMatrix = CreatePossibilityMatrix(iMaster, iSlave, allocator);
 
-            var masterIndices = posMatrix.masterIndices.ToArray(allocator);
-            var slaveIndices = posMatrix.slaveIndices.ToArray(allocator);
-
-            posMatrix.Dispose();
+            var masterIndices = posMatrix.masterIndices;
+            var slaveIndices = posMatrix.slaveIndices;
 
             var pinPoints = new DynamicArray<PinPoint>(0, allocator);
 
@@ -280,7 +293,7 @@ namespace iShape.Clipper.Collision {
                 hasExclusion = pinExclusion || hasExclusion;
             }
 
-            var navigator = BuildNavigator(ref pinPoints, ref pinPaths, iMaster.Length, hasExclusion, allocator);
+            var navigator = BuildNavigator(ref pinPoints, ref pinPaths, iMaster.Length, hasExclusion, posMatrix.masterBox, posMatrix.slaveBox, allocator);
 
             pinPoints.Dispose();
             pinPaths.Dispose();
@@ -289,7 +302,8 @@ namespace iShape.Clipper.Collision {
         }
 
         private static AdjacencyMatrix CreatePossibilityMatrix(NativeArray<IntVector> master, NativeArray<IntVector> slave, Allocator allocator) {
-            var slaveBoxArea = new Util.Rect(long.MaxValue, long.MaxValue, long.MinValue, long.MinValue);
+            var slaveBox = new Util.Rect(long.MaxValue, long.MaxValue, long.MinValue, long.MinValue);
+            var masterBox = new Util.Rect(long.MaxValue, long.MaxValue, long.MinValue, long.MinValue);
 
             var slaveSegmentsBoxAreas = new DynamicArray<Util.Rect>(8, allocator);
 
@@ -299,19 +313,23 @@ namespace iShape.Clipper.Collision {
                 var a = slave[i];
                 var b = slave[i != lastSlaveIndex ? i + 1 : 0];
 
-                slaveBoxArea.Assimilate(a);
+                slaveBox.Assimilate(a);
                 slaveSegmentsBoxAreas.Add(new Util.Rect(a, b));
             }
 
-            var posMatrix = new AdjacencyMatrix(0, allocator);
+            // var posMatrix = new AdjacencyMatrix(0, allocator);
 
+            var masterIndices = new DynamicArray<int>(Allocator.Temp);
+            var slaveIndices = new DynamicArray<int>(Allocator.Temp);
+            
             int lastMasterIndex = master.Length - 1;
 
             for (int i = 0; i <= lastMasterIndex; ++i) {
                 var master_0 = master[i];
                 var master_1 = master[i != lastMasterIndex ? i + 1 : 0];
+                masterBox.Assimilate(master_0);
 
-                bool isIntersectionImpossible = slaveBoxArea.IsNotIntersecting(master_0, master_1);
+                bool isIntersectionImpossible = slaveBox.IsNotIntersecting(master_0, master_1);
 
                 if (isIntersectionImpossible) {
                     continue;
@@ -322,14 +340,15 @@ namespace iShape.Clipper.Collision {
                     bool isIntersectionPossible = slaveSegmentsBoxAreas[j].IsIntersecting(segmentBoxArea);
 
                     if (isIntersectionPossible) {
-                        posMatrix.AddMate(i, j);
+                        masterIndices.Add(i);
+                        slaveIndices.Add(j);
                     }
                 }
             }
 
             slaveSegmentsBoxAreas.Dispose();
 
-            return posMatrix;
+            return new AdjacencyMatrix(masterIndices.Convert(), slaveIndices.Convert(), masterBox, slaveBox);
         }
 
 
@@ -507,9 +526,9 @@ namespace iShape.Clipper.Collision {
 
             return result;
         }
-
+        
         /// Build  Navigator section
-        private static PinNavigator BuildNavigator(ref DynamicArray<PinPoint> pinPointArray, ref DynamicArray<PinPath> pinPathArray, int masterCount, bool hasExclusion, Allocator allocator) {
+        private static PinNavigator BuildNavigator(ref DynamicArray<PinPoint> pinPointArray, ref DynamicArray<PinPath> pinPathArray, int masterCount, bool hasExclusion, Util.Rect masterBox, Util.Rect slaveBox, Allocator allocator) {
             var handlerArray = new DynamicArray<PinHandler>(pinPathArray.Count + pinPointArray.Count, allocator);
             int i = 0;
             while (i < pinPathArray.Count) {
@@ -536,7 +555,9 @@ namespace iShape.Clipper.Collision {
                     new NativeArray<PinPath>(0, allocator),
                     new NativeArray<PinPoint>(0, allocator),
                     new NativeArray<PinNode>(0, allocator),
-                    hasContacts
+                    hasContacts,
+                    masterBox,
+                    slaveBox
                 );
             }
 
@@ -551,7 +572,9 @@ namespace iShape.Clipper.Collision {
                     new NativeArray<PinPath>(0, allocator),
                     new NativeArray<PinPoint>(0, allocator),
                     new NativeArray<PinNode>(0, allocator),
-                    hasContacts
+                    hasContacts,
+                    masterBox,
+                    slaveBox
                 );
             }
 
@@ -576,7 +599,15 @@ namespace iShape.Clipper.Collision {
             
             handlerArray.Dispose();
 
-            return new PinNavigator(slavePath, pinPathArray.ToArray(allocator), pinPointArray.ToArray(allocator), nodes, hasContacts);
+            return new PinNavigator(
+                slavePath,
+                pinPathArray.ToArray(allocator),
+                pinPointArray.ToArray(allocator),
+                nodes,
+                hasContacts,
+                masterBox,
+                slaveBox
+                );
         }
 
         private static void Compact(ref DynamicArray<PinHandler> handlerArray, ref DynamicArray<PinPoint> pinPointArray, ref DynamicArray<PinPath> pinPathArray, Allocator allocator) {

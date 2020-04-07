@@ -20,7 +20,7 @@ namespace Tests.Clipper {
 
             var solution = master.Subtract(slave, iGeom, Allocator.Temp);
 
-            Assert.AreEqual(solution.nature, SubtractSolution.Nature.overlap);
+            Assert.AreEqual(solution.nature, Solution.Nature.overlap);
             Assert.AreEqual(solution.pathList.Count, 1);
 
             var path = solution.pathList.Get(0, Allocator.Temp).ToArray();
@@ -38,7 +38,8 @@ namespace Tests.Clipper {
             Assert.AreEqual(path, sample);
 
             solution.Dispose();
-        }
+            master.Dispose();
+            slave.Dispose();}
         
         [Test]
         public void Test_01() {
@@ -49,7 +50,7 @@ namespace Tests.Clipper {
 
             var solution = master.Subtract(slave, iGeom, Allocator.Temp);
 
-            Assert.AreEqual(solution.nature, SubtractSolution.Nature.overlap);
+            Assert.AreEqual(solution.nature, Solution.Nature.overlap);
             Assert.AreEqual(solution.pathList.Count, 1);
 
             var path = solution.pathList.Get(0, Allocator.Temp).ToArray();
@@ -63,7 +64,8 @@ namespace Tests.Clipper {
             Assert.AreEqual(path, sample);
 
             solution.Dispose();
-        }
+            master.Dispose();
+            slave.Dispose();}
         
         [Test]
         public void Test_02() {
@@ -74,7 +76,7 @@ namespace Tests.Clipper {
 
             var solution = master.Subtract(slave, iGeom, Allocator.Temp);
 
-            Assert.AreEqual(solution.nature, SubtractSolution.Nature.overlap);
+            Assert.AreEqual(solution.nature, Solution.Nature.overlap);
             Assert.AreEqual(solution.pathList.Count, 1);
 
             var path = solution.pathList.Get(0, Allocator.Temp).ToArray();
@@ -88,7 +90,8 @@ namespace Tests.Clipper {
             Assert.AreEqual(path, sample);
 
             solution.Dispose();
-        }
+            master.Dispose();
+            slave.Dispose();}
         
         [Test]
         public void Test_03() {
@@ -99,7 +102,7 @@ namespace Tests.Clipper {
 
             var solution = master.Subtract(slave, iGeom, Allocator.Temp);
 
-            Assert.AreEqual(solution.nature, SubtractSolution.Nature.overlap);
+            Assert.AreEqual(solution.nature, Solution.Nature.overlap);
             Assert.AreEqual(solution.pathList.Count, 1);
 
             var path = solution.pathList.Get(0, Allocator.Temp).ToArray();
@@ -113,7 +116,8 @@ namespace Tests.Clipper {
             Assert.AreEqual(path, sample);
 
             solution.Dispose();
-        }
+            master.Dispose();
+            slave.Dispose();}
         [Test]
         public void Test_04() {
             var data = SubtractTestData.data[4];
@@ -123,7 +127,7 @@ namespace Tests.Clipper {
 
             var solution = master.Subtract(slave, iGeom, Allocator.Temp);
 
-            Assert.AreEqual(solution.nature, SubtractSolution.Nature.overlap);
+            Assert.AreEqual(solution.nature, Solution.Nature.overlap);
             Assert.AreEqual(solution.pathList.Count, 1);
 
             var path = solution.pathList.Get(0, Allocator.Temp).ToArray();
@@ -136,7 +140,8 @@ namespace Tests.Clipper {
             Assert.AreEqual(path, sample);
 
             solution.Dispose();
-        }
+            master.Dispose();
+            slave.Dispose();}
         
         [Test]
         public void Test_05() {
@@ -147,7 +152,7 @@ namespace Tests.Clipper {
 
             var solution = master.Subtract(slave, iGeom, Allocator.Temp);
 
-            Assert.AreEqual(solution.nature, SubtractSolution.Nature.overlap);
+            Assert.AreEqual(solution.nature, Solution.Nature.overlap);
             Assert.AreEqual(solution.pathList.Count, 1);
 
             var path = solution.pathList.Get(0, Allocator.Temp).ToArray();
@@ -160,7 +165,8 @@ namespace Tests.Clipper {
             Assert.AreEqual(path, sample);
 
             solution.Dispose();
-        }
+            master.Dispose();
+            slave.Dispose();}
         
         [Test]
         public void Test_06() {
@@ -171,7 +177,7 @@ namespace Tests.Clipper {
 
             var solution = master.Subtract(slave, iGeom, Allocator.Temp);
 
-            Assert.AreEqual(solution.nature, SubtractSolution.Nature.overlap);
+            Assert.AreEqual(solution.nature, Solution.Nature.overlap);
             Assert.AreEqual(solution.pathList.Count, 2);
 
             var path0 = solution.pathList.Get(0, Allocator.Temp).ToArray();
@@ -193,7 +199,8 @@ namespace Tests.Clipper {
             Assert.AreEqual(path1, sample1);
             
             solution.Dispose();
-        }
+            master.Dispose();
+            slave.Dispose();}
         
         [Test]
         public void Test_07() {
@@ -204,7 +211,7 @@ namespace Tests.Clipper {
 
             var solution = master.Subtract(slave, iGeom, Allocator.Temp);
 
-            Assert.AreEqual(solution.nature, SubtractSolution.Nature.overlap);
+            Assert.AreEqual(solution.nature, Solution.Nature.overlap);
             Assert.AreEqual(solution.pathList.Count, 2);
 
             var path0 = solution.pathList.Get(0, Allocator.Temp).ToArray();
@@ -229,7 +236,8 @@ namespace Tests.Clipper {
             Assert.AreEqual(path1, sample1);
             
             solution.Dispose();
-        }
+            master.Dispose();
+            slave.Dispose();}
         
         [Test]
         public void Test_08() {
@@ -240,7 +248,7 @@ namespace Tests.Clipper {
 
             var solution = master.Subtract(slave, iGeom, Allocator.Temp);
 
-            Assert.AreEqual(solution.nature, SubtractSolution.Nature.overlap);
+            Assert.AreEqual(solution.nature, Solution.Nature.overlap);
             Assert.AreEqual(solution.pathList.Count, 2);
 
             var path0 = solution.pathList.Get(0, Allocator.Temp).ToArray();
@@ -265,7 +273,8 @@ namespace Tests.Clipper {
             Assert.AreEqual(path1, sample1);
             
             solution.Dispose();
-        }
+            master.Dispose();
+            slave.Dispose();}
         
         [Test]
         public void Test_09() {
@@ -276,7 +285,7 @@ namespace Tests.Clipper {
 
             var solution = master.Subtract(slave, iGeom, Allocator.Temp);
 
-            Assert.AreEqual(solution.nature, SubtractSolution.Nature.overlap);
+            Assert.AreEqual(solution.nature, Solution.Nature.overlap);
             Assert.AreEqual(solution.pathList.Count, 2);
 
             var path0 = solution.pathList.Get(0, Allocator.Temp).ToArray();
@@ -300,7 +309,8 @@ namespace Tests.Clipper {
             Assert.AreEqual(path1, sample1);
             
             solution.Dispose();
-        }
+            master.Dispose();
+            slave.Dispose();}
         
         [Test]
         public void Test_10() {
@@ -311,7 +321,7 @@ namespace Tests.Clipper {
 
             var solution = master.Subtract(slave, iGeom, Allocator.Temp);
 
-            Assert.AreEqual(solution.nature, SubtractSolution.Nature.overlap);
+            Assert.AreEqual(solution.nature, Solution.Nature.overlap);
             Assert.AreEqual(solution.pathList.Count, 2);
 
             var path0 = solution.pathList.Get(0, Allocator.Temp).ToArray();
@@ -335,7 +345,8 @@ namespace Tests.Clipper {
             Assert.AreEqual(path1, sample1);
             
             solution.Dispose();
-        }
+            master.Dispose();
+            slave.Dispose();}
         
         [Test]
         public void Test_11() {
@@ -346,7 +357,7 @@ namespace Tests.Clipper {
 
             var solution = master.Subtract(slave, iGeom, Allocator.Temp);
 
-            Assert.AreEqual(solution.nature, SubtractSolution.Nature.overlap);
+            Assert.AreEqual(solution.nature, Solution.Nature.overlap);
             Assert.AreEqual(solution.pathList.Count, 2);
 
             var path0 = solution.pathList.Get(0, Allocator.Temp).ToArray();
@@ -368,7 +379,8 @@ namespace Tests.Clipper {
             Assert.AreEqual(path1, sample1);
             
             solution.Dispose();
-        }
+            master.Dispose();
+            slave.Dispose();}
         
         [Test]
         public void Test_12() {
@@ -379,7 +391,7 @@ namespace Tests.Clipper {
 
             var solution = master.Subtract(slave, iGeom, Allocator.Temp);
 
-            Assert.AreEqual(solution.nature, SubtractSolution.Nature.overlap);
+            Assert.AreEqual(solution.nature, Solution.Nature.overlap);
             Assert.AreEqual(solution.pathList.Count, 1);
 
             var path = solution.pathList.Get(0, Allocator.Temp).ToArray();
@@ -396,7 +408,8 @@ namespace Tests.Clipper {
             Assert.AreEqual(path, sample);
 
             solution.Dispose();
-        }
+            master.Dispose();
+            slave.Dispose();}
         
         [Test]
         public void Test_13() {
@@ -407,10 +420,11 @@ namespace Tests.Clipper {
 
             var solution = master.Subtract(slave, iGeom, Allocator.Temp);
 
-            Assert.AreEqual(solution.nature, SubtractSolution.Nature.notOverlap);
+            Assert.AreEqual(solution.nature, Solution.Nature.notOverlap);
 
             solution.Dispose();
-        }
+            master.Dispose();
+            slave.Dispose();}
         
         [Test]
         public void Test_14() {
@@ -421,7 +435,7 @@ namespace Tests.Clipper {
 
             var solution = master.Subtract(slave, iGeom, Allocator.Temp);
 
-            Assert.AreEqual(solution.nature, SubtractSolution.Nature.overlap);
+            Assert.AreEqual(solution.nature, Solution.Nature.overlap);
             Assert.AreEqual(solution.pathList.Count, 4);
 
             var path0 = solution.pathList.Get(0, Allocator.Temp).ToArray();
@@ -461,7 +475,8 @@ namespace Tests.Clipper {
             Assert.AreEqual(path3, sample3);
             
             solution.Dispose();
-        }
+            master.Dispose();
+            slave.Dispose();}
         
         [Test]
         public void Test_15() {
@@ -472,7 +487,7 @@ namespace Tests.Clipper {
 
             var solution = master.Subtract(slave, iGeom, Allocator.Temp);
 
-            Assert.AreEqual(solution.nature, SubtractSolution.Nature.overlap);
+            Assert.AreEqual(solution.nature, Solution.Nature.overlap);
             Assert.AreEqual(solution.pathList.Count, 1);
 
             var path = solution.pathList.Get(0, Allocator.Temp).ToArray();
@@ -490,7 +505,8 @@ namespace Tests.Clipper {
             Assert.AreEqual(path, sample);
 
             solution.Dispose();
-        }
+            master.Dispose();
+            slave.Dispose();}
         
         [Test]
         public void Test_16() {
@@ -501,11 +517,12 @@ namespace Tests.Clipper {
 
             var solution = master.Subtract(slave, iGeom, Allocator.Temp);
 
-            Assert.AreEqual(solution.nature, SubtractSolution.Nature.notOverlap);
+            Assert.AreEqual(solution.nature, Solution.Nature.notOverlap);
             Assert.AreEqual(solution.pathList.Count, 0);
 
             solution.Dispose();
-        }
+            master.Dispose();
+            slave.Dispose();}
         
         [Test]
         public void Test_17() {
@@ -516,7 +533,7 @@ namespace Tests.Clipper {
 
             var solution = master.Subtract(slave, iGeom, Allocator.Temp);
 
-            Assert.AreEqual(solution.nature, SubtractSolution.Nature.overlap);
+            Assert.AreEqual(solution.nature, Solution.Nature.overlap);
             Assert.AreEqual(solution.pathList.Count, 3);
 
             var path0 = solution.pathList.Get(0, Allocator.Temp).ToArray();
@@ -550,7 +567,8 @@ namespace Tests.Clipper {
             Assert.AreEqual(path2, sample2);
 
             solution.Dispose();
-        }
+            master.Dispose();
+            slave.Dispose();}
 
         [Test]
         public void Test_18() {
@@ -561,7 +579,7 @@ namespace Tests.Clipper {
 
             var solution = master.Subtract(slave, iGeom, Allocator.Temp);
 
-            Assert.AreEqual(solution.nature, SubtractSolution.Nature.overlap);
+            Assert.AreEqual(solution.nature, Solution.Nature.overlap);
             Assert.AreEqual(solution.pathList.Count, 2);
 
             var path0 = solution.pathList.Get(0, Allocator.Temp).ToArray();
@@ -589,7 +607,8 @@ namespace Tests.Clipper {
             Assert.AreEqual(path1, sample1);
 
             solution.Dispose();
-        }
+            master.Dispose();
+            slave.Dispose();}
         
         [Test]
         public void Test_19() {
@@ -600,7 +619,7 @@ namespace Tests.Clipper {
 
             var solution = master.Subtract(slave, iGeom, Allocator.Temp);
 
-            Assert.AreEqual(solution.nature, SubtractSolution.Nature.overlap);
+            Assert.AreEqual(solution.nature, Solution.Nature.overlap);
             Assert.AreEqual(solution.pathList.Count, 1);
 
             var path = solution.pathList.Get(0, Allocator.Temp).ToArray();
@@ -618,7 +637,8 @@ namespace Tests.Clipper {
             Assert.AreEqual(path, sample);
 
             solution.Dispose();
-        }
+            master.Dispose();
+            slave.Dispose();}
         
         [Test]
         public void Test_20() {
@@ -629,7 +649,7 @@ namespace Tests.Clipper {
 
             var solution = master.Subtract(slave, iGeom, Allocator.Temp);
 
-            Assert.AreEqual(solution.nature, SubtractSolution.Nature.overlap);
+            Assert.AreEqual(solution.nature, Solution.Nature.overlap);
             Assert.AreEqual(solution.pathList.Count, 1);
 
             var path = solution.pathList.Get(0, Allocator.Temp).ToArray();
@@ -646,7 +666,8 @@ namespace Tests.Clipper {
             Assert.AreEqual(path, sample);
 
             solution.Dispose();
-        }
+            master.Dispose();
+            slave.Dispose();}
         
         [Test]
         public void Test_21() {
@@ -657,7 +678,7 @@ namespace Tests.Clipper {
 
             var solution = master.Subtract(slave, iGeom, Allocator.Temp);
 
-            Assert.AreEqual(solution.nature, SubtractSolution.Nature.overlap);
+            Assert.AreEqual(solution.nature, Solution.Nature.overlap);
             Assert.AreEqual(solution.pathList.Count, 1);
 
             var path = solution.pathList.Get(0, Allocator.Temp).ToArray();
@@ -675,7 +696,8 @@ namespace Tests.Clipper {
             Assert.AreEqual(path, sample);
 
             solution.Dispose();
-        }
+            master.Dispose();
+            slave.Dispose();}
         
         [Test]
         public void Test_22() {
@@ -686,7 +708,7 @@ namespace Tests.Clipper {
 
             var solution = master.Subtract(slave, iGeom, Allocator.Temp);
 
-            Assert.AreEqual(solution.nature, SubtractSolution.Nature.overlap);
+            Assert.AreEqual(solution.nature, Solution.Nature.overlap);
             Assert.AreEqual(solution.pathList.Count, 1);
 
             var path = solution.pathList.Get(0, Allocator.Temp).ToArray();
@@ -700,7 +722,8 @@ namespace Tests.Clipper {
             Assert.AreEqual(path, sample);
 
             solution.Dispose();
-        }
+            master.Dispose();
+            slave.Dispose();}
         
         [Test]
         public void Test_23() {
@@ -711,7 +734,7 @@ namespace Tests.Clipper {
 
             var solution = master.Subtract(slave, iGeom, Allocator.Temp);
 
-            Assert.AreEqual(solution.nature, SubtractSolution.Nature.overlap);
+            Assert.AreEqual(solution.nature, Solution.Nature.overlap);
             Assert.AreEqual(solution.pathList.Count, 1);
 
             var path = solution.pathList.Get(0, Allocator.Temp).ToArray();
@@ -731,7 +754,8 @@ namespace Tests.Clipper {
             Assert.AreEqual(path, sample);
 
             solution.Dispose();
-        }
+            master.Dispose();
+            slave.Dispose();}
         
         [Test]
         public void Test_24() {
@@ -742,7 +766,7 @@ namespace Tests.Clipper {
 
             var solution = master.Subtract(slave, iGeom, Allocator.Temp);
 
-            Assert.AreEqual(solution.nature, SubtractSolution.Nature.overlap);
+            Assert.AreEqual(solution.nature, Solution.Nature.overlap);
             Assert.AreEqual(solution.pathList.Count, 2);
 
             var path0 = solution.pathList.Get(0, Allocator.Temp).ToArray();
@@ -767,7 +791,8 @@ namespace Tests.Clipper {
             Assert.AreEqual(path1, sample1);
 
             solution.Dispose();
-        }
+            master.Dispose();
+            slave.Dispose();}
         
         [Test]
         public void Test_25() {
@@ -778,7 +803,7 @@ namespace Tests.Clipper {
 
             var solution = master.Subtract(slave, iGeom, Allocator.Temp);
 
-            Assert.AreEqual(solution.nature, SubtractSolution.Nature.overlap);
+            Assert.AreEqual(solution.nature, Solution.Nature.overlap);
             Assert.AreEqual(solution.pathList.Count, 2);
 
             var path0 = solution.pathList.Get(0, Allocator.Temp).ToArray();
@@ -803,7 +828,8 @@ namespace Tests.Clipper {
             Assert.AreEqual(path1, sample1);
 
             solution.Dispose();
-        }
+            master.Dispose();
+            slave.Dispose();}
         
         [Test]
         public void Test_26() {
@@ -814,7 +840,7 @@ namespace Tests.Clipper {
 
             var solution = master.Subtract(slave, iGeom, Allocator.Temp);
 
-            Assert.AreEqual(solution.nature, SubtractSolution.Nature.overlap);
+            Assert.AreEqual(solution.nature, Solution.Nature.overlap);
             Assert.AreEqual(solution.pathList.Count, 2);
 
             var path0 = solution.pathList.Get(0, Allocator.Temp).ToArray();
@@ -839,7 +865,8 @@ namespace Tests.Clipper {
             Assert.AreEqual(path1, sample1);
 
             solution.Dispose();
-        }
+            master.Dispose();
+            slave.Dispose();}
         
         [Test]
         public void Test_27() {
@@ -850,7 +877,7 @@ namespace Tests.Clipper {
 
             var solution = master.Subtract(slave, iGeom, Allocator.Temp);
 
-            Assert.AreEqual(solution.nature, SubtractSolution.Nature.overlap);
+            Assert.AreEqual(solution.nature, Solution.Nature.overlap);
             Assert.AreEqual(solution.pathList.Count, 1);
 
             var path = solution.pathList.Get(0, Allocator.Temp).ToArray();
@@ -870,7 +897,8 @@ namespace Tests.Clipper {
             Assert.AreEqual(path, sample);
 
             solution.Dispose();
-        }
+            master.Dispose();
+            slave.Dispose();}
         
         [Test]
         public void Test_28() {
@@ -881,7 +909,7 @@ namespace Tests.Clipper {
 
             var solution = master.Subtract(slave, iGeom, Allocator.Temp);
 
-            Assert.AreEqual(solution.nature, SubtractSolution.Nature.overlap);
+            Assert.AreEqual(solution.nature, Solution.Nature.overlap);
             Assert.AreEqual(solution.pathList.Count, 2);
 
             var path0 = solution.pathList.Get(0, Allocator.Temp).ToArray();
@@ -905,7 +933,8 @@ namespace Tests.Clipper {
             Assert.AreEqual(path1, sample1);
 
             solution.Dispose();
-        }
+            master.Dispose();
+            slave.Dispose();}
         
         [Test]
         public void Test_29() {
@@ -916,11 +945,12 @@ namespace Tests.Clipper {
 
             var solution = master.Subtract(slave, iGeom, Allocator.Temp);
 
-            Assert.AreEqual(solution.nature, SubtractSolution.Nature.overlap);
+            Assert.AreEqual(solution.nature, Solution.Nature.overlap);
             Assert.AreEqual(solution.pathList.Count, 1);
 
             solution.Dispose();
-        }
+            master.Dispose();
+            slave.Dispose();}
         
         [Test]
         public void Test_30() {
@@ -931,7 +961,7 @@ namespace Tests.Clipper {
 
             var solution = master.Subtract(slave, iGeom, Allocator.Temp);
 
-            Assert.AreEqual(solution.nature, SubtractSolution.Nature.overlap);
+            Assert.AreEqual(solution.nature, Solution.Nature.overlap);
             Assert.AreEqual(solution.pathList.Count, 1);
 
             var path = solution.pathList.Get(0, Allocator.Temp).ToArray();
@@ -945,7 +975,8 @@ namespace Tests.Clipper {
             Assert.AreEqual(path, sample);
 
             solution.Dispose();
-        }
+            master.Dispose();
+            slave.Dispose();}
         
         [Test]
         public void Test_31() {
@@ -956,7 +987,7 @@ namespace Tests.Clipper {
 
             var solution = master.Subtract(slave, iGeom, Allocator.Temp);
 
-            Assert.AreEqual(solution.nature, SubtractSolution.Nature.overlap);
+            Assert.AreEqual(solution.nature, Solution.Nature.overlap);
             Assert.AreEqual(solution.pathList.Count, 1);
 
             var path = solution.pathList.Get(0, Allocator.Temp).ToArray();
@@ -974,7 +1005,8 @@ namespace Tests.Clipper {
             Assert.AreEqual(path, sample);
 
             solution.Dispose();
-        }
+            master.Dispose();
+            slave.Dispose();}
         
         [Test]
         public void Test_32() {
@@ -985,7 +1017,7 @@ namespace Tests.Clipper {
 
             var solution = master.Subtract(slave, iGeom, Allocator.Temp);
 
-            Assert.AreEqual(solution.nature, SubtractSolution.Nature.overlap);
+            Assert.AreEqual(solution.nature, Solution.Nature.overlap);
             Assert.AreEqual(solution.pathList.Count, 1);
 
             var path = solution.pathList.Get(0, Allocator.Temp).ToArray();
@@ -1003,7 +1035,8 @@ namespace Tests.Clipper {
             Assert.AreEqual(path, sample);
 
             solution.Dispose();
-        }
+            master.Dispose();
+            slave.Dispose();}
         
         [Test]
         public void Test_33() {
@@ -1014,7 +1047,7 @@ namespace Tests.Clipper {
 
             var solution = master.Subtract(slave, iGeom, Allocator.Temp);
 
-            Assert.AreEqual(solution.nature, SubtractSolution.Nature.overlap);
+            Assert.AreEqual(solution.nature, Solution.Nature.overlap);
             Assert.AreEqual(solution.pathList.Count, 2);
 
             var path0 = solution.pathList.Get(0, Allocator.Temp).ToArray();
@@ -1044,7 +1077,8 @@ namespace Tests.Clipper {
             Assert.AreEqual(path1, sample1);
 
             solution.Dispose();
-        }
+            master.Dispose();
+            slave.Dispose();}
         
         [Test]
         public void Test_34() {
@@ -1055,7 +1089,7 @@ namespace Tests.Clipper {
 
             var solution = master.Subtract(slave, iGeom, Allocator.Temp);
 
-            Assert.AreEqual(solution.nature, SubtractSolution.Nature.overlap);
+            Assert.AreEqual(solution.nature, Solution.Nature.overlap);
             Assert.AreEqual(solution.pathList.Count, 2);
 
             var path0 = solution.pathList.Get(0, Allocator.Temp);
@@ -1067,7 +1101,8 @@ namespace Tests.Clipper {
             path1.Dispose();
 
             solution.Dispose();
-        }
+            master.Dispose();
+            slave.Dispose();}
         
         [Test]
         public void Test_35() {
@@ -1078,7 +1113,7 @@ namespace Tests.Clipper {
 
             var solution = master.Subtract(slave, iGeom, Allocator.Temp);
 
-            Assert.AreEqual(solution.nature, SubtractSolution.Nature.overlap);
+            Assert.AreEqual(solution.nature, Solution.Nature.overlap);
             Assert.AreEqual(solution.pathList.Count, 2);
 
             var path0 = solution.pathList.Get(0, Allocator.Temp).ToArray();
@@ -1095,7 +1130,8 @@ namespace Tests.Clipper {
             Assert.AreEqual(path1, sample1);
 
             solution.Dispose();
-        }
+            master.Dispose();
+            slave.Dispose();}
         
         [Test]
         public void Test_36() {
@@ -1106,7 +1142,7 @@ namespace Tests.Clipper {
 
             var solution = master.Subtract(slave, iGeom, Allocator.Temp);
 
-            Assert.AreEqual(solution.nature, SubtractSolution.Nature.overlap);
+            Assert.AreEqual(solution.nature, Solution.Nature.overlap);
             Assert.AreEqual(solution.pathList.Count, 2);
 
             var path0 = solution.pathList.Get(0, Allocator.Temp).ToArray();
@@ -1129,7 +1165,8 @@ namespace Tests.Clipper {
             Assert.AreEqual(path1, sample1);
 
             solution.Dispose();
-        }
+            master.Dispose();
+            slave.Dispose();}
         
         [Test]
         public void Test_37() {
@@ -1140,7 +1177,7 @@ namespace Tests.Clipper {
 
             var solution = master.Subtract(slave, iGeom, Allocator.Temp);
 
-            Assert.AreEqual(solution.nature, SubtractSolution.Nature.overlap);
+            Assert.AreEqual(solution.nature, Solution.Nature.overlap);
             Assert.AreEqual(solution.pathList.Count, 1);
 
             var path = solution.pathList.Get(0, Allocator.Temp).ToArray();
@@ -1157,7 +1194,8 @@ namespace Tests.Clipper {
             Assert.AreEqual(path, sample);
 
             solution.Dispose();
-        }
+            master.Dispose();
+            slave.Dispose();}
         
         [Test]
         public void Test_38() {
@@ -1168,7 +1206,7 @@ namespace Tests.Clipper {
 
             var solution = master.Subtract(slave, iGeom, Allocator.Temp);
 
-            Assert.AreEqual(solution.nature, SubtractSolution.Nature.overlap);
+            Assert.AreEqual(solution.nature, Solution.Nature.overlap);
             Assert.AreEqual(solution.pathList.Count, 5);
 
             var path0 = solution.pathList.Get(0, Allocator.Temp).ToArray();
@@ -1223,7 +1261,8 @@ namespace Tests.Clipper {
             Assert.AreEqual(path4, sample4);
             
             solution.Dispose();
-        }
+            master.Dispose();
+            slave.Dispose();}
         
                 
         [Test]
@@ -1235,7 +1274,7 @@ namespace Tests.Clipper {
 
             var solution = master.Subtract(slave, iGeom, Allocator.Temp);
 
-            Assert.AreEqual(solution.nature, SubtractSolution.Nature.overlap);
+            Assert.AreEqual(solution.nature, Solution.Nature.overlap);
             Assert.AreEqual(solution.pathList.Count, 2);
 
             var path0 = solution.pathList.Get(0, Allocator.Temp).ToArray();
@@ -1258,7 +1297,8 @@ namespace Tests.Clipper {
             Assert.AreEqual(path1, sample1);
 
             solution.Dispose();
-        }
+            master.Dispose();
+            slave.Dispose();}
         
         [Test]
         public void Test_40() {
@@ -1269,11 +1309,12 @@ namespace Tests.Clipper {
 
             var solution = master.Subtract(slave, iGeom, Allocator.Temp);
 
-            Assert.AreEqual(solution.nature, SubtractSolution.Nature.empty);
+            Assert.AreEqual(solution.nature, Solution.Nature.equal);
             Assert.AreEqual(solution.pathList.Count, 0);
 
             solution.Dispose();
-        }
+            master.Dispose();
+            slave.Dispose();}
         
         [Test]
         public void Test_41() {
@@ -1284,7 +1325,7 @@ namespace Tests.Clipper {
 
             var solution = master.Subtract(slave, iGeom, Allocator.Temp);
 
-            Assert.AreEqual(solution.nature, SubtractSolution.Nature.overlap);
+            Assert.AreEqual(solution.nature, Solution.Nature.overlap);
             Assert.AreEqual(solution.pathList.Count, 1);
 
             var path = solution.pathList.Get(0, Allocator.Temp).ToArray();
@@ -1298,7 +1339,8 @@ namespace Tests.Clipper {
             Assert.AreEqual(path, sample);
 
             solution.Dispose();
-        }
+            master.Dispose();
+            slave.Dispose();}
         
         [Test]
         public void Test_42() {
@@ -1309,7 +1351,7 @@ namespace Tests.Clipper {
 
             var solution = master.Subtract(slave, iGeom, Allocator.Temp);
 
-            Assert.AreEqual(solution.nature, SubtractSolution.Nature.overlap);
+            Assert.AreEqual(solution.nature, Solution.Nature.overlap);
             Assert.AreEqual(solution.pathList.Count, 1);
 
             var path = solution.pathList.Get(0, Allocator.Temp).ToArray();
@@ -1323,7 +1365,8 @@ namespace Tests.Clipper {
             Assert.AreEqual(path, sample);
 
             solution.Dispose();
-        }
+            master.Dispose();
+            slave.Dispose();}
         
         [Test]
         public void Test_43() {
@@ -1334,7 +1377,7 @@ namespace Tests.Clipper {
 
             var solution = master.Subtract(slave, iGeom, Allocator.Temp);
 
-            Assert.AreEqual(solution.nature, SubtractSolution.Nature.overlap);
+            Assert.AreEqual(solution.nature, Solution.Nature.overlap);
             Assert.AreEqual(solution.pathList.Count, 1);
 
             var path = solution.pathList.Get(0, Allocator.Temp).ToArray();
@@ -1352,7 +1395,8 @@ namespace Tests.Clipper {
             Assert.AreEqual(path, sample);
 
             solution.Dispose();
-        }
+            master.Dispose();
+            slave.Dispose();}
         
         [Test]
         public void Test_44() {
@@ -1363,7 +1407,7 @@ namespace Tests.Clipper {
 
             var solution = master.Subtract(slave, iGeom, Allocator.Temp);
 
-            Assert.AreEqual(solution.nature, SubtractSolution.Nature.overlap);
+            Assert.AreEqual(solution.nature, Solution.Nature.overlap);
             Assert.AreEqual(solution.pathList.Count, 1);
 
             var path = solution.pathList.Get(0, Allocator.Temp).ToArray();
@@ -1381,7 +1425,8 @@ namespace Tests.Clipper {
             Assert.AreEqual(path, sample);
 
             solution.Dispose();
-        }
+            master.Dispose();
+            slave.Dispose();}
         
         [Test]
         public void Test_45() {
@@ -1392,7 +1437,7 @@ namespace Tests.Clipper {
 
             var solution = master.Subtract(slave, iGeom, Allocator.Temp);
 
-            Assert.AreEqual(solution.nature, SubtractSolution.Nature.overlap);
+            Assert.AreEqual(solution.nature, Solution.Nature.overlap);
             Assert.AreEqual(solution.pathList.Count, 1);
 
             var path = solution.pathList.Get(0, Allocator.Temp).ToArray();
@@ -1411,7 +1456,62 @@ namespace Tests.Clipper {
             Assert.AreEqual(path, sample);
 
             solution.Dispose();
-        }
+            master.Dispose();
+            slave.Dispose();}
+        
+        [Test]
+        public void Test_46() {
+            var data = SubtractTestData.data[46];
+
+            var master = new NativeArray<IntVector>(iGeom.Int(data[0]), Allocator.Temp);
+            var slave = new NativeArray<IntVector>(iGeom.Int(data[1]), Allocator.Temp);
+
+            var solution = master.Subtract(slave, iGeom, Allocator.Temp);
+
+            Assert.AreEqual(solution.nature, Solution.Nature.notOverlap);
+
+            solution.Dispose();
+            master.Dispose();
+            slave.Dispose();}
+        
+        [Test]
+        public void Test_47() {
+            var data = SubtractTestData.data[47];
+
+            var master = new NativeArray<IntVector>(iGeom.Int(data[0]), Allocator.Temp);
+            var slave = new NativeArray<IntVector>(iGeom.Int(data[1]), Allocator.Temp);
+
+            var solution = master.Subtract(slave, iGeom, Allocator.Temp);
+
+            Assert.AreEqual(solution.nature, Solution.Nature.notOverlap);
+
+            solution.Dispose();
+            master.Dispose();
+            slave.Dispose();}
+        
+        [Test]
+        public void Test_100() {
+            var master = new NativeArray<IntVector>(new [] {
+                new IntVector(-2, 2),
+                new IntVector(2, 2),
+                new IntVector(2, 0),
+                new IntVector(-2, 0)
+            }, Allocator.Temp);
+            
+            var slave = new NativeArray<IntVector>(new [] {
+                new IntVector(-4, 7),
+                new IntVector(-4, -7),
+                new IntVector(3, -7),
+                new IntVector(1, 7)
+            }, Allocator.Temp);
+
+            var solution = master.Subtract(slave, iGeom, Allocator.Temp);
+
+            Assert.AreEqual(solution.nature, Solution.Nature.slaveIncludeMaster);
+
+            solution.Dispose();
+            master.Dispose();
+            slave.Dispose();}
     }
 
 }
