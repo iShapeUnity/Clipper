@@ -13,81 +13,33 @@ namespace Tests.Clipper {
         public void Test_00() {
             var corner = new Corner(iGeom.Int(new Vector2(0, 0)),
                 iGeom.Int(new Vector2(0, 10)),
-                iGeom.Int(new Vector2(10, 0)),
-                iGeom
+                iGeom.Int(new Vector2(10, 0))
             );
 
-            Assert.AreEqual(corner.IsBetween(iGeom.Int(new Vector2(5, 5))), false);
-            Assert.AreEqual(corner.IsBetween(iGeom.Int(new Vector2(5, -5))), true);
-            Assert.AreEqual(corner.IsBetween(iGeom.Int(new Vector2(-5, -5))), true);
-            Assert.AreEqual(corner.IsBetween(iGeom.Int(new Vector2(0, -5))), true);
-            Assert.AreEqual(corner.IsBetween(iGeom.Int(new Vector2(-5, 5))), true);
-            Assert.AreEqual(corner.IsBetween(iGeom.Int(new Vector2(-5, 0))), true);
+            Assert.AreEqual(corner.IsBetweenIntVersion(iGeom.Int(new Vector2(5, y: 5)), false), Corner.Result.absent);
+            Assert.AreEqual(corner.IsBetweenIntVersion(iGeom.Int(new Vector2(5, y: 5)), true), Corner.Result.contain);
+
+            Assert.AreEqual(corner.IsBetweenIntVersion(iGeom.Int(new Vector2(5, y: -5)), false), Corner.Result.contain);
+            Assert.AreEqual(corner.IsBetweenIntVersion(iGeom.Int(new Vector2(5, y: -5)), true), Corner.Result.absent);
+
+            Assert.AreEqual(corner.IsBetweenIntVersion(iGeom.Int(new Vector2(-5, y: -5)), false), Corner.Result.contain);
+            Assert.AreEqual(corner.IsBetweenIntVersion(iGeom.Int(new Vector2(-5, y: -5)), true), Corner.Result.absent);
+
+            Assert.AreEqual(corner.IsBetweenIntVersion(iGeom.Int(new Vector2(0, y: -5)), false), Corner.Result.contain);
+            Assert.AreEqual(corner.IsBetweenIntVersion(iGeom.Int(new Vector2(0, y: -5)), true), Corner.Result.absent);
+
+            Assert.AreEqual(corner.IsBetweenIntVersion(iGeom.Int(new Vector2(-5, y: 5)), false), Corner.Result.contain);
+            Assert.AreEqual(corner.IsBetweenIntVersion(iGeom.Int(new Vector2(-5, y: 5)), true), Corner.Result.absent);
+
+            Assert.AreEqual(corner.IsBetweenIntVersion(iGeom.Int(new Vector2(-5, y: 0)), false), Corner.Result.contain);
+            Assert.AreEqual(corner.IsBetweenIntVersion(iGeom.Int(new Vector2(-5, y: 0)), true), Corner.Result.absent);
+
+            Assert.AreEqual(corner.IsBetweenIntVersion(iGeom.Int(new Vector2(0, y: 5)), false), Corner.Result.onBoarder);
+            Assert.AreEqual(corner.IsBetweenIntVersion(iGeom.Int(new Vector2(0, y: 5)), true), Corner.Result.onBoarder);
+            Assert.AreEqual(corner.IsBetweenIntVersion(iGeom.Int(new Vector2(5, y: 0)), false), Corner.Result.onBoarder);
+            Assert.AreEqual(corner.IsBetweenIntVersion(iGeom.Int(new Vector2(5, y: 0)), true), Corner.Result.onBoarder);
         }
 
-        [Test]
-        public void Test_01() {
-            var corner = new Corner(iGeom.Int(new Vector2(0, 0)),
-                iGeom.Int(new Vector2(-10, 0)),
-                iGeom.Int(new Vector2(10, 0)),
-                iGeom
-            );
-
-            Assert.AreEqual(corner.IsBetween(iGeom.Int(new Vector2(0, 5))), false);
-            Assert.AreEqual(corner.IsBetween(iGeom.Int(new Vector2(5, 5))), false);
-            Assert.AreEqual(corner.IsBetween(iGeom.Int(new Vector2(-5, 5))), false);
-            Assert.AreEqual(corner.IsBetween(iGeom.Int(new Vector2(-5, -5))), true);
-            Assert.AreEqual(corner.IsBetween(iGeom.Int(new Vector2(0, -5))), true);
-            Assert.AreEqual(corner.IsBetween(iGeom.Int(new Vector2(5, -5))), true);
-        }
-
-        [Test]
-        public void Test_02() {
-            var corner = new Corner(iGeom.Int(new Vector2(0, 0)),
-                iGeom.Int(new Vector2(-10, -10)),
-                iGeom.Int(new Vector2(10, -10)),
-                iGeom
-            );
-
-            Assert.AreEqual(corner.IsBetween(iGeom.Int(new Vector2(10, 0))), false);
-            Assert.AreEqual(corner.IsBetween(iGeom.Int(new Vector2(0, 5))), false);
-            Assert.AreEqual(corner.IsBetween(iGeom.Int(new Vector2(5, 5))), false);
-            Assert.AreEqual(corner.IsBetween(iGeom.Int(new Vector2(-5, 5))), false);
-            Assert.AreEqual(corner.IsBetween(iGeom.Int(new Vector2(-10, 0))), false);
-            Assert.AreEqual(corner.IsBetween(iGeom.Int(new Vector2(0, -10))), true);
-        }
-
-        [Test]
-        public void Test_03() {
-            var corner = new Corner(iGeom.Int(new Vector2(0, 0)),
-                iGeom.Int(new Vector2(-10, 0)),
-                iGeom.Int(new Vector2(0, -10)),
-                iGeom
-            );
-
-            Assert.AreEqual(corner.IsBetween(iGeom.Int(new Vector2(-5, -5))), true);
-            Assert.AreEqual(corner.IsBetween(iGeom.Int(new Vector2(5, 0))), false);
-            Assert.AreEqual(corner.IsBetween(iGeom.Int(new Vector2(5, 5))), false);
-            Assert.AreEqual(corner.IsBetween(iGeom.Int(new Vector2(0, 5))), false);
-            Assert.AreEqual(corner.IsBetween(iGeom.Int(new Vector2(-5, 5))), false);
-            Assert.AreEqual(corner.IsBetween(iGeom.Int(new Vector2(-5, 0))), false);
-        }
-
-        [Test]
-        public void Test_04() {
-            var corner = new Corner(iGeom.Int(new Vector2(10, 10)),
-                iGeom.Int(new Vector2(10, 20)),
-                iGeom.Int(new Vector2(20, 10)),
-                iGeom
-            );
-
-            Assert.AreEqual(corner.IsBetween(iGeom.Int(new Vector2(15, 15))), false);
-            Assert.AreEqual(corner.IsBetween(iGeom.Int(new Vector2(15, 5))), true);
-            Assert.AreEqual(corner.IsBetween(iGeom.Int(new Vector2(5, 5))), true);
-            Assert.AreEqual(corner.IsBetween(iGeom.Int(new Vector2(10, 5))), true);
-            Assert.AreEqual(corner.IsBetween(iGeom.Int(new Vector2(5, 15))), true);
-            Assert.AreEqual(corner.IsBetween(iGeom.Int(new Vector2(5, 10))), true);
-        }
     }
 
 }

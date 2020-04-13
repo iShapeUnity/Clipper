@@ -1,6 +1,7 @@
 using iShape.Clipper.Collision.Primitive;
 using iShape.Clipper.Collision.Navigation;
 using iShape.Clipper.Collision.Sort;
+using iShape.Clipper.Util;
 using iShape.Geometry;
 using iShape.Collections;
 using Unity.Collections;
@@ -12,10 +13,10 @@ namespace iShape.Clipper.Collision {
         
             internal NativeArray<int> masterIndices;
             internal NativeArray<int> slaveIndices;
-            internal readonly Util.Rect masterBox;
-            internal readonly Util.Rect slaveBox;
+            internal readonly Rect masterBox;
+            internal readonly Rect slaveBox;
         
-            internal AdjacencyMatrix(NativeArray<int> masterIndices, NativeArray<int> slaveIndices, Util.Rect masterBox, Util.Rect slaveBox) {
+            internal AdjacencyMatrix(NativeArray<int> masterIndices, NativeArray<int> slaveIndices, Rect masterBox, Rect slaveBox) {
                 this.masterIndices = masterIndices;
                 this.slaveIndices = slaveIndices;
                 this.masterBox = masterBox;
@@ -23,7 +24,7 @@ namespace iShape.Clipper.Collision {
             }
         }
         
-        public static PinNavigator FindPins(NativeArray<IntVector> iMaster, NativeArray<IntVector> iSlave, IntGeom iGeom, PinPoint.PinType exclusionPinType, Allocator allocator) {
+        public static PinNavigator FindPins(NativeArray<IntVector> iMaster, NativeArray<IntVector> iSlave, PinPoint.PinType exclusionPinType, Allocator allocator) {
             var posMatrix = CreatePossibilityMatrix(iMaster, iSlave, allocator);
 
             var masterIndices = posMatrix.masterIndices;
@@ -57,7 +58,7 @@ namespace iShape.Clipper.Collision {
                     var sl0 = iSlave[slIx0];
                     var sl1 = iSlave[slIx1];
 
-                    var crossType = CrossResolver.DefineType(ms0, ms1, sl0, sl1, out var point);
+                    var crossType = CrossResolver.DefineType(ms0, ms1, sl0, sl1, out var point, out var dp);
 
                     // .not_cross, .pure are the most possible cases (more then 99%)
 
@@ -72,12 +73,27 @@ namespace iShape.Clipper.Collision {
 
                     switch (crossType) {
                         case CrossType.not_cross:
-                        case CrossType.same_line:
                             continue;
+                        case CrossType.same_line:
+                            if (sl1 == ms0) {
+                                var pin = new PinPoint(ms0, PinPoint.PinType.nil, new PathMileStone(msIx0), new PathMileStone(slIx1));
+                                pinPoints.Add(pin);
+                            } else {
+                                if (Edge.IsInRect(ms0, ms1, sl1)) {
+                                    var pin = new PinPoint(sl1, PinPoint.PinType.nil, new PathMileStone(msIx0, ms0.SqrDistance(sl1)), new PathMileStone(slIx1));
+                                    pinPoints.Add(pin);
+                                }
+                                if (Edge.IsInRect(sl0, sl1, ms0)) {
+                                    var pin = new PinPoint(ms0, PinPoint.PinType.nil, new PathMileStone(msIx0), new PathMileStone(slIx0, sl0.SqrDistance(ms0)));
+                                    pinPoints.Add(pin);
+                                }
+                            }
+                            break;
                         case CrossType.pure:
                             // simple intersection and most common case
 
                             pinPointDef = new PinPoint.Def(
+                                dp,
                                 point,
                                 ms0,
                                 ms1,
@@ -99,6 +115,7 @@ namespace iShape.Clipper.Collision {
                             nextSl = slIx1;
 
                             pinPointDef = new PinPoint.Def(
+                                dp,
                                 point,
                                 iMaster[prevMs],
                                 iMaster[nextMs],
@@ -108,7 +125,7 @@ namespace iShape.Clipper.Collision {
                                 new PathMileStone(slIx0, sl0.SqrDistance(point))
                             );
 
-                            pinPoint = PinPoint.BuildOnSlave(pinPointDef, iGeom);
+                            pinPoint = PinPoint.BuildOnSide(pinPointDef);
                             pinPoints.Add(pinPoint);
                             endsCount += 1;
                             break;
@@ -120,6 +137,7 @@ namespace iShape.Clipper.Collision {
                             nextSl = slIx1;
 
                             pinPointDef = new PinPoint.Def(
+                                dp,
                                 point,
                                 iMaster[prevMs],
                                 iMaster[nextMs],
@@ -129,7 +147,7 @@ namespace iShape.Clipper.Collision {
                                 new PathMileStone(slIx0, sl0.SqrDistance(point))
                             );
 
-                            pinPoint = PinPoint.BuildOnSlave(pinPointDef, iGeom);
+                            pinPoint = PinPoint.BuildOnSide(pinPointDef);
                             pinPoints.Add(pinPoint);
                             endsCount += 1;
                             break;
@@ -141,6 +159,7 @@ namespace iShape.Clipper.Collision {
                             nextSl = slIx1;
 
                             pinPointDef = new PinPoint.Def(
+                                dp,
                                 point,
                                 iMaster[prevMs],
                                 iMaster[nextMs],
@@ -150,7 +169,7 @@ namespace iShape.Clipper.Collision {
                                 new PathMileStone(slIx0)
                             );
 
-                            pinPoint = PinPoint.BuildOnMaster(pinPointDef);
+                            pinPoint = PinPoint.BuildOnSide(pinPointDef);
                             pinPoints.Add(pinPoint);
                             endsCount += 1;
                             break;
@@ -162,6 +181,7 @@ namespace iShape.Clipper.Collision {
                             nextSl = (slIx1 + 1) % slaveCount;
 
                             pinPointDef = new PinPoint.Def(
+                                dp,
                                 point,
                                 iMaster[prevMs],
                                 iMaster[nextMs],
@@ -171,7 +191,7 @@ namespace iShape.Clipper.Collision {
                                 new PathMileStone(slIx1)
                             );
 
-                            pinPoint = PinPoint.BuildOnMaster(pinPointDef);
+                            pinPoint = PinPoint.BuildOnSide(pinPointDef);
                             pinPoints.Add(pinPoint);
                             endsCount += 1;
                             break;
@@ -183,6 +203,7 @@ namespace iShape.Clipper.Collision {
                             nextSl = slIx1;
 
                             pinPointDef = new PinPoint.Def(
+                                dp,
                                 point,
                                 iMaster[prevMs],
                                 iMaster[nextMs],
@@ -192,7 +213,7 @@ namespace iShape.Clipper.Collision {
                                 new PathMileStone(slIx0)
                             );
 
-                            pinPoint = PinPoint.BuildOnCross(pinPointDef, iGeom);
+                            pinPoint = PinPoint.BuildOnSide(pinPointDef);
                             pinPoints.Add(pinPoint);
                             endsCount += 1;
                             break;
@@ -204,6 +225,7 @@ namespace iShape.Clipper.Collision {
                             nextSl = (slIx1 + 1) % slaveCount;
 
                             pinPointDef = new PinPoint.Def(
+                                dp,
                                 point,
                                 iMaster[prevMs],
                                 iMaster[nextMs],
@@ -213,7 +235,7 @@ namespace iShape.Clipper.Collision {
                                 new PathMileStone(slIx1)
                             );
 
-                            pinPoint = PinPoint.BuildOnCross(pinPointDef, iGeom);
+                            pinPoint = PinPoint.BuildOnSide(pinPointDef);
                             pinPoints.Add(pinPoint);
                             endsCount += 1;
                             break;
@@ -225,6 +247,7 @@ namespace iShape.Clipper.Collision {
                             nextSl = slIx1;
 
                             pinPointDef = new PinPoint.Def(
+                                dp,
                                 point,
                                 iMaster[prevMs],
                                 iMaster[nextMs],
@@ -234,7 +257,7 @@ namespace iShape.Clipper.Collision {
                                 new PathMileStone(slIx0)
                             );
 
-                            pinPoint = PinPoint.BuildOnCross(pinPointDef, iGeom);
+                            pinPoint = PinPoint.BuildOnSide(pinPointDef);
                             pinPoints.Add(pinPoint);
                             endsCount += 1;
                             break;
@@ -246,6 +269,7 @@ namespace iShape.Clipper.Collision {
                             nextSl = (slIx1 + 1) % slaveCount;
 
                             pinPointDef = new PinPoint.Def(
+                                dp,
                                 point,
                                 iMaster[prevMs],
                                 iMaster[nextMs],
@@ -255,7 +279,7 @@ namespace iShape.Clipper.Collision {
                                 new PathMileStone(slIx1)
                             );
 
-                            pinPoint = PinPoint.BuildOnCross(pinPointDef, iGeom);
+                            pinPoint = PinPoint.BuildOnSide(pinPointDef);
                             pinPoints.Add(pinPoint);
                             endsCount += 1;
                             break;
@@ -302,10 +326,10 @@ namespace iShape.Clipper.Collision {
         }
 
         private static AdjacencyMatrix CreatePossibilityMatrix(NativeArray<IntVector> master, NativeArray<IntVector> slave, Allocator allocator) {
-            var slaveBox = new Util.Rect(long.MaxValue, long.MaxValue, long.MinValue, long.MinValue);
-            var masterBox = new Util.Rect(long.MaxValue, long.MaxValue, long.MinValue, long.MinValue);
+            var slaveBox = new Rect(long.MaxValue, long.MaxValue, long.MinValue, long.MinValue);
+            var masterBox = new Rect(long.MaxValue, long.MaxValue, long.MinValue, long.MinValue);
 
-            var slaveSegmentsBoxAreas = new DynamicArray<Util.Rect>(8, allocator);
+            var slaveSegmentsBoxAreas = new DynamicArray<Rect>(8, allocator);
 
             int lastSlaveIndex = slave.Length - 1;
 
@@ -314,7 +338,7 @@ namespace iShape.Clipper.Collision {
                 var b = slave[i != lastSlaveIndex ? i + 1 : 0];
 
                 slaveBox.Assimilate(a);
-                slaveSegmentsBoxAreas.Add(new Util.Rect(a, b));
+                slaveSegmentsBoxAreas.Add(new Rect(a, b));
             }
 
             // var posMatrix = new AdjacencyMatrix(0, allocator);
@@ -335,7 +359,7 @@ namespace iShape.Clipper.Collision {
                     continue;
                 }
 
-                var segmentBoxArea = new Util.Rect(master_0, master_1);
+                var segmentBoxArea = new Rect(master_0, master_1);
                 for (int j = 0; j <= lastSlaveIndex; ++j) {
                     bool isIntersectionPossible = slaveSegmentsBoxAreas[j].IsIntersecting(segmentBoxArea);
 
@@ -528,7 +552,7 @@ namespace iShape.Clipper.Collision {
         }
         
         /// Build  Navigator section
-        private static PinNavigator BuildNavigator(ref DynamicArray<PinPoint> pinPointArray, ref DynamicArray<PinPath> pinPathArray, int masterCount, bool hasExclusion, Util.Rect masterBox, Util.Rect slaveBox, Allocator allocator) {
+        private static PinNavigator BuildNavigator(ref DynamicArray<PinPoint> pinPointArray, ref DynamicArray<PinPath> pinPathArray, int masterCount, bool hasExclusion, Rect masterBox, Rect slaveBox, Allocator allocator) {
             var handlerArray = new DynamicArray<PinHandler>(pinPathArray.Count + pinPointArray.Count, allocator);
             int i = 0;
             while (i < pinPathArray.Count) {

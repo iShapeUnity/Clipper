@@ -36,8 +36,8 @@ namespace iShape.Clipper.Collision.Sort {
                             var a0 = array[j0];
                             var a1 = array[j1];
 
-                            if (a.masterMileStone < a0.masterMileStone || a.masterMileStone < a1.masterMileStone) {
-                                if (a0.masterMileStone > a1.masterMileStone) {
+                            if (a < a0 || a < a1) {
+                                if (a0 > a1) {
                                     array[j0] = a;
                                     array[j] = a0;
                                     j = j0;
@@ -52,7 +52,7 @@ namespace iShape.Clipper.Collision.Sort {
                         } else if (j0 < n) {
                             var ax = array[j];
                             var a0 = array[j0];
-                            if (ax.masterMileStone < a0.masterMileStone) {
+                            if (ax < a0) {
                                 array[j0] = ax;
                                 array[j] = a0;
                             }
@@ -84,10 +84,10 @@ namespace iShape.Clipper.Collision.Sort {
                     if (j1 < m) {
                         var a0 = array[j0];
                         var a1 = array[j1];
-                        fallDown = a.masterMileStone < a0.masterMileStone || a.masterMileStone < a1.masterMileStone;
+                        fallDown = a < a0 || a < a1;
 
                         if (fallDown) {
-                            if (a0.masterMileStone > a1.masterMileStone) {
+                            if (a0 > a1) {
                                 array[j0] = a;
                                 array[j] = a0;
                                 j = j0;
@@ -100,7 +100,7 @@ namespace iShape.Clipper.Collision.Sort {
                     } else if (j0 < m) {
                         var ax = array[j];
                         var a0 = array[j0];
-                        if (ax.masterMileStone < a0.masterMileStone) {
+                        if (ax < a0) {
                             array[j0] = ax;
                             array[j] = a0;
                         }

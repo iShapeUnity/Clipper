@@ -18,7 +18,7 @@ namespace Tests.Clipper {
             var master = new NativeArray<IntVector>(iGeom.Int(data[0]), Allocator.Temp);
             var slave = new NativeArray<IntVector>(iGeom.Int(data[1]), Allocator.Temp);
 
-            var solution = master.Intersect(slave, iGeom, Allocator.Temp);
+            var solution = master.Intersect(slave, Allocator.Temp);
 
             Assert.AreEqual(solution.nature, Solution.Nature.overlap);
             Assert.AreEqual(solution.pathList.Count, 1);
@@ -45,7 +45,7 @@ namespace Tests.Clipper {
             var master = new NativeArray<IntVector>(iGeom.Int(data[0]), Allocator.Temp);
             var slave = new NativeArray<IntVector>(iGeom.Int(data[1]), Allocator.Temp);
 
-            var solution = master.Intersect(slave, iGeom, Allocator.Temp);
+            var solution = master.Intersect(slave, Allocator.Temp);
 
             Assert.AreEqual(solution.nature, Solution.Nature.overlap);
             Assert.AreEqual(solution.pathList.Count, 1);
@@ -72,7 +72,7 @@ namespace Tests.Clipper {
             var master = new NativeArray<IntVector>(iGeom.Int(data[0]), Allocator.Temp);
             var slave = new NativeArray<IntVector>(iGeom.Int(data[1]), Allocator.Temp);
 
-            var solution = master.Intersect(slave, iGeom, Allocator.Temp);
+            var solution = master.Intersect(slave, Allocator.Temp);
 
             Assert.AreEqual(solution.nature, Solution.Nature.overlap);
             Assert.AreEqual(solution.pathList.Count, 1);
@@ -99,7 +99,7 @@ namespace Tests.Clipper {
             var master = new NativeArray<IntVector>(iGeom.Int(data[0]), Allocator.Temp);
             var slave = new NativeArray<IntVector>(iGeom.Int(data[1]), Allocator.Temp);
 
-            var solution = master.Intersect(slave, iGeom, Allocator.Temp);
+            var solution = master.Intersect(slave, Allocator.Temp);
 
             Assert.AreEqual(solution.nature, Solution.Nature.overlap);
             Assert.AreEqual(solution.pathList.Count, 1);
@@ -125,7 +125,7 @@ namespace Tests.Clipper {
             var master = new NativeArray<IntVector>(iGeom.Int(data[0]), Allocator.Temp);
             var slave = new NativeArray<IntVector>(iGeom.Int(data[1]), Allocator.Temp);
 
-            var solution = master.Intersect(slave, iGeom, Allocator.Temp);
+            var solution = master.Intersect(slave, Allocator.Temp);
 
             Assert.AreEqual(solution.nature, Solution.Nature.overlap);
             Assert.AreEqual(solution.pathList.Count, 1);
@@ -152,7 +152,7 @@ namespace Tests.Clipper {
             var master = new NativeArray<IntVector>(iGeom.Int(data[0]), Allocator.Temp);
             var slave = new NativeArray<IntVector>(iGeom.Int(data[1]), Allocator.Temp);
 
-            var solution = master.Intersect(slave, iGeom, Allocator.Temp);
+            var solution = master.Intersect(slave, Allocator.Temp);
 
             Assert.AreEqual(solution.nature, Solution.Nature.overlap);
             Assert.AreEqual(solution.pathList.Count, 1);
@@ -180,7 +180,7 @@ namespace Tests.Clipper {
             var master = new NativeArray<IntVector>(iGeom.Int(data[0]), Allocator.Temp);
             var slave = new NativeArray<IntVector>(iGeom.Int(data[1]), Allocator.Temp);
 
-            var solution = master.Intersect(slave, iGeom, Allocator.Temp);
+            var solution = master.Intersect(slave, Allocator.Temp);
 
             Assert.AreEqual(solution.nature, Solution.Nature.overlap);
             Assert.AreEqual(solution.pathList.Count, 1);
@@ -209,7 +209,7 @@ namespace Tests.Clipper {
             var master = new NativeArray<IntVector>(iGeom.Int(data[0]), Allocator.Temp);
             var slave = new NativeArray<IntVector>(iGeom.Int(data[1]), Allocator.Temp);
 
-            var solution = master.Intersect(slave, iGeom, Allocator.Temp);
+            var solution = master.Intersect(slave, Allocator.Temp);
 
             Assert.AreEqual(solution.nature, Solution.Nature.overlap);
             Assert.AreEqual(solution.pathList.Count, 1);
@@ -237,7 +237,7 @@ namespace Tests.Clipper {
             var master = new NativeArray<IntVector>(iGeom.Int(data[0]), Allocator.Temp);
             var slave = new NativeArray<IntVector>(iGeom.Int(data[1]), Allocator.Temp);
 
-            var solution = master.Intersect(slave, iGeom, Allocator.Temp);
+            var solution = master.Intersect(slave, Allocator.Temp);
 
             Assert.AreEqual(solution.nature, Solution.Nature.overlap);
             Assert.AreEqual(solution.pathList.Count, 1);
@@ -263,7 +263,7 @@ namespace Tests.Clipper {
             var master = new NativeArray<IntVector>(iGeom.Int(data[0]), Allocator.Temp);
             var slave = new NativeArray<IntVector>(iGeom.Int(data[1]), Allocator.Temp);
 
-            var solution = master.Intersect(slave, iGeom, Allocator.Temp);
+            var solution = master.Intersect(slave, Allocator.Temp);
 
             Assert.AreEqual(solution.nature, Solution.Nature.overlap);
             Assert.AreEqual(solution.pathList.Count, 1);
@@ -289,7 +289,7 @@ namespace Tests.Clipper {
             var master = new NativeArray<IntVector>(iGeom.Int(data[0]), Allocator.Temp);
             var slave = new NativeArray<IntVector>(iGeom.Int(data[1]), Allocator.Temp);
 
-            var solution = master.Intersect(slave, iGeom, Allocator.Temp);
+            var solution = master.Intersect(slave, Allocator.Temp);
 
             Assert.AreEqual(solution.nature, Solution.Nature.overlap);
             Assert.AreEqual(solution.pathList.Count, 1);
@@ -315,7 +315,7 @@ namespace Tests.Clipper {
             var master = new NativeArray<IntVector>(iGeom.Int(data[0]), Allocator.Temp);
             var slave = new NativeArray<IntVector>(iGeom.Int(data[1]), Allocator.Temp);
 
-            var solution = master.Intersect(slave, iGeom, Allocator.Temp);
+            var solution = master.Intersect(slave, Allocator.Temp);
 
             Assert.AreEqual(solution.nature, Solution.Nature.overlap);
             Assert.AreEqual(solution.pathList.Count, 1);
@@ -342,7 +342,7 @@ namespace Tests.Clipper {
             var master = new NativeArray<IntVector>(iGeom.Int(data[0]), Allocator.Temp);
             var slave = new NativeArray<IntVector>(iGeom.Int(data[1]), Allocator.Temp);
 
-            var solution = master.Intersect(slave, iGeom, Allocator.Temp);
+            var solution = master.Intersect(slave, Allocator.Temp);
 
             Assert.AreEqual(solution.nature, Solution.Nature.overlap);
             Assert.AreEqual(solution.pathList.Count, 1);
@@ -368,7 +368,7 @@ namespace Tests.Clipper {
             var master = new NativeArray<IntVector>(iGeom.Int(data[0]), Allocator.Temp);
             var slave = new NativeArray<IntVector>(iGeom.Int(data[1]), Allocator.Temp);
 
-            var solution = master.Intersect(slave, iGeom, Allocator.Temp);
+            var solution = master.Intersect(slave, Allocator.Temp);
 
             Assert.AreEqual(solution.nature, Solution.Nature.notOverlap);
 
@@ -384,7 +384,7 @@ namespace Tests.Clipper {
             var master = new NativeArray<IntVector>(iGeom.Int(data[0]), Allocator.Temp);
             var slave = new NativeArray<IntVector>(iGeom.Int(data[1]), Allocator.Temp);
 
-            var solution = master.Intersect(slave, iGeom, Allocator.Temp);
+            var solution = master.Intersect(slave, Allocator.Temp);
 
             Assert.AreEqual(solution.nature, Solution.Nature.overlap);
             Assert.AreEqual(solution.pathList.Count, 1);
@@ -415,7 +415,7 @@ namespace Tests.Clipper {
             var master = new NativeArray<IntVector>(iGeom.Int(data[0]), Allocator.Temp);
             var slave = new NativeArray<IntVector>(iGeom.Int(data[1]), Allocator.Temp);
 
-            var solution = master.Intersect(slave, iGeom, Allocator.Temp);
+            var solution = master.Intersect(slave, Allocator.Temp);
 
             Assert.AreEqual(solution.nature, Solution.Nature.overlap);
             Assert.AreEqual(solution.pathList.Count, 1);
@@ -442,7 +442,7 @@ namespace Tests.Clipper {
             var master = new NativeArray<IntVector>(iGeom.Int(data[0]), Allocator.Temp);
             var slave = new NativeArray<IntVector>(iGeom.Int(data[1]), Allocator.Temp);
 
-            var solution = master.Intersect(slave, iGeom, Allocator.Temp);
+            var solution = master.Intersect(slave, Allocator.Temp);
 
             Assert.AreEqual(solution.nature, Solution.Nature.notOverlap);
             Assert.AreEqual(solution.pathList.Count, 0);
@@ -459,7 +459,7 @@ namespace Tests.Clipper {
             var master = new NativeArray<IntVector>(iGeom.Int(data[0]), Allocator.Temp);
             var slave = new NativeArray<IntVector>(iGeom.Int(data[1]), Allocator.Temp);
 
-            var solution = master.Intersect(slave, iGeom, Allocator.Temp);
+            var solution = master.Intersect(slave, Allocator.Temp);
 
             Assert.AreEqual(solution.nature, Solution.Nature.overlap);
             Assert.AreEqual(solution.pathList.Count, 2);
@@ -496,7 +496,7 @@ namespace Tests.Clipper {
             var master = new NativeArray<IntVector>(iGeom.Int(data[0]), Allocator.Temp);
             var slave = new NativeArray<IntVector>(iGeom.Int(data[1]), Allocator.Temp);
 
-            var solution = master.Intersect(slave, iGeom, Allocator.Temp);
+            var solution = master.Intersect(slave, Allocator.Temp);
 
             Assert.AreEqual(solution.nature, Solution.Nature.overlap);
             Assert.AreEqual(solution.pathList.Count, 2);
@@ -533,7 +533,7 @@ namespace Tests.Clipper {
             var master = new NativeArray<IntVector>(iGeom.Int(data[0]), Allocator.Temp);
             var slave = new NativeArray<IntVector>(iGeom.Int(data[1]), Allocator.Temp);
 
-            var solution = master.Intersect(slave, iGeom, Allocator.Temp);
+            var solution = master.Intersect(slave, Allocator.Temp);
 
             Assert.AreEqual(solution.nature, Solution.Nature.overlap);
             Assert.AreEqual(solution.pathList.Count, 1);
@@ -559,7 +559,7 @@ namespace Tests.Clipper {
             var master = new NativeArray<IntVector>(iGeom.Int(data[0]), Allocator.Temp);
             var slave = new NativeArray<IntVector>(iGeom.Int(data[1]), Allocator.Temp);
 
-            var solution = master.Intersect(slave, iGeom, Allocator.Temp);
+            var solution = master.Intersect(slave, Allocator.Temp);
 
             Assert.AreEqual(solution.nature, Solution.Nature.overlap);
             Assert.AreEqual(solution.pathList.Count, 1);
@@ -585,7 +585,7 @@ namespace Tests.Clipper {
             var master = new NativeArray<IntVector>(iGeom.Int(data[0]), Allocator.Temp);
             var slave = new NativeArray<IntVector>(iGeom.Int(data[1]), Allocator.Temp);
 
-            var solution = master.Intersect(slave, iGeom, Allocator.Temp);
+            var solution = master.Intersect(slave, Allocator.Temp);
 
             Assert.AreEqual(solution.nature, Solution.Nature.overlap);
             Assert.AreEqual(solution.pathList.Count, 1);
@@ -611,7 +611,7 @@ namespace Tests.Clipper {
             var master = new NativeArray<IntVector>(iGeom.Int(data[0]), Allocator.Temp);
             var slave = new NativeArray<IntVector>(iGeom.Int(data[1]), Allocator.Temp);
 
-            var solution = master.Intersect(slave, iGeom, Allocator.Temp);
+            var solution = master.Intersect(slave, Allocator.Temp);
 
             Assert.AreEqual(solution.nature, Solution.Nature.overlap);
             Assert.AreEqual(solution.pathList.Count, 1);
@@ -638,7 +638,7 @@ namespace Tests.Clipper {
             var master = new NativeArray<IntVector>(iGeom.Int(data[0]), Allocator.Temp);
             var slave = new NativeArray<IntVector>(iGeom.Int(data[1]), Allocator.Temp);
 
-            var solution = master.Intersect(slave, iGeom, Allocator.Temp);
+            var solution = master.Intersect(slave, Allocator.Temp);
 
             Assert.AreEqual(solution.nature, Solution.Nature.overlap);
             Assert.AreEqual(solution.pathList.Count, 1);
@@ -666,7 +666,7 @@ namespace Tests.Clipper {
             var master = new NativeArray<IntVector>(iGeom.Int(data[0]), Allocator.Temp);
             var slave = new NativeArray<IntVector>(iGeom.Int(data[1]), Allocator.Temp);
 
-            var solution = master.Intersect(slave, iGeom, Allocator.Temp);
+            var solution = master.Intersect(slave, Allocator.Temp);
 
             Assert.AreEqual(solution.nature, Solution.Nature.overlap);
             Assert.AreEqual(solution.pathList.Count, 1);
@@ -693,7 +693,7 @@ namespace Tests.Clipper {
             var master = new NativeArray<IntVector>(iGeom.Int(data[0]), Allocator.Temp);
             var slave = new NativeArray<IntVector>(iGeom.Int(data[1]), Allocator.Temp);
 
-            var solution = master.Intersect(slave, iGeom, Allocator.Temp);
+            var solution = master.Intersect(slave, Allocator.Temp);
 
             Assert.AreEqual(solution.nature, Solution.Nature.overlap);
             Assert.AreEqual(solution.pathList.Count, 1);
@@ -720,7 +720,7 @@ namespace Tests.Clipper {
             var master = new NativeArray<IntVector>(iGeom.Int(data[0]), Allocator.Temp);
             var slave = new NativeArray<IntVector>(iGeom.Int(data[1]), Allocator.Temp);
 
-            var solution = master.Intersect(slave, iGeom, Allocator.Temp);
+            var solution = master.Intersect(slave, Allocator.Temp);
 
             Assert.AreEqual(solution.nature, Solution.Nature.overlap);
             Assert.AreEqual(solution.pathList.Count, 1);
@@ -747,7 +747,7 @@ namespace Tests.Clipper {
             var master = new NativeArray<IntVector>(iGeom.Int(data[0]), Allocator.Temp);
             var slave = new NativeArray<IntVector>(iGeom.Int(data[1]), Allocator.Temp);
 
-            var solution = master.Intersect(slave, iGeom, Allocator.Temp);
+            var solution = master.Intersect(slave, Allocator.Temp);
 
             Assert.AreEqual(solution.nature, Solution.Nature.overlap);
             Assert.AreEqual(solution.pathList.Count, 2);
@@ -782,7 +782,7 @@ namespace Tests.Clipper {
             var master = new NativeArray<IntVector>(iGeom.Int(data[0]), Allocator.Temp);
             var slave = new NativeArray<IntVector>(iGeom.Int(data[1]), Allocator.Temp);
 
-            var solution = master.Intersect(slave, iGeom, Allocator.Temp);
+            var solution = master.Intersect(slave, Allocator.Temp);
 
             Assert.AreEqual(solution.nature, Solution.Nature.overlap);
             Assert.AreEqual(solution.pathList.Count, 2);
@@ -819,7 +819,7 @@ namespace Tests.Clipper {
             var master = new NativeArray<IntVector>(iGeom.Int(data[0]), Allocator.Temp);
             var slave = new NativeArray<IntVector>(iGeom.Int(data[1]), Allocator.Temp);
 
-            var solution = master.Intersect(slave, iGeom, Allocator.Temp);
+            var solution = master.Intersect(slave, Allocator.Temp);
 
             Assert.AreEqual(solution.nature, Solution.Nature.overlap);
             Assert.AreEqual(solution.pathList.Count, 2);
@@ -854,7 +854,7 @@ namespace Tests.Clipper {
             var master = new NativeArray<IntVector>(iGeom.Int(data[0]), Allocator.Temp);
             var slave = new NativeArray<IntVector>(iGeom.Int(data[1]), Allocator.Temp);
 
-            var solution = master.Intersect(slave, iGeom, Allocator.Temp);
+            var solution = master.Intersect(slave, Allocator.Temp);
 
             Assert.AreEqual(solution.nature, Solution.Nature.overlap);
             Assert.AreEqual(solution.pathList.Count, 2);
@@ -891,7 +891,7 @@ namespace Tests.Clipper {
             var master = new NativeArray<IntVector>(iGeom.Int(data[0]), Allocator.Temp);
             var slave = new NativeArray<IntVector>(iGeom.Int(data[1]), Allocator.Temp);
 
-            var solution = master.Intersect(slave, iGeom, Allocator.Temp);
+            var solution = master.Intersect(slave, Allocator.Temp);
 
             Assert.AreEqual(solution.nature, Solution.Nature.overlap);
             Assert.AreEqual(solution.pathList.Count, 2);
@@ -931,7 +931,7 @@ namespace Tests.Clipper {
             var master = new NativeArray<IntVector>(iGeom.Int(data[0]), Allocator.Temp);
             var slave = new NativeArray<IntVector>(iGeom.Int(data[1]), Allocator.Temp);
 
-            var solution = master.Intersect(slave, iGeom, Allocator.Temp);
+            var solution = master.Intersect(slave, Allocator.Temp);
 
             Assert.AreEqual(solution.nature, Solution.Nature.overlap);
             Assert.AreEqual(solution.pathList.Count, 3);
@@ -978,7 +978,7 @@ namespace Tests.Clipper {
             var master = new NativeArray<IntVector>(iGeom.Int(data[0]), Allocator.Temp);
             var slave = new NativeArray<IntVector>(iGeom.Int(data[1]), Allocator.Temp);
 
-            var solution = master.Intersect(slave, iGeom, Allocator.Temp);
+            var solution = master.Intersect(slave, Allocator.Temp);
 
             Assert.AreEqual(solution.nature, Solution.Nature.overlap);
             Assert.AreEqual(solution.pathList.Count, 3);
@@ -1031,7 +1031,7 @@ namespace Tests.Clipper {
             var master = new NativeArray<IntVector>(iGeom.Int(data[0]), Allocator.Temp);
             var slave = new NativeArray<IntVector>(iGeom.Int(data[1]), Allocator.Temp);
 
-            var solution = master.Intersect(slave, iGeom, Allocator.Temp);
+            var solution = master.Intersect(slave, Allocator.Temp);
 
             Assert.AreEqual(solution.nature, Solution.Nature.overlap);
             Assert.AreEqual(solution.pathList.Count, 4);
@@ -1091,7 +1091,7 @@ namespace Tests.Clipper {
             var master = new NativeArray<IntVector>(iGeom.Int(data[0]), Allocator.Temp);
             var slave = new NativeArray<IntVector>(iGeom.Int(data[1]), Allocator.Temp);
 
-            var solution = master.Intersect(slave, iGeom, Allocator.Temp);
+            var solution = master.Intersect(slave, Allocator.Temp);
 
             Assert.AreEqual(solution.nature, Solution.Nature.overlap);
             Assert.AreEqual(solution.pathList.Count, 2);
@@ -1127,7 +1127,7 @@ namespace Tests.Clipper {
             var master = new NativeArray<IntVector>(iGeom.Int(data[0]), Allocator.Temp);
             var slave = new NativeArray<IntVector>(iGeom.Int(data[1]), Allocator.Temp);
 
-            var solution = master.Intersect(slave, iGeom, Allocator.Temp);
+            var solution = master.Intersect(slave, Allocator.Temp);
 
             Assert.AreEqual(solution.nature, Solution.Nature.overlap);
             Assert.AreEqual(solution.pathList.Count, 2);
@@ -1163,7 +1163,7 @@ namespace Tests.Clipper {
             var master = new NativeArray<IntVector>(iGeom.Int(data[0]), Allocator.Temp);
             var slave = new NativeArray<IntVector>(iGeom.Int(data[1]), Allocator.Temp);
 
-            var solution = master.Intersect(slave, iGeom, Allocator.Temp);
+            var solution = master.Intersect(slave, Allocator.Temp);
 
             Assert.AreEqual(solution.nature, Solution.Nature.overlap);
             Assert.AreEqual(solution.pathList.Count, 3);
@@ -1207,7 +1207,7 @@ namespace Tests.Clipper {
             var master = new NativeArray<IntVector>(iGeom.Int(data[0]), Allocator.Temp);
             var slave = new NativeArray<IntVector>(iGeom.Int(data[1]), Allocator.Temp);
 
-            var solution = master.Intersect(slave, iGeom, Allocator.Temp);
+            var solution = master.Intersect(slave, Allocator.Temp);
 
             Assert.AreEqual(solution.nature, Solution.Nature.overlap);
             Assert.AreEqual(solution.pathList.Count, 4);
@@ -1266,7 +1266,7 @@ namespace Tests.Clipper {
             var master = new NativeArray<IntVector>(iGeom.Int(data[0]), Allocator.Temp);
             var slave = new NativeArray<IntVector>(iGeom.Int(data[1]), Allocator.Temp);
 
-            var solution = master.Intersect(slave, iGeom, Allocator.Temp);
+            var solution = master.Intersect(slave, Allocator.Temp);
 
             Assert.AreEqual(solution.nature, Solution.Nature.overlap);
             Assert.AreEqual(solution.pathList.Count, 1);
@@ -1295,7 +1295,7 @@ namespace Tests.Clipper {
             var master = new NativeArray<IntVector>(iGeom.Int(data[0]), Allocator.Temp);
             var slave = new NativeArray<IntVector>(iGeom.Int(data[1]), Allocator.Temp);
 
-            var solution = master.Intersect(slave, iGeom, Allocator.Temp);
+            var solution = master.Intersect(slave, Allocator.Temp);
 
             Assert.AreEqual(solution.nature, Solution.Nature.equal);
             Assert.AreEqual(solution.pathList.Count, 0);
@@ -1312,7 +1312,7 @@ namespace Tests.Clipper {
             var master = new NativeArray<IntVector>(iGeom.Int(data[0]), Allocator.Temp);
             var slave = new NativeArray<IntVector>(iGeom.Int(data[1]), Allocator.Temp);
 
-            var solution = master.Intersect(slave, iGeom, Allocator.Temp);
+            var solution = master.Intersect(slave, Allocator.Temp);
 
             Assert.AreEqual(solution.nature, Solution.Nature.overlap);
             Assert.AreEqual(solution.pathList.Count, 1);
@@ -1340,7 +1340,7 @@ namespace Tests.Clipper {
             var master = new NativeArray<IntVector>(iGeom.Int(data[0]), Allocator.Temp);
             var slave = new NativeArray<IntVector>(iGeom.Int(data[1]), Allocator.Temp);
 
-            var solution = master.Intersect(slave, iGeom, Allocator.Temp);
+            var solution = master.Intersect(slave, Allocator.Temp);
 
             Assert.AreEqual(solution.nature, Solution.Nature.overlap);
             Assert.AreEqual(solution.pathList.Count, 1);
@@ -1368,7 +1368,7 @@ namespace Tests.Clipper {
             var master = new NativeArray<IntVector>(iGeom.Int(data[0]), Allocator.Temp);
             var slave = new NativeArray<IntVector>(iGeom.Int(data[1]), Allocator.Temp);
 
-            var solution = master.Intersect(slave, iGeom, Allocator.Temp);
+            var solution = master.Intersect(slave, Allocator.Temp);
 
             Assert.AreEqual(solution.nature, Solution.Nature.overlap);
             Assert.AreEqual(solution.pathList.Count, 1);
@@ -1394,7 +1394,7 @@ namespace Tests.Clipper {
             var master = new NativeArray<IntVector>(iGeom.Int(data[0]), Allocator.Temp);
             var slave = new NativeArray<IntVector>(iGeom.Int(data[1]), Allocator.Temp);
 
-            var solution = master.Intersect(slave, iGeom, Allocator.Temp);
+            var solution = master.Intersect(slave, Allocator.Temp);
 
             Assert.AreEqual(solution.nature, Solution.Nature.overlap);
             Assert.AreEqual(solution.pathList.Count, 2);

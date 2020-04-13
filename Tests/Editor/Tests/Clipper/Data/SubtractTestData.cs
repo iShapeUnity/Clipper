@@ -931,7 +931,7 @@ namespace Tests.Clipper.Data {
                     new IntVector(20430, -7187),
                     new IntVector(20412, -7209),
                     new IntVector(20184, -7249)
-                }.toVectors(1),
+                }.toFloat(1),
                 new[] {
                     new IntVector(34140, -16093),
                     new IntVector(31800, -9665),
@@ -942,7 +942,7 @@ namespace Tests.Clipper.Data {
                     new IntVector(19140, -24754),
                     new IntVector(25877, -25941),
                     new IntVector(31800, -22521)
-                }.toVectors(1)
+                }.toFloat(1)
             }
         };
     }

@@ -8,8 +8,8 @@ using Unity.Collections;
 namespace iShape.Clipper.Solver {
 
     public static class RootSolver {
-        public static ComplexSolution Cut(this NativeArray<IntVector> master, NativeArray<IntVector> slave, IntGeom iGeom, Allocator allocator) {
-            var navigator = CrossDetector.FindPins(master, slave, iGeom, PinPoint.PinType.in_out, allocator);
+        public static ComplexSolution Cut(this NativeArray<IntVector> master, NativeArray<IntVector> slave, Allocator allocator) {
+            var navigator = CrossDetector.FindPins(master, slave,  PinPoint.PinType.in_out, allocator);
             var filterNavigator = new FilterNavigator(navigator, PinPoint.PinType.inside, PinPoint.PinType.out_in, Allocator.Temp);
             var nature = filterNavigator.Nature(master, slave, false);
             switch (nature) {
@@ -30,8 +30,8 @@ namespace iShape.Clipper.Solver {
             return new ComplexSolution(new PlainShape(allocator), new PlainShape(allocator), Solution.Nature.notOverlap);
         }
 
-        public static Solution Intersect(this NativeArray<IntVector> master, NativeArray<IntVector> slave, IntGeom iGeom, Allocator allocator) {
-            var navigator = CrossDetector.FindPins(master, slave, iGeom, PinPoint.PinType.in_out, allocator);
+        public static Solution Intersect(this NativeArray<IntVector> master, NativeArray<IntVector> slave, Allocator allocator) {
+            var navigator = CrossDetector.FindPins(master, slave,  PinPoint.PinType.in_out, allocator);
             var filterNavigator = new FilterNavigator(navigator, PinPoint.PinType.inside, PinPoint.PinType.out_in, Allocator.Temp);
             var nature = filterNavigator.Nature(master, slave, false);
             switch (nature) {
@@ -49,8 +49,8 @@ namespace iShape.Clipper.Solver {
             return new Solution(new PlainShape(allocator), Solution.Nature.notOverlap);
         }
 
-        public static Solution Subtract(this NativeArray<IntVector> master, NativeArray<IntVector> slave, IntGeom iGeom, Allocator allocator) {
-            var navigator = CrossDetector.FindPins(master, slave, iGeom, PinPoint.PinType.in_out, allocator);
+        public static Solution Subtract(this NativeArray<IntVector> master, NativeArray<IntVector> slave, Allocator allocator) {
+            var navigator = CrossDetector.FindPins(master, slave,  PinPoint.PinType.in_out, allocator);
             var filterNavigator = new FilterNavigator(navigator, PinPoint.PinType.inside, PinPoint.PinType.out_in, Allocator.Temp);
             var nature = filterNavigator.Nature(master, slave, false);
             switch (nature) {
@@ -68,8 +68,8 @@ namespace iShape.Clipper.Solver {
             return new Solution(new PlainShape(allocator), Solution.Nature.notOverlap);
         }
 
-        public static Solution Union(this NativeArray<IntVector> master, NativeArray<IntVector> slave, IntGeom iGeom, Allocator allocator) {
-            var navigator = CrossDetector.FindPins(master, slave, iGeom, PinPoint.PinType.out_in, allocator);
+        public static Solution Union(this NativeArray<IntVector> master, NativeArray<IntVector> slave, Allocator allocator) {
+            var navigator = CrossDetector.FindPins(master, slave, PinPoint.PinType.out_in, allocator);
             var filterNavigator = new FilterNavigator(navigator, PinPoint.PinType.outside, PinPoint.PinType.in_out, Allocator.Temp);
             var nature = filterNavigator.Nature(master, slave, true);
             switch (nature) {

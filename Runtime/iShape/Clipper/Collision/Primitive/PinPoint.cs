@@ -5,6 +5,7 @@ namespace iShape.Clipper.Collision.Primitive {
     public struct PinPoint {
         internal struct Def {
             
+            internal readonly DBVector dp;
             internal readonly IntVector pt;
             internal readonly IntVector ms0;
             internal readonly IntVector ms1;
@@ -14,6 +15,7 @@ namespace iShape.Clipper.Collision.Primitive {
             internal readonly PathMileStone slaveMileStone;
 
             internal Def(
+                DBVector dp,
                 IntVector pt,
                 IntVector ms0,
                 IntVector ms1,
@@ -22,6 +24,7 @@ namespace iShape.Clipper.Collision.Primitive {
                 PathMileStone masterMileStone,
                 PathMileStone slaveMileStone
             ) {
+                this.dp = dp;
                 this.pt = pt;
                 this.ms0 = ms0;
                 this.ms1 = ms1;
@@ -47,7 +50,7 @@ namespace iShape.Clipper.Collision.Primitive {
         public readonly PathMileStone masterMileStone;
         public readonly PathMileStone slaveMileStone;
 
-        private PinPoint(IntVector point, PinType type, PathMileStone masterMileStone, PathMileStone slaveMileStone) {
+        public PinPoint(IntVector point, PinType type, PathMileStone masterMileStone, PathMileStone slaveMileStone) {
             this.point = point;
             this.type = type;
             this.masterMileStone = masterMileStone;
@@ -67,6 +70,22 @@ namespace iShape.Clipper.Collision.Primitive {
         
         public static bool operator!= (PinPoint left, PinPoint right) {
             return left.masterMileStone != right.masterMileStone || left.slaveMileStone != right.slaveMileStone;
+        }
+        
+        public static bool operator <(PinPoint a, PinPoint b) {
+            if (a != b) {
+                return a.masterMileStone < b.masterMileStone;
+            } else {
+                return a.type != PinPoint.PinType.nil;
+            }
+        }
+
+        public static bool operator >(PinPoint a, PinPoint b) {
+            if (a != b) {
+                return a.masterMileStone > b.masterMileStone;
+            } else {
+                return a.type == PinPoint.PinType.nil;
+            }
         }
 
         public override bool Equals(object obj) {
@@ -91,55 +110,33 @@ namespace iShape.Clipper.Collision.Primitive {
             var type = isCW ? PinType.outside : PinType.inside;
             return new PinPoint(def.pt, type, def.masterMileStone, def.slaveMileStone);
         }
-
-        internal static PinPoint BuildOnMaster(Def def) {
-            bool isCW0 = PinPoint.IsClockWise(def.pt,def.ms1,def.sl0);
-            bool isCW1 = PinPoint.IsClockWise(def.pt,def.ms1,def.sl1);
-
-            PinType type;
-            if (isCW0 == isCW1) {
-                type = isCW0 ? PinType.out_in : PinType.in_out;
-            }
-            else {
-                type = isCW0 ? PinType.outside : PinType.inside;
-            }
-
-            return new PinPoint(def.pt, type, def.masterMileStone, def.slaveMileStone);
-        }
         
-        internal static PinPoint BuildOnSlave(Def def, IntGeom iGeom) {
-            var corner = new Corner(def.pt,def.ms0,def.ms1, iGeom);
+        internal static PinPoint BuildOnSide(Def def) {
+            var corner = new Corner(def.dp, def.pt, def.ms0, def.ms1);
 
-            bool isSl0 = corner.IsBetween(def.sl0, true);
-            bool isSl1 = corner.IsBetween(def.sl1, true);
+            var s0 = corner.IsBetweenDoubleVersion(def.sl0, true);
+            var s1 = corner.IsBetweenDoubleVersion(def.sl1, true);
 
             PinType type;
-            if (isSl0 && isSl1) {
-                type = PinType.in_out;
-            } else if (!isSl0 && !isSl1) {
-                type = PinType.out_in;
+            if (s0 == Corner.Result.onBoarder || s1 == Corner.Result.onBoarder) {
+                if (s0 == Corner.Result.onBoarder && s1 == Corner.Result.onBoarder) {
+                    type = PinType.nil;
+                } else if (s0 != Corner.Result.onBoarder) {
+                    type = s0 == Corner.Result.contain ? PinType.inside : PinType.outside;
+                } else {
+                    type = s1 == Corner.Result.contain ? PinType.outside : PinType.inside;
+                }
             } else {
-                type = isSl0 ? PinType.inside : PinType.outside;
-            }
-
-            return new PinPoint(def.pt, type, def.masterMileStone, def.slaveMileStone);
-        }
-
-        internal static PinPoint BuildOnCross(Def def, IntGeom iGeom) {
-            var corner = new Corner(def.pt,def.ms0,def.ms1, iGeom);
-
-            var isSl0 = corner.IsBetween(def.sl0, true);
-            var isSl1 = corner.IsBetween(def.sl1, true);
-
-            PinType type;
-            if (isSl0 && isSl1) {
-                type = PinType.in_out;
-            }
-            else if (!isSl0 && !isSl1) {
-                type = PinType.out_in;
-            }
-            else {
-                type = isSl0 ? PinType.inside : PinType.outside;
+                bool isSl0 = s0 == Corner.Result.contain;
+                bool isSl1 = s1 == Corner.Result.contain;
+            
+                if (isSl0 && isSl1) {
+                    type = PinType.in_out;
+                } else if (!isSl0 && !isSl1) {
+                    type = PinType.out_in;
+                } else {
+                    type = isSl0 ? PinType.inside : PinType.outside;
+                }
             }
 
             return new PinPoint(def.pt, type, def.masterMileStone, def.slaveMileStone);

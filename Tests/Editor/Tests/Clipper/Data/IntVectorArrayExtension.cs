@@ -5,7 +5,7 @@ namespace Tests.Clipper.Data {
 
     internal static class IntVectorArrayExtension {
         
-        internal static Vector2[] toVectors(this IntVector[] self, long scale) {
+        internal static Vector2[] toFloat(this IntVector[] self, long scale) {
             var result = new Vector2[self.Length];
             var geom = IntGeom.DefGeom;
             for (int i = 0; i < self.Length; ++i) {
@@ -16,6 +16,10 @@ namespace Tests.Clipper.Data {
             }
 
             return result;
+        }
+        
+        internal static IntVector[] toInt(this Vector2[] self) {
+            return IntGeom.DefGeom.Int(self);;
         }
         
     }

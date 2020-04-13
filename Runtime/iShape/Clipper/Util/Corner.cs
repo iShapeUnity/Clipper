@@ -3,65 +3,161 @@ using iShape.Geometry;
 namespace iShape.Clipper.Util {
     public struct Corner {
 
-        private IntVector basis;
+        public enum Result {
+            onBoarder,
+            contain,
+            absent
+        }
+        
+        private readonly IntVector o;
         private readonly IntVector a;
         private readonly IntVector b;
-        private readonly IntVector o;
-        private readonly long projection;
-        private readonly bool isCWS;
-        private readonly IntGeom iGeom;
+        
+        private readonly DBVector d0;
+        private readonly DBVector da;
+        private readonly DBVector db;
+        private readonly bool isInnerCornerCW;
 
-        public Corner(IntVector o, IntVector a, IntVector b, IntGeom iGeom) {
+        public Corner(DBVector d0, IntVector o, IntVector a, IntVector b) {
+            this.d0 = d0;
+            this.da = new DBVector(a);
+            this.db = new DBVector(b);
+            
             this.o = o;
             this.a = a;
             this.b = b;
 
-            this.basis = new IntVector(o.x - a.x, o.y - a.y).Normal(iGeom);
-            var satellite = new IntVector(o.x - b.x, o.y - b.y).Normal(iGeom);
+            this.isInnerCornerCW = Corner.isClockWise(this.a, this.o, this.b) == 1;
+        }
+        
+        public Corner(IntVector o, IntVector a, IntVector b) {
+            this.d0 = new DBVector(o);
+            this.da = new DBVector(a);
+            this.db = new DBVector(b);
+            
+            this.o = o;
+            this.a = a;
+            this.b = b;
 
-            this.projection = basis.ScalarMultiply(satellite);
-            this.isCWS = IsClockWiseDirection(a, o, b);
-            this.iGeom = iGeom;
+            this.isInnerCornerCW = Corner.isClockWise(this.a, this.o, this.b) == 1;
         }
 
-        public bool IsBetween(IntVector p, bool clockwise = false) {
-            var target = new IntVector(o.x - p.x,o.y - p.y).Normal(iGeom);
-            var targetProjection = basis.ScalarMultiply(target);
-            var isTargetCws = IsClockWiseDirection(a,o,p);
+        public Result IsBetweenIntVersion(IntVector p, bool clockwise) {
+            int aop = Corner.isClockWise(a, o, p);
+            int bop = Corner.isClockWise(b, o, p);
+            if (aop == 0 || bop == 0) {
+                if (aop == 0 && bop == 0) {
+                    return Result.onBoarder;
+                }
 
-            bool result;
-
-            if (this.isCWS && isTargetCws) {
-                result = targetProjection > this.projection;
-            } else if (!this.isCWS && !isTargetCws) {
-                result = targetProjection < this.projection;
-            } else {
-                result = !this.isCWS;
+                long dotProduct;
+                if (aop == 0) {
+                    var ao = a - o;
+                    var po = p - o;
+                    dotProduct = ao.x * po.x + ao.y * po.y;
+                } else {
+                    var bo = b - o;
+                    var po = p - o;
+                    dotProduct = bo.x * po.x + bo.y * po.y;
+                }
+                if (dotProduct > 0) {
+                    return Result.onBoarder;
+                } else if (clockwise == this.isInnerCornerCW) {
+                    return Result.absent;
+                } else {
+                    return Result.contain;
+                }
             }
 
-            return result != clockwise;
+            bool isClockWiseAOP = aop == 1;
+            bool isClockWiseBOP = bop == 1;
+
+            bool isInner = isClockWiseAOP != isClockWiseBOP && this.isInnerCornerCW == isClockWiseAOP;
+
+            if (this.isInnerCornerCW != clockwise) {
+                isInner = !isInner;
+            }
+            if (isInner) {
+                return Result.contain;
+            } else {
+                return Result.absent;
+            }
+            
+        }
+        
+        public Result IsBetweenDoubleVersion(IntVector p, bool clockwise) {
+            int aop = Corner.isClockWise(a, o, p);
+            int bop = Corner.isClockWise(b, o, p);
+            if (aop == 0 || bop == 0) {
+                if (aop == 0 && bop == 0) {
+                    return Result.onBoarder;
+                }
+
+                long dotProduct;
+                if (aop == 0) {
+                    var ao = a - o;
+                    var po = p - o;
+                    dotProduct = ao.x * po.x + ao.y * po.y;
+                } else {
+                    var bo = b - o;
+                    var po = p - o;
+                    dotProduct = bo.x * po.x + bo.y * po.y;
+                }
+                if (dotProduct > 0) {
+                    return Result.onBoarder;
+                } else if (clockwise == this.isInnerCornerCW) {
+                    return Result.absent;
+                } else {
+                    return Result.contain;
+                }
+            }
+
+            var dp = new DBVector(p);
+
+            int dAOP = Corner.isClockWise(da, d0, dp);
+            int dBOP = Corner.isClockWise(db, d0, dp);
+
+            bool isClockWiseAOP = dAOP == 1;
+            bool isClockWiseBOP = dBOP == 1;
+
+            bool isInner = isClockWiseAOP != isClockWiseBOP && this.isInnerCornerCW == isClockWiseAOP;
+
+            if (this.isInnerCornerCW != clockwise) {
+                isInner = !isInner;
+            }
+            if (isInner) {
+                return Result.contain;
+            } else {
+                return Result.absent;
+            }
         }
 
-        public bool IsOnBorder(IntVector p) {
-            var dir = p - o;
-            var testA = IsSameDirection(a - o, dir);
-            var testB = IsSameDirection(b - o, dir);
-
-            return testA || testB;
-        }
-
-        private static bool IsSameDirection(IntVector a, IntVector b) {
-            var isSameLine = a.x * b.y == a.y * b.x;
-            var isSameDirection = a.x * b.x >= 0 && a.y * b.y >= 0;
-            return isSameLine && isSameDirection;
-        }
-
-
-        private static bool IsClockWiseDirection(IntVector a, IntVector b, IntVector c) {
+        private static int isClockWise(IntVector a, IntVector b, IntVector c) {
             var m0 = (c.y - a.y) * (b.x - a.x);
             var m1 = (b.y - a.y) * (c.x - a.x);
 
-            return m0 < m1;
+            if (m0 < m1) {
+                return -1;
+            } else if (m0 > m1) {
+                return 1;
+            }
+
+            return 0;
+        }
+        
+        private static int isClockWise(DBVector a, DBVector b, DBVector c) {
+            var m0 = (c.y - a.y) * (b.x - a.x);
+            var m1 = (b.y - a.y) * (c.x - a.x);
+
+            if (m0 < m1) {
+                return -1;
+            }
+            
+            if (m0 > m1) {
+                return 1;
+            }
+
+            return 0;
         }
 
     }

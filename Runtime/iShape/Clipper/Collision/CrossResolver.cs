@@ -6,7 +6,7 @@ namespace iShape.Clipper.Collision {
     internal struct CrossResolver {
 
         internal static CrossType DefineType(IntVector a0, IntVector a1, IntVector b0, IntVector b1,
-            out IntVector cross) {
+            out IntVector cross, out DBVector dp) {
             int d0 = IsClockWise(a0, b0, b1);
             int d1 = IsClockWise(a1, b0, b1);
             int d2 = IsClockWise(a0, a1, b0);
@@ -15,11 +15,13 @@ namespace iShape.Clipper.Collision {
             if (d0 == 0 || d1 == 0 || d2 == 0 || d3 == 0) {
                 if (d0 == 0 && d1 == 0 && d2 == 0 && d3 == 0) {
                     cross = IntVector.Zero;
+                    dp = DBVector.Zero;
                     return CrossType.same_line;
                 }
 
                 if (d0 == 0) {
                     cross = a0;
+                    dp = new DBVector(cross);
                     if (d2 == 0 || d3 == 0) {
                         if (d2 == 0) {
                             return CrossType.end_a0_b0;
@@ -35,6 +37,7 @@ namespace iShape.Clipper.Collision {
 
                 if (d1 == 0) {
                     cross = a1;
+                    dp = new DBVector(cross);
                     if (d2 == 0 || d3 == 0) {
                         if (d2 == 0) {
                             return CrossType.end_a1_b0;
@@ -51,17 +54,21 @@ namespace iShape.Clipper.Collision {
                 if (d0 != d1) {
                     if (d2 == 0) {
                         cross = b0;
+                        dp = new DBVector(cross);
                         return CrossType.end_b0;
                     } else {
                         cross = b1;
+                        dp = new DBVector(cross);
                         return CrossType.end_b1;
                     }
                 } else {
                     cross = IntVector.Zero;
+                    dp = DBVector.Zero;
                     return CrossType.not_cross;
                 }
             } else if (d0 != d1 && d2 != d3) {
-                cross = CrossResolver.Cross(a0, a1, b0, b1);
+                cross = CrossResolver.Cross(a0, a1, b0, b1, out var dCross);
+                dp = dCross;
                 // still can be ends (watch case union 44)
                 var isA0 = a0 == cross;
                 var isA1 = a1 == cross;
@@ -90,6 +97,7 @@ namespace iShape.Clipper.Collision {
             }
 
             cross = IntVector.Zero;
+            dp = DBVector.Zero;
             return CrossType.not_cross;
         }
 
@@ -108,7 +116,7 @@ namespace iShape.Clipper.Collision {
             return 0;
         }
 
-        private static IntVector Cross(IntVector a0, IntVector a1, IntVector b0, IntVector b1) {
+        private static IntVector Cross(IntVector a0, IntVector a1, IntVector b0, IntVector b1, out DBVector dp) {
             long dxA = a0.x - a1.x;
             long dyB = b0.y - b1.y;
             long dyA = a0.y - a1.y;
@@ -126,6 +134,8 @@ namespace iShape.Clipper.Collision {
 
             double dx = x * invert_divider;
             double dy = y * invert_divider;
+            
+            dp = new DBVector(dx, dy);
             
             long cx = (long) Math.Round(dx, MidpointRounding.AwayFromZero);
             long cy = (long) Math.Round(dy, MidpointRounding.AwayFromZero);
