@@ -106,7 +106,7 @@ namespace iShape.Clipper.Collision.Primitive {
         }
 
         internal static PinPoint BuildSimple(Def def) {
-            bool isCW = PinPoint.IsClockWise(def.ms1, def.pt, def.sl1);
+            bool isCW = PinPoint.IsClockWise(def.ms1, def.dp, def.sl1);
             var type = isCW ? PinType.outside : PinType.inside;
             return new PinPoint(def.pt, type, def.masterMileStone, def.slaveMileStone);
         }
@@ -142,9 +142,11 @@ namespace iShape.Clipper.Collision.Primitive {
             return new PinPoint(def.pt, type, def.masterMileStone, def.slaveMileStone);
         }
 
-        private static bool IsClockWise(IntVector a, IntVector b, IntVector c) {
-            long m0 = (c.y - a.y) * (b.x - a.x);
-            long m1 = (b.y - a.y) * (c.x - a.x);
+        private static bool IsClockWise(IntVector ia, DBVector b, IntVector ic) {
+            var a = new DBVector(ia);
+            var c = new DBVector(ic);
+            double m0 = (c.y - a.y) * (b.x - a.x);
+            double m1 = (b.y - a.y) * (c.x - a.x);
 
             return m0 < m1;
         }
