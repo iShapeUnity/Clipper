@@ -20,13 +20,26 @@ namespace iShape.Clipper.Solver {
                     filterNavigator.Dispose();
                     return new ComplexSolution(new PlainShape(allocator), new PlainShape(allocator), nature);
                 case Solution.Nature.overlap:
+                    var cursor = filterNavigator.First;
+                    if (cursor.type == PinPoint.PinType.out_in && !filterNavigator.HasEdge) {
+                        if (master.IsContain(slave)) {
+                            filterNavigator.Dispose();
+                            return new ComplexSolution(new PlainShape(allocator), new PlainShape(allocator), Solution.Nature.masterIncludeSlave);
+                        }
+                        if (slave.IsContain(master)) {
+                            filterNavigator.Dispose();
+                            return new ComplexSolution(new PlainShape(allocator), new PlainShape(allocator), Solution.Nature.slaveIncludeMaster);
+                        }
+                    }
                     var restPathList = SubtractSolver.Subtract(filterNavigator, master, slave, allocator);
                     filterNavigator.Reset();
                     var bitePathList = IntersectSolver.Intersect(filterNavigator, master, slave, allocator);
-                    filterNavigator.Dispose();
                     
+                    filterNavigator.Dispose();
                     return new ComplexSolution(restPathList, bitePathList, Solution.Nature.overlap);
             }
+            
+            filterNavigator.Dispose();
             return new ComplexSolution(new PlainShape(allocator), new PlainShape(allocator), Solution.Nature.notOverlap);
         }
 
@@ -42,10 +55,23 @@ namespace iShape.Clipper.Solver {
                     filterNavigator.Dispose();
                     return new Solution(new PlainShape(allocator), nature);
                 case Solution.Nature.overlap:
+                    var cursor = filterNavigator.First;
+                    if (cursor.type == PinPoint.PinType.out_in && !filterNavigator.HasEdge) {
+                        if (master.IsContain(slave)) {
+                            filterNavigator.Dispose();
+                            return new Solution(new PlainShape(allocator), Solution.Nature.masterIncludeSlave);
+                        }
+                        if (slave.IsContain(master)) {
+                            filterNavigator.Dispose();
+                            return new Solution(new PlainShape(allocator), Solution.Nature.slaveIncludeMaster);
+                        }
+                    }
                     var pathList = IntersectSolver.Intersect(filterNavigator, master, slave, allocator);
                     filterNavigator.Dispose();
                     return new Solution(pathList, Solution.Nature.overlap);
             }
+            
+            filterNavigator.Dispose();
             return new Solution(new PlainShape(allocator), Solution.Nature.notOverlap);
         }
 
@@ -61,10 +87,24 @@ namespace iShape.Clipper.Solver {
                     filterNavigator.Dispose();
                     return new Solution(new PlainShape(allocator), nature);
                 case Solution.Nature.overlap:
+                    var cursor = filterNavigator.First;
+                    if (cursor.type == PinPoint.PinType.out_in && !filterNavigator.HasEdge) {
+                        if (master.IsContain(slave)) {
+                            filterNavigator.Dispose();
+                            return new Solution(new PlainShape(allocator), Solution.Nature.masterIncludeSlave);
+                        }
+                        if (slave.IsContain(master)) {
+                            filterNavigator.Dispose();
+                            return new Solution(new PlainShape(allocator), Solution.Nature.slaveIncludeMaster);
+                        }
+                    }
                     var pathList = SubtractSolver.Subtract(filterNavigator, master, slave, allocator);
+                    
                     filterNavigator.Dispose();
                     return new Solution(pathList, Solution.Nature.overlap);
             }
+            
+            filterNavigator.Dispose();
             return new Solution(new PlainShape(allocator), Solution.Nature.notOverlap);
         }
 
@@ -80,7 +120,7 @@ namespace iShape.Clipper.Solver {
                     filterNavigator.Dispose();
                     return new Solution(new PlainShape(allocator), nature);
                 case Solution.Nature.overlap:
-                    var cursor = filterNavigator.First();
+                    var cursor = filterNavigator.First;
                     if (cursor.type == PinPoint.PinType.in_out) {
                         if (master.IsContain(slave)) {
                             filterNavigator.Dispose();
@@ -92,10 +132,12 @@ namespace iShape.Clipper.Solver {
                         }
                     }
                     var pathList = UnionSolver.Union(filterNavigator, master, slave, allocator);
+                    
                     filterNavigator.Dispose();
                     return new Solution(pathList, Solution.Nature.overlap);
             }
 
+            filterNavigator.Dispose();
             return new Solution(new PlainShape(allocator), Solution.Nature.notOverlap);
         }
     }

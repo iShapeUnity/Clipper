@@ -248,29 +248,8 @@ namespace Tests.Clipper {
 
             var solution = master.Subtract(slave, Allocator.Temp);
 
-            Assert.AreEqual(solution.nature, Solution.Nature.overlap);
-            Assert.AreEqual(solution.pathList.Count, 2);
-
-            var path0 = solution.pathList.Get(0, Allocator.Temp).ToArray();
-            var sample0 = iGeom.Int(new[] {
-                new Vector2(0,10),
-                new Vector2(0,0),
-                new Vector2(10,0),
-                new Vector2(10,-10),
-                new Vector2(-10,-10),
-                new Vector2(-10,10)
-            });
-
-            Assert.AreEqual(path0, sample0);
-
-            var path1 = solution.pathList.Get(1, Allocator.Temp).ToArray();
-            var sample1 = iGeom.Int(new[] {
-                new Vector2(10,0),
-                new Vector2(0,10),
-                new Vector2(10,10)
-            });
-
-            Assert.AreEqual(path1, sample1);
+            Assert.AreEqual(solution.nature, Solution.Nature.masterIncludeSlave);
+            Assert.AreEqual(solution.pathList.Count, 0);
             
             solution.Dispose();
             master.Dispose();
@@ -321,28 +300,8 @@ namespace Tests.Clipper {
 
             var solution = master.Subtract(slave, Allocator.Temp);
 
-            Assert.AreEqual(solution.nature, Solution.Nature.overlap);
-            Assert.AreEqual(solution.pathList.Count, 2);
-
-            var path0 = solution.pathList.Get(0, Allocator.Temp).ToArray();
-            var sample0 = iGeom.Int(new[] {
-                new Vector2(10,10),
-                new Vector2(-5,5),
-                new Vector2(0,-10),
-                new Vector2(-10,-10),
-                new Vector2(-10,10)
-            });
-
-            Assert.AreEqual(path0, sample0);
-
-            var path1 = solution.pathList.Get(1, Allocator.Temp).ToArray();
-            var sample1 = iGeom.Int(new[] {
-                new Vector2(0,-10),
-                new Vector2(10,10),
-                new Vector2(10,-10)
-            });
-
-            Assert.AreEqual(path1, sample1);
+            Assert.AreEqual(solution.nature, Solution.Nature.masterIncludeSlave);
+            Assert.AreEqual(solution.pathList.Count, 0);
             
             solution.Dispose();
             master.Dispose();
@@ -619,22 +578,8 @@ namespace Tests.Clipper {
 
             var solution = master.Subtract(slave, Allocator.Temp);
 
-            Assert.AreEqual(solution.nature, Solution.Nature.overlap);
-            Assert.AreEqual(solution.pathList.Count, 1);
-
-            var path = solution.pathList.Get(0, Allocator.Temp).ToArray();
-            var sample = iGeom.Int(new[] {
-                new Vector2(10,0),
-                new Vector2(0,5),
-                new Vector2(0,-5),
-                new Vector2(10,0),
-                new Vector2(10,-10),
-                new Vector2(-10,-10),
-                new Vector2(-10,10),
-                new Vector2(10,10)
-            });
-
-            Assert.AreEqual(path, sample);
+            Assert.AreEqual(solution.nature, Solution.Nature.masterIncludeSlave);
+            Assert.AreEqual(solution.pathList.Count, 0);
 
             solution.Dispose();
             master.Dispose();
@@ -649,21 +594,8 @@ namespace Tests.Clipper {
 
             var solution = master.Subtract(slave, Allocator.Temp);
 
-            Assert.AreEqual(solution.nature, Solution.Nature.overlap);
-            Assert.AreEqual(solution.pathList.Count, 1);
-
-            var path = solution.pathList.Get(0, Allocator.Temp).ToArray();
-            var sample = iGeom.Int(new[] {
-                new Vector2(10,10),
-                new Vector2(0,5),
-                new Vector2(5,0),
-                new Vector2(10,10),
-                new Vector2(10,-10),
-                new Vector2(-10,-10),
-                new Vector2(-10,10)
-            });
-
-            Assert.AreEqual(path, sample);
+            Assert.AreEqual(solution.nature, Solution.Nature.masterIncludeSlave);
+            Assert.AreEqual(solution.pathList.Count, 0);
 
             solution.Dispose();
             master.Dispose();

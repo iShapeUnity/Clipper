@@ -12,6 +12,9 @@ namespace iShape.Clipper.Solver {
         private NativeArray<Cursor> nextCursors;
         private int nextIndex;
 
+        internal Cursor First => nextCursors.Length > 0 ? this.nextCursors[0] : Cursor.empty;
+        internal bool HasEdge => navigator.pinPathArray.Length != 0;
+        
         internal FilterNavigator(PinNavigator navigator, PinPoint.PinType primary, PinPoint.PinType secondary, Allocator allocator) {
             this.navigator = navigator;
             this.nextCursors = getCursors(navigator, primary, secondary, allocator);
@@ -30,18 +33,13 @@ namespace iShape.Clipper.Solver {
 
             return Cursor.empty;
         }
-    
-        internal Cursor First() {
-            return nextCursors.Length > 0 ? this.nextCursors[0] : Cursor.empty;
-        }
-        
-        
+
         internal Solution.Nature Nature(NativeArray<IntVector> master, NativeArray<IntVector> slave, bool isSlaveClockWise) {
             if (navigator.isEqual) {
                 return Solution.Nature.equal;
             }
 
-            var cursor = this.First();
+            var cursor = this.First;
             if (cursor.isNotEmpty) {
                 return Solution.Nature.overlap;
             } else if (this.navigator.hasContacts) {

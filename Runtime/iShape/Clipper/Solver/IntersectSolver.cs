@@ -1,3 +1,4 @@
+using iShape.Clipper.Collision;
 using iShape.Clipper.Collision.Navigation;
 using iShape.Clipper.Collision.Primitive;
 using iShape.Collections;
@@ -144,7 +145,7 @@ namespace iShape.Clipper.Solver {
                         }
                     }
                 } while (cursor != start);
-
+                path.Simplify();
                 pathList.Add(path.slice, false);
                 path.RemoveAll();
 

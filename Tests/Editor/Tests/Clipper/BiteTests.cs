@@ -1803,8 +1803,10 @@ namespace Tests.Clipper {
                     new PathLayout(0, 4, true),
                     new PathLayout(4, 4, false)
                 });
+
+            var a = mainShape1.layouts.ToArray();
             
-            Assert.AreEqual(mainShape1.layouts.ToArray(),
+            Assert.AreEqual(a,
                 new[] {
                     new PathLayout(0, 4, true),
                     new PathLayout(4, 22, false)
