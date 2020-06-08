@@ -15,6 +15,8 @@ namespace iShape.Clipper.Solver {
             NativeArray<IntVector> slave, Allocator allocator
         ) {
             var pathList = new DynamicPlainShape(allocator);
+            pathList.AddEmpty(); // reserve for hull
+            bool isHullFounded = false;
 
             int masterCount = master.Length;
             int masterLastIndex = masterCount - 1;
@@ -143,9 +145,19 @@ namespace iShape.Clipper.Solver {
                     }
                 } while (cursor != start);
 
-                bool isClockWise = path.IsClockWise();
                 path.Simplify();
-                pathList.Add(path.slice, isClockWise);
+                if (isHullFounded) {
+                    pathList.Add(path.slice, false);                    
+                } else {
+                    bool isClockWise = path.IsClockWise();
+                    if (isClockWise) {
+                        isHullFounded = true;
+                        pathList.ReplaceAt(0, path.slice);
+                    } else {
+                        pathList.Add(path.slice, false);
+                    }
+                }
+
                 path.RemoveAll();
                 
                 cursor = filterNavigator.Next();

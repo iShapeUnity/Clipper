@@ -6,67 +6,67 @@ using Unity.Collections;
 
 namespace iShape.Clipper.Solver {
 
-    public static class CutSolver {
+    public static class ComplexSubtractSolver {
         private const Allocator tempAllocator = Allocator.Temp;
 
-        public static BiteSolution Bite(this PlainShape self, NativeArray<IntVector> path, Allocator allocator) {
+        public static ComplexSubtractSolution ComplexSubtract(this PlainShape self, NativeArray<IntVector> path, Allocator allocator) {
             var hull = self.Get(0, tempAllocator);
 
             var solution = hull.Cut(path, tempAllocator);
             hull.Dispose();
             
-            BiteSolution biteSolution;
+            ComplexSubtractSolution complexSubtractSolution;
 
             switch (solution.nature) {
                 case Solution.Nature.notOverlap:
-                    biteSolution = new BiteSolution(new PlainShapeList(allocator), new PlainShapeList(allocator), false);
+                    complexSubtractSolution = new ComplexSubtractSolution(new PlainShapeList(allocator), new PlainShapeList(allocator), false);
                     break;
                 case Solution.Nature.equal:
                 case Solution.Nature.slaveIncludeMaster:
-                    biteSolution = new BiteSolution(new PlainShapeList(allocator), new PlainShapeList(self, allocator), true);
+                    complexSubtractSolution = new ComplexSubtractSolution(new PlainShapeList(allocator), new PlainShapeList(self, allocator), true);
                     break;
                 case Solution.Nature.masterIncludeSlave:
-                    biteSolution = self.HoleCase(path, allocator);
+                    complexSubtractSolution = self.HoleCase(path, allocator);
                     break;
                 case Solution.Nature.overlap:
-                    biteSolution = self.OverlapCase(solution, allocator);
+                    complexSubtractSolution = self.OverlapCase(solution, allocator);
                     break;
                 default:
-                    biteSolution = new BiteSolution(new PlainShapeList(allocator), new PlainShapeList(allocator), false);
+                    complexSubtractSolution = new ComplexSubtractSolution(new PlainShapeList(allocator), new PlainShapeList(allocator), false);
                     break;
             }
 
             solution.Dispose();
 
             // impossible case
-            return biteSolution;
+            return complexSubtractSolution;
         }
 
         // case where hole is completely inside
-        private static BiteSolution HoleCase(this PlainShape self, NativeArray<IntVector> cutPath, Allocator allocator) {
+        private static ComplexSubtractSolution HoleCase(this PlainShape self, NativeArray<IntVector> cutPath, Allocator allocator) {
             int n = self.layouts.Length;
-            PlainShapeList mainList;
-            PlainShapeList biteList;
             if (n == 1) {
                 // original shape does not have holes 
                 var shape = new DynamicPlainShape(self, allocator);
                 shape.Add(cutPath, false);
 
-                mainList = shape.ToShapeList(allocator);
-                biteList = new PlainShapeList(cutPath.Reverse(), true, allocator);
-            } else {
-                mainList = self.HoleCaseMainList(cutPath, allocator);
-                biteList = self.HoleCaseBiteList(cutPath, allocator);
+                var mainList = shape.ToShapeList(allocator);
+                var partList = new PlainShapeList(cutPath.Reverse(), true, allocator);
+                
+                return new ComplexSubtractSolution(mainList, partList, true);
+            } else if (self.HoleCaseMainList(cutPath, out var mainList, allocator)) {
+                var partList = self.HoleCaseBiteList(cutPath, allocator);
+                return new ComplexSubtractSolution(mainList, partList, true);
             }
-
-            return new BiteSolution(mainList, biteList, true);
+            
+            return new ComplexSubtractSolution(new PlainShapeList(allocator), new PlainShapeList(allocator), false);
         }
 
-        private static BiteSolution OverlapCase(this PlainShape self, ComplexSolution cutHullSolution, Allocator allocator) {
-            var mainList = self.OverlapCaseMainList(cutHullSolution.restPathList, allocator);
-            var biteList = self.OverlapCaseBiteList(cutHullSolution.bitePathList, allocator);
+        private static ComplexSubtractSolution OverlapCase(this PlainShape self, DualSolution cutHullSolution, Allocator allocator) {
+            var mainList = self.OverlapCaseMainList(cutHullSolution.mainPathList, allocator);
+            var partList = self.OverlapCaseBiteList(cutHullSolution.partPathList, allocator);
 
-            return new BiteSolution(mainList, biteList, true);
+            return new ComplexSubtractSolution(mainList, partList, true);
         }
 
         private static PlainShapeList OverlapCaseMainList(this PlainShape self, PlainShape restPathList, Allocator allocator) {
@@ -186,10 +186,10 @@ namespace iShape.Clipper.Solver {
             return result.Convert();
         }
 
-        private static PlainShapeList OverlapCaseBiteList(this PlainShape self, PlainShape bitePathList, Allocator allocator) {
-            var subPaths = new DynamicPlainShape(bitePathList.points.Length, bitePathList.layouts.Length, allocator);
-            for (int i = 0; i < bitePathList.layouts.Length; ++i) {
-                var subPath = bitePathList.Get(i, tempAllocator).Reverse();
+        private static PlainShapeList OverlapCaseBiteList(this PlainShape self, PlainShape partPathList, Allocator allocator) {
+            var subPaths = new DynamicPlainShape(partPathList.points.Length, partPathList.layouts.Length, allocator);
+            for (int i = 0; i < partPathList.layouts.Length; ++i) {
+                var subPath = partPathList.Get(i, tempAllocator).Reverse();
                 subPaths.Add(subPath, true);
                 subPath.Dispose();
             }
@@ -200,12 +200,11 @@ namespace iShape.Clipper.Solver {
             return result;
         }
 
-        private static PlainShapeList HoleCaseMainList(this PlainShape self, NativeArray<IntVector> cutPath, Allocator allocator) {
+        private static bool HoleCaseMainList(this PlainShape self, NativeArray<IntVector> cutPath, out PlainShapeList plainShapeList, Allocator allocator) {
             int n = self.layouts.Length;
 
             // new hole
-            var rootHole = new NativeArray<IntVector>(cutPath, tempAllocator);
-            rootHole.Reverse();
+            var rootHole = new NativeArray<IntVector>(cutPath, tempAllocator).Reverse();
 
             // holes which are not intersected with new one
             var notInteractedHoles = new DynamicArray<int>(tempAllocator);
@@ -232,10 +231,17 @@ namespace iShape.Clipper.Solver {
                         nextHole.Dispose();
                         break;
                     case Solution.Nature.slaveIncludeMaster:
-                        interactedHoles.Add(i);
+                        // new hole is almost inside from one of the hole
+                        
                         rootHole.Dispose();
-                        rootHole = nextHole;
-                        break;
+                        nextHole.Dispose();
+                        union.Dispose();
+                        islands.Dispose();
+                        notInteractedHoles.Dispose();
+                        interactedHoles.Dispose();
+                        
+                        plainShapeList = new PlainShapeList(allocator);
+                        return false;
                     case Solution.Nature.overlap:
                         interactedHoles.Add(i);
                         var uShape = union.pathList;
@@ -290,7 +296,8 @@ namespace iShape.Clipper.Solver {
                 notInteractedHoles.Dispose();
                 interactedHoles.Dispose();
 
-                return mainShape.ToShapeList(allocator);
+                plainShapeList = mainShape.ToShapeList(allocator); 
+                return true;
             }
 
             // subtract from inside pieces the holes which are inside or touch the new hole
@@ -388,7 +395,9 @@ namespace iShape.Clipper.Solver {
             
             rootShape.Dispose();
 
-            return shapeParts.Convert();
+            plainShapeList = shapeParts.Convert();
+
+            return true;
         }
 
         private static PlainShapeList HoleCaseBiteList(this PlainShape self, NativeArray<IntVector> cutPath, Allocator allocator) {
@@ -464,14 +473,14 @@ namespace iShape.Clipper.Solver {
                 return new PlainShapeList(allocator);
             }
 
-            var biteList = new DynamicPlainShapeList(allocator);
+            var partList = new DynamicPlainShapeList(allocator);
             
             if (holes.layouts.Count == 0) {
                 holes.Dispose();
                 for (int i = 0; i < subPaths.layouts.Count; ++i) {
-                    biteList.Add(subPaths.Get(i));
+                    partList.Add(subPaths.Get(i));
                 }
-                return biteList.Convert();
+                return partList.Convert();
             }
 
             for (int i = 0; i < subPaths.layouts.Count; ++i) {
@@ -484,12 +493,12 @@ namespace iShape.Clipper.Solver {
                     }
                 }
 
-                biteList.Add(subShape.Convert());
+                partList.Add(subShape.Convert());
             }
             
             holes.Dispose();
 
-            return biteList.Convert();
+            return partList.Convert();
         }
     }
 

@@ -2,21 +2,21 @@ using iShape.Geometry.Container;
 
 namespace iShape.Clipper.Solver {
 
-    public struct BiteSolution {
+    public struct ComplexSubtractSolution {
 
         public readonly bool isInteract;
         public PlainShapeList mainList;
-        public PlainShapeList biteList;
+        public PlainShapeList partList;
 
-        public BiteSolution(PlainShapeList mainList, PlainShapeList biteList, bool isInteract) {
+        public ComplexSubtractSolution(PlainShapeList mainList, PlainShapeList partList, bool isInteract) {
             this.mainList = mainList;
-            this.biteList = biteList;
+            this.partList = partList;
             this.isInteract = isInteract;
         }
 
         public void Dispose() {
             this.mainList.Dispose();
-            this.biteList.Dispose();
+            this.partList.Dispose();
         }
     }
 

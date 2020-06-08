@@ -379,16 +379,6 @@ namespace Tests.Clipper {
 
             var path0 = solution.pathList.Get(0, Allocator.Temp).ToArray();
             var sample0 = iGeom.Int(new[] {
-                new Vector2(5, 0),
-                new Vector2(5, 5),
-                new Vector2(-5, 5),
-                new Vector2(-5, 0)
-            });
-
-            Assert.AreEqual(path0, sample0);
-
-            var path1 = solution.pathList.Get(1, Allocator.Temp).ToArray();
-            var sample1 = iGeom.Int(new[] {
                 new Vector2(-5, -5),
                 new Vector2(-10, -5),
                 new Vector2(-10, 10),
@@ -397,6 +387,16 @@ namespace Tests.Clipper {
                 new Vector2(5, -5),
                 new Vector2(5, 0),
                 new Vector2(0, -5)
+            });
+
+            Assert.AreEqual(path0, sample0);
+            
+            var path1 = solution.pathList.Get(1, Allocator.Temp).ToArray();
+            var sample1 = iGeom.Int(new[] {
+                new Vector2(5, 0),
+                new Vector2(5, 5),
+                new Vector2(-5, 5),
+                new Vector2(-5, 0)
             });
 
             Assert.AreEqual(path1, sample1);
@@ -420,24 +420,6 @@ namespace Tests.Clipper {
 
             var path0 = solution.pathList.Get(0, Allocator.Temp).ToArray();
             var sample0 = iGeom.Int(new[] {
-                new Vector2(-5, 10),
-                new Vector2(-5, 15),
-                new Vector2(-10, 15),
-                new Vector2(-10, -5),
-                new Vector2(5, -5),
-                new Vector2(5, 5),
-                new Vector2(0, 5),
-                new Vector2(0, 0),
-                new Vector2(-5, 0),
-                new Vector2(-5, 5),
-                new Vector2(-7.5f, 5),
-                new Vector2(-7.5f, 10)
-            });
-
-            Assert.AreEqual(path0, sample0);
-
-            var path1 = solution.pathList.Get(1, Allocator.Temp).ToArray();
-            var sample1 = iGeom.Int(new[] {
                 new Vector2(5, 10),
                 new Vector2(5, 25),
                 new Vector2(-20, 25),
@@ -458,6 +440,24 @@ namespace Tests.Clipper {
                 new Vector2(-15, 20),
                 new Vector2(0, 20),
                 new Vector2(0, 10)
+            });
+            
+            Assert.AreEqual(path0, sample0);
+            
+            var path1 = solution.pathList.Get(1, Allocator.Temp).ToArray();
+            var sample1 = iGeom.Int(new[] {
+                new Vector2(-5, 10),
+                new Vector2(-5, 15),
+                new Vector2(-10, 15),
+                new Vector2(-10, -5),
+                new Vector2(5, -5),
+                new Vector2(5, 5),
+                new Vector2(0, 5),
+                new Vector2(0, 0),
+                new Vector2(-5, 0),
+                new Vector2(-5, 5),
+                new Vector2(-7.5f, 5),
+                new Vector2(-7.5f, 10)
             });
 
             Assert.AreEqual(path1, sample1);
@@ -482,20 +482,6 @@ namespace Tests.Clipper {
 
             var path0 = solution.pathList.Get(0, Allocator.Temp).ToArray();
             var sample0 = iGeom.Int(new[] {
-                new Vector2(-5, 2.5f),
-                new Vector2(-5, 15),
-                new Vector2(-10, 15),
-                new Vector2(-10, -5),
-                new Vector2(5, -5),
-                new Vector2(5, -2.5f),
-                new Vector2(-7.5f, -2.5f),
-                new Vector2(-7.5f, 2.5f)
-            });
-
-            Assert.AreEqual(path0, sample0);
-
-            var path1 = solution.pathList.Get(1, Allocator.Temp).ToArray();
-            var sample1 = iGeom.Int(new[] {
                 new Vector2(5, 2.5f),
                 new Vector2(5, 25),
                 new Vector2(-20, 25),
@@ -516,6 +502,20 @@ namespace Tests.Clipper {
                 new Vector2(-15, 20),
                 new Vector2(0, 20),
                 new Vector2(0, 2.5f)
+            });
+
+            Assert.AreEqual(path0, sample0);
+            
+            var path1 = solution.pathList.Get(1, Allocator.Temp).ToArray();
+            var sample1 = iGeom.Int(new[] {
+                new Vector2(-5, 2.5f),
+                new Vector2(-5, 15),
+                new Vector2(-10, 15),
+                new Vector2(-10, -5),
+                new Vector2(5, -5),
+                new Vector2(5, -2.5f),
+                new Vector2(-7.5f, -2.5f),
+                new Vector2(-7.5f, 2.5f)
             });
 
             Assert.AreEqual(path1, sample1);
@@ -797,6 +797,20 @@ namespace Tests.Clipper {
 
             var path0 = solution.pathList.Get(0, Allocator.Temp).ToArray();
             var sample0 = iGeom.Int(new[] {
+                new Vector2(-10, 10),
+                new Vector2(-20, 10),
+                new Vector2(-20, 20),
+                new Vector2(10, 20),
+                new Vector2(10, -15),
+                new Vector2(-20, -15),
+                new Vector2(-20, 5),
+                new Vector2(-10, 5)
+            });
+
+            Assert.AreEqual(path0, sample0);
+            
+            var path1 = solution.pathList.Get(1, Allocator.Temp).ToArray();
+            var sample1 = iGeom.Int(new[] {
                 new Vector2(-10, 0),
                 new Vector2(-15, 0),
                 new Vector2(-15, -10),
@@ -809,20 +823,6 @@ namespace Tests.Clipper {
                 new Vector2(-5, 0),
                 new Vector2(-5, -5),
                 new Vector2(-10, -5)
-            });
-
-            Assert.AreEqual(path0, sample0);
-
-            var path1 = solution.pathList.Get(1, Allocator.Temp).ToArray();
-            var sample1 = iGeom.Int(new[] {
-                new Vector2(-10, 10),
-                new Vector2(-20, 10),
-                new Vector2(-20, 20),
-                new Vector2(10, 20),
-                new Vector2(10, -15),
-                new Vector2(-20, -15),
-                new Vector2(-20, 5),
-                new Vector2(-10, 5)
             });
 
             Assert.AreEqual(path1, sample1);
@@ -892,20 +892,6 @@ namespace Tests.Clipper {
 
             var path0 = solution.pathList.Get(0, Allocator.Temp).ToArray();
             var sample0 = iGeom.Int(new[] {
-                new Vector2(0, 5),
-                new Vector2(5, 5),
-                new Vector2(5, 0),
-                new Vector2(-10, 0),
-                new Vector2(-10, -10),
-                new Vector2(10, -10),
-                new Vector2(10, 10),
-                new Vector2(0, 10)
-            });
-
-            Assert.AreEqual(path0, sample0);
-
-            var path1 = solution.pathList.Get(1, Allocator.Temp).ToArray();
-            var sample1 = iGeom.Int(new[] {
                 new Vector2(-5, 10),
                 new Vector2(-15, 10),
                 new Vector2(-15, 20),
@@ -914,6 +900,20 @@ namespace Tests.Clipper {
                 new Vector2(-15, -15),
                 new Vector2(-15, 5),
                 new Vector2(-5, 5)
+            });
+
+            Assert.AreEqual(path0, sample0);
+            
+            var path1 = solution.pathList.Get(1, Allocator.Temp).ToArray();
+            var sample1 = iGeom.Int(new[] {
+                new Vector2(0, 5),
+                new Vector2(5, 5),
+                new Vector2(5, 0),
+                new Vector2(-10, 0),
+                new Vector2(-10, -10),
+                new Vector2(10, -10),
+                new Vector2(10, 10),
+                new Vector2(0, 10)
             });
 
             Assert.AreEqual(path1, sample1);
@@ -1015,16 +1015,6 @@ namespace Tests.Clipper {
 
             var path0 = solution.pathList.Get(0, Allocator.Temp).ToArray();
             var sample0 = iGeom.Int(new[] {
-                new Vector2(5, 20),
-                new Vector2(5, 25),
-                new Vector2(-20, 25),
-                new Vector2(-20, 20)
-            });
-
-            Assert.AreEqual(path0, sample0);
-
-            var path1 = solution.pathList.Get(1, Allocator.Temp).ToArray();
-            var sample1 = iGeom.Int(new[] {
                 new Vector2(7, -15),
                 new Vector2(15, -15),
                 new Vector2(15, 20),
@@ -1035,6 +1025,16 @@ namespace Tests.Clipper {
                 new Vector2(10, 30),
                 new Vector2(10, -10),
                 new Vector2(7, -10)
+            });
+
+            Assert.AreEqual(path0, sample0);
+            
+            var path1 = solution.pathList.Get(1, Allocator.Temp).ToArray();
+            var sample1 = iGeom.Int(new[] {
+                new Vector2(5, 20),
+                new Vector2(5, 25),
+                new Vector2(-20, 25),
+                new Vector2(-20, 20)
             });
 
             Assert.AreEqual(path1, sample1);
@@ -1058,25 +1058,6 @@ namespace Tests.Clipper {
 
             var path0 = solution.pathList.Get(0, Allocator.Temp).ToArray();
             var sample0 = iGeom.Int(new[] {
-                new Vector2(5, 20),
-                new Vector2(5, 25),
-                new Vector2(-20, 25),
-                new Vector2(-20, 20)
-            });
-
-            Assert.AreEqual(path0, sample0);
-
-            var path1 = solution.pathList.Get(1, Allocator.Temp).ToArray();
-            var sample1 = new[] {
-                new IntVector(49167, -50000),
-                iGeom.Int(new Vector2(5, -5)),
-                iGeom.Int(new Vector2(5, -4))
-            };
-
-            Assert.AreEqual(path1, sample1);
-
-            var path2 = solution.pathList.Get(2, Allocator.Temp).ToArray();
-            var sample2 = iGeom.Int(new[] {
                 new Vector2(4.0833f, -15),
                 new Vector2(15, -15),
                 new Vector2(15, 20),
@@ -1088,6 +1069,25 @@ namespace Tests.Clipper {
                 new Vector2(10, -10),
                 new Vector2(4.5f, -10)
             });
+
+            Assert.AreEqual(path0, sample0);
+            
+            var path1 = solution.pathList.Get(1, Allocator.Temp).ToArray();
+            var sample1 = iGeom.Int(new[] {
+                new Vector2(5, 20),
+                new Vector2(5, 25),
+                new Vector2(-20, 25),
+                new Vector2(-20, 20)
+            });
+
+            Assert.AreEqual(path1, sample1);
+
+            var path2 = solution.pathList.Get(2, Allocator.Temp).ToArray();
+            var sample2 = new[] {
+                new IntVector(49167, -50000),
+                iGeom.Int(new Vector2(5, -5)),
+                iGeom.Int(new Vector2(5, -4))
+            };
 
             Assert.AreEqual(path2, sample2);
 
@@ -1110,7 +1110,22 @@ namespace Tests.Clipper {
             Assert.AreEqual(solution.pathList.Count, 3);
 
             var path0 = solution.pathList.Get(0, Allocator.Temp).ToArray();
-            var sample0 = new[] {
+            var sample0 = iGeom.Int(new[] {
+                new Vector2(15, -9),
+                new Vector2(15, 20),
+                new Vector2(20, 20),
+                new Vector2(20, -20),
+                new Vector2(-25, -20),
+                new Vector2(-25, 30),
+                new Vector2(10, 30),
+                new Vector2(10, -5.625f),
+                new Vector2(12, -5)
+            });
+
+            Assert.AreEqual(path0, sample0);
+
+            var path1 = solution.pathList.Get(1, Allocator.Temp).ToArray();
+            var sample1 = new[] {
                 iGeom.Int(new Vector2(-4, -10)),
                 iGeom.Int(new Vector2(-15, -10)),
                 iGeom.Int(new Vector2(-15, 20)),
@@ -1127,28 +1142,13 @@ namespace Tests.Clipper {
                 new IntVector(-168000, -140000)
             };
 
-            Assert.AreEqual(path0, sample0);
-
-            var path1 = solution.pathList.Get(1, Allocator.Temp).ToArray();
-            var sample1 = iGeom.Int(new[] {
-                new Vector2(-10, -14),
-                new Vector2(15, -14),
-                new Vector2(15, -9)
-            });
-
             Assert.AreEqual(path1, sample1);
 
             var path2 = solution.pathList.Get(2, Allocator.Temp).ToArray();
             var sample2 = iGeom.Int(new[] {
-                new Vector2(15, -9),
-                new Vector2(15, 20),
-                new Vector2(20, 20),
-                new Vector2(20, -20),
-                new Vector2(-25, -20),
-                new Vector2(-25, 30),
-                new Vector2(10, 30),
-                new Vector2(10, -5.625f),
-                new Vector2(12, -5)
+                new Vector2(-10, -14),
+                new Vector2(15, -14),
+                new Vector2(15, -9)
             });
 
             Assert.AreEqual(path2, sample2);
@@ -1246,16 +1246,30 @@ namespace Tests.Clipper {
 
             var path0 = solution.pathList.Get(0, Allocator.Temp).ToArray();
             var sample0 = iGeom.Int(new[] {
+                new Vector2(15, 15),
+                new Vector2(15, 20),
+                new Vector2(20, 20),
+                new Vector2(20, -20),
+                new Vector2(-25, -20),
+                new Vector2(-25, 30),
+                new Vector2(10, 30),
+                new Vector2(10, 15)
+            });
+
+            Assert.AreEqual(path0, sample0);
+            
+            var path1 = solution.pathList.Get(1, Allocator.Temp).ToArray();
+            var sample1 = iGeom.Int(new[] {
                 new Vector2(5, 0),
                 new Vector2(5, 10),
                 new Vector2(0, 10),
                 new Vector2(0, 0)
             });
 
-            Assert.AreEqual(path0, sample0);
+            Assert.AreEqual(path1, sample1);
 
-            var path1 = solution.pathList.Get(1, Allocator.Temp).ToArray();
-            var sample1 = iGeom.Int(new[] {
+            var path2 = solution.pathList.Get(2, Allocator.Temp).ToArray();
+            var sample2 = iGeom.Int(new[] {
                 new Vector2(-10, 10),
                 new Vector2(-10, -5),
                 new Vector2(-5, -5),
@@ -1263,10 +1277,10 @@ namespace Tests.Clipper {
                 new Vector2(-5, 10)
             });
 
-            Assert.AreEqual(path1, sample1);
+            Assert.AreEqual(path2, sample2);
 
-            var path2 = solution.pathList.Get(2, Allocator.Temp).ToArray();
-            var sample2 = iGeom.Int(new[] {
+            var path3 = solution.pathList.Get(3, Allocator.Temp).ToArray();
+            var sample3 = iGeom.Int(new[] {
                 new Vector2(-15, -10),
                 new Vector2(-15, 20),
                 new Vector2(0, 20),
@@ -1278,28 +1292,14 @@ namespace Tests.Clipper {
                 new Vector2(-15, -15)
             });
 
-            Assert.AreEqual(path2, sample2);
-
-            var path3 = solution.pathList.Get(3, Allocator.Temp).ToArray();
-            var sample3 = iGeom.Int(new[] {
-                new Vector2(10, -5),
-                new Vector2(10, -10),
-                new Vector2(15, -10),
-                new Vector2(15, -5)
-            });
-
             Assert.AreEqual(path3, sample3);
 
             var path4 = solution.pathList.Get(4, Allocator.Temp).ToArray();
             var sample4 = iGeom.Int(new[] {
-                new Vector2(15, 15),
-                new Vector2(15, 20),
-                new Vector2(20, 20),
-                new Vector2(20, -20),
-                new Vector2(-25, -20),
-                new Vector2(-25, 30),
-                new Vector2(10, 30),
-                new Vector2(10, 15)
+                new Vector2(10, -5),
+                new Vector2(10, -10),
+                new Vector2(15, -10),
+                new Vector2(15, -5)
             });
 
             Assert.AreEqual(path4, sample4);

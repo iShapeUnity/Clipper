@@ -1,3 +1,4 @@
+using iShape.Collections;
 using iShape.Geometry;
 using iShape.Geometry.Container;
 using Unity.Collections;
@@ -5,7 +6,7 @@ using UnityEngine;
 
 namespace Tests.Clipper.Data {
 
-    internal struct BiteTestData {
+    internal struct ComplexTestData {
 
         internal struct PackData {
             internal PlainShape shape;
@@ -34,17 +35,34 @@ namespace Tests.Clipper.Data {
                 this.path = path;
             }
 
-            internal PackData Allocate(Allocator allocator) {
+            internal PackData AllocateSubtract(Allocator allocator) {
                 var iHull = IntGeom.DefGeom.Int(hull);
                 var iHoles = IntGeom.DefGeom.Int(holes);
                 var iShape = new IntShape(iHull, iHoles);
 
                 var iPath = IntGeom.DefGeom.Int(path);
+                var aPath = new NativeArray<IntVector>(iPath, allocator);
 
                 var packData = new PackData(
                     new PlainShape(iShape, allocator),
-                    new NativeArray<IntVector>(iPath, allocator)
+                    aPath
                     );
+                
+                return packData;
+            }
+            
+            internal PackData AllocateUnion(Allocator allocator) {
+                var iHull = IntGeom.DefGeom.Int(hull);
+                var iHoles = IntGeom.DefGeom.Int(holes);
+                var iShape = new IntShape(iHull, iHoles);
+
+                var iPath = IntGeom.DefGeom.Int(path);
+                var aPath = new NativeArray<IntVector>(iPath, allocator);
+
+                var packData = new PackData(
+                    new PlainShape(iShape, allocator),
+                    aPath.Reverse()
+                );
                 
                 return packData;
             }

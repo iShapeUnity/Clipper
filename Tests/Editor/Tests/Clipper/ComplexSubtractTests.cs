@@ -8,54 +8,22 @@ using UnityEngine;
 
 namespace Tests.Clipper {
 
-    public class BiteTests {
+    public class ComplexSubtractTests {
         private const Allocator allocator = Allocator.Temp;
         private IntGeom iGeom = IntGeom.DefGeom;
 
         [Test]
         public void Test_00() {
-            var data = BiteTestData.data[0].Allocate(allocator);
-            var solution = data.shape.Bite(data.path, allocator);
+            var data = ComplexTestData.data[0].AllocateSubtract(allocator);
+            var solution = data.shape.ComplexSubtract(data.path, allocator);
             data.Dispose();
-
-            Assert.AreEqual(solution.isInteract, true);
-
-            var mainShape = solution.mainList.Get(0, Allocator.Temp);
-
-            Assert.AreEqual(mainShape.layouts.ToArray(),
-                new[] {
-                    new PathLayout(0, 4, true),
-                    new PathLayout(4, 4, false)
-                });
-
-            Assert.AreEqual(mainShape.IsClockWise(0), true);
-            Assert.AreEqual(mainShape.IsClockWise(1), false);
-
-            Assert.AreEqual(solution.mainList.points.ToArray(),
-                iGeom.Int(
-                    new[] {
-                        new Vector2(-15, -15),
-                        new Vector2(-15, 15),
-                        new Vector2(15, 15),
-                        new Vector2(15, -15),
-                        new Vector2(-10, 10),
-                        new Vector2(-10, -10),
-                        new Vector2(10, -10),
-                        new Vector2(10, 10)
-                    })
-            );
-
-            Assert.AreEqual(solution.biteList.layouts.ToArray(), new PathLayout[0]);
-            Assert.AreEqual(solution.biteList.points.ToArray(), new IntVector[0]);
-
-            mainShape.Dispose();
             solution.Dispose();
         }
 
         [Test]
         public void Test_01() {
-            var data = BiteTestData.data[1].Allocate(allocator);
-            var solution = data.shape.Bite(data.path, allocator);
+            var data = ComplexTestData.data[1].AllocateSubtract(allocator);
+            var solution = data.shape.ComplexSubtract(data.path, allocator);
             data.Dispose();
 
             Assert.AreEqual(solution.isInteract, true);
@@ -85,7 +53,7 @@ namespace Tests.Clipper {
                     })
             );
 
-            var biteShape = solution.biteList.Get(0, Allocator.Temp);
+            var biteShape = solution.partList.Get(0, Allocator.Temp);
 
             Assert.AreEqual(biteShape.layouts.ToArray(),
                 new[] {
@@ -111,8 +79,8 @@ namespace Tests.Clipper {
 
         [Test]
         public void Test_02() {
-            var data = BiteTestData.data[2].Allocate(allocator);
-            var solution = data.shape.Bite(data.path, allocator);
+            var data = ComplexTestData.data[2].AllocateSubtract(allocator);
+            var solution = data.shape.ComplexSubtract(data.path, allocator);
             data.Dispose();
 
             Assert.AreEqual(solution.isInteract, true);
@@ -146,7 +114,7 @@ namespace Tests.Clipper {
                     })
             );
 
-            var biteShape = solution.biteList.Get(0, Allocator.Temp);
+            var biteShape = solution.partList.Get(0, Allocator.Temp);
 
             Assert.AreEqual(biteShape.layouts.ToArray(),
                 new[] {
@@ -155,7 +123,7 @@ namespace Tests.Clipper {
 
             Assert.AreEqual(biteShape.IsClockWise(0), true);
 
-            Assert.AreEqual(solution.biteList.points.ToArray(),
+            Assert.AreEqual(solution.partList.points.ToArray(),
                 iGeom.Int(
                     new[] {
                         new Vector2(-5, -5),
@@ -174,8 +142,8 @@ namespace Tests.Clipper {
 
         [Test]
         public void Test_03() {
-            var data = BiteTestData.data[3].Allocate(allocator);
-            var solution = data.shape.Bite(data.path, allocator);
+            var data = ComplexTestData.data[3].AllocateSubtract(allocator);
+            var solution = data.shape.ComplexSubtract(data.path, allocator);
             data.Dispose();
 
             Assert.AreEqual(solution.isInteract, true);
@@ -211,8 +179,8 @@ namespace Tests.Clipper {
                     })
             );
 
-            var biteShape0 = solution.biteList.Get(0, Allocator.Temp);
-            var biteShape1 = solution.biteList.Get(1, Allocator.Temp);
+            var biteShape0 = solution.partList.Get(0, Allocator.Temp);
+            var biteShape1 = solution.partList.Get(1, Allocator.Temp);
 
             Assert.AreEqual(biteShape0.layouts.ToArray(),
                 new[] {
@@ -255,8 +223,8 @@ namespace Tests.Clipper {
 
         [Test]
         public void Test_04() {
-            var data = BiteTestData.data[4].Allocate(allocator);
-            var solution = data.shape.Bite(data.path, allocator);
+            var data = ComplexTestData.data[4].AllocateSubtract(allocator);
+            var solution = data.shape.ComplexSubtract(data.path, allocator);
             data.Dispose();
 
             Assert.AreEqual(solution.isInteract, true);
@@ -343,7 +311,7 @@ namespace Tests.Clipper {
                     })
             );
 
-            var biteShape = solution.biteList.Get(0, Allocator.Temp);
+            var biteShape = solution.partList.Get(0, Allocator.Temp);
 
             Assert.AreEqual(biteShape.layouts.ToArray(),
                 new[] {
@@ -391,8 +359,8 @@ namespace Tests.Clipper {
 
         [Test]
         public void Test_05() {
-            var data = BiteTestData.data[5].Allocate(allocator);
-            var solution = data.shape.Bite(data.path, allocator);
+            var data = ComplexTestData.data[5].AllocateSubtract(allocator);
+            var solution = data.shape.ComplexSubtract(data.path, allocator);
             data.Dispose();
 
             Assert.AreEqual(solution.isInteract, true);
@@ -474,7 +442,7 @@ namespace Tests.Clipper {
                     })
             );
 
-            var biteShape = solution.biteList.Get(0, Allocator.Temp);
+            var biteShape = solution.partList.Get(0, Allocator.Temp);
 
             Assert.AreEqual(biteShape.layouts.ToArray(),
                 new[] {
@@ -534,8 +502,8 @@ namespace Tests.Clipper {
 
         [Test]
         public void Test_06() {
-            var data = BiteTestData.data[6].Allocate(allocator);
-            var solution = data.shape.Bite(data.path, allocator);
+            var data = ComplexTestData.data[6].AllocateSubtract(allocator);
+            var solution = data.shape.ComplexSubtract(data.path, allocator);
             data.Dispose();
 
             Assert.AreEqual(solution.isInteract, true);
@@ -544,7 +512,7 @@ namespace Tests.Clipper {
 
             Assert.AreEqual(solution.mainList.points.ToArray(), new IntVector[0]);
 
-            var biteShape = solution.biteList.Get(0, Allocator.Temp);
+            var biteShape = solution.partList.Get(0, Allocator.Temp);
 
             Assert.AreEqual(biteShape.layouts.ToArray(),
                 new[] {
@@ -569,8 +537,8 @@ namespace Tests.Clipper {
 
         [Test]
         public void Test_07() {
-            var data = BiteTestData.data[7].Allocate(allocator);
-            var solution = data.shape.Bite(data.path, allocator);
+            var data = ComplexTestData.data[7].AllocateSubtract(allocator);
+            var solution = data.shape.ComplexSubtract(data.path, allocator);
 
             Assert.AreEqual(solution.isInteract, true);
 
@@ -578,7 +546,7 @@ namespace Tests.Clipper {
 
             Assert.AreEqual(solution.mainList.points.ToArray(), new IntVector[0]);
 
-            var biteShape = solution.biteList.Get(0, Allocator.Temp);
+            var biteShape = solution.partList.Get(0, Allocator.Temp);
 
             Assert.AreEqual(biteShape.layouts.ToArray(),
                 new[] {
@@ -603,8 +571,8 @@ namespace Tests.Clipper {
 
         [Test]
         public void Test_08() {
-            var data = BiteTestData.data[8].Allocate(allocator);
-            var solution = data.shape.Bite(data.path, allocator);
+            var data = ComplexTestData.data[8].AllocateSubtract(allocator);
+            var solution = data.shape.ComplexSubtract(data.path, allocator);
             data.Dispose();
 
             Assert.AreEqual(solution.isInteract, true);
@@ -613,7 +581,7 @@ namespace Tests.Clipper {
 
             Assert.AreEqual(solution.mainList.points.ToArray(), new IntVector[0]);
 
-            var biteShape = solution.biteList.Get(0, Allocator.Temp);
+            var biteShape = solution.partList.Get(0, Allocator.Temp);
 
             Assert.AreEqual(biteShape.layouts.ToArray(),
                 new[] {
@@ -644,8 +612,8 @@ namespace Tests.Clipper {
 
         [Test]
         public void Test_09() {
-            var data = BiteTestData.data[9].Allocate(allocator);
-            var solution = data.shape.Bite(data.path, allocator);
+            var data = ComplexTestData.data[9].AllocateSubtract(allocator);
+            var solution = data.shape.ComplexSubtract(data.path, allocator);
             data.Dispose();
 
             Assert.AreEqual(solution.isInteract, true);
@@ -673,7 +641,7 @@ namespace Tests.Clipper {
                     })
             );
 
-            var biteShape = solution.biteList.Get(0, Allocator.Temp);
+            var biteShape = solution.partList.Get(0, Allocator.Temp);
 
             Assert.AreEqual(biteShape.layouts.ToArray(),
                 new[] {
@@ -699,8 +667,8 @@ namespace Tests.Clipper {
 
         [Test]
         public void Test_10() {
-            var data = BiteTestData.data[10].Allocate(allocator);
-            var solution = data.shape.Bite(data.path, allocator);
+            var data = ComplexTestData.data[10].AllocateSubtract(allocator);
+            var solution = data.shape.ComplexSubtract(data.path, allocator);
 
             Assert.AreEqual(solution.isInteract, true);
 
@@ -732,7 +700,7 @@ namespace Tests.Clipper {
                     })
             );
 
-            var biteShape = solution.biteList.Get(0, Allocator.Temp);
+            var biteShape = solution.partList.Get(0, Allocator.Temp);
 
             Assert.AreEqual(biteShape.layouts.ToArray(),
                 new[] {
@@ -758,8 +726,8 @@ namespace Tests.Clipper {
 
         [Test]
         public void Test_11() {
-            var data = BiteTestData.data[11].Allocate(allocator);
-            var solution = data.shape.Bite(data.path, allocator);
+            var data = ComplexTestData.data[11].AllocateSubtract(allocator);
+            var solution = data.shape.ComplexSubtract(data.path, allocator);
             data.Dispose();
 
             Assert.AreEqual(solution.isInteract, true);
@@ -805,7 +773,7 @@ namespace Tests.Clipper {
                     })
             );
 
-            var biteShape = solution.biteList.Get(0, Allocator.Temp);
+            var biteShape = solution.partList.Get(0, Allocator.Temp);
 
             Assert.AreEqual(biteShape.layouts.ToArray(),
                 new[] {
@@ -832,8 +800,8 @@ namespace Tests.Clipper {
 
         [Test]
         public void Test_12() {
-            var data = BiteTestData.data[12].Allocate(allocator);
-            var solution = data.shape.Bite(data.path, allocator);
+            var data = ComplexTestData.data[12].AllocateSubtract(allocator);
+            var solution = data.shape.ComplexSubtract(data.path, allocator);
             data.Dispose();
 
             Assert.AreEqual(solution.isInteract, true);
@@ -884,7 +852,7 @@ namespace Tests.Clipper {
                     })
             );
 
-            var biteShape = solution.biteList.Get(0, Allocator.Temp);
+            var biteShape = solution.partList.Get(0, Allocator.Temp);
 
             Assert.AreEqual(biteShape.layouts.ToArray(),
                 new[] {
@@ -918,8 +886,8 @@ namespace Tests.Clipper {
 
         [Test]
         public void Test_13() {
-            var data = BiteTestData.data[13].Allocate(allocator);
-            var solution = data.shape.Bite(data.path, allocator);
+            var data = ComplexTestData.data[13].AllocateSubtract(allocator);
+            var solution = data.shape.ComplexSubtract(data.path, allocator);
             data.Dispose();
 
             Assert.AreEqual(solution.isInteract, true);
@@ -977,7 +945,7 @@ namespace Tests.Clipper {
                     })
             );
 
-            var biteShape = solution.biteList.Get(0, Allocator.Temp);
+            var biteShape = solution.partList.Get(0, Allocator.Temp);
             
             Assert.AreEqual(biteShape.layouts.ToArray(),
                 new[] {
@@ -1014,8 +982,8 @@ namespace Tests.Clipper {
 
         [Test]
         public void Test_14() {
-            var data = BiteTestData.data[14].Allocate(allocator);
-            var solution = data.shape.Bite(data.path, allocator);
+            var data = ComplexTestData.data[14].AllocateSubtract(allocator);
+            var solution = data.shape.ComplexSubtract(data.path, allocator);
             data.Dispose();
 
             Assert.AreEqual(solution.isInteract, true);
@@ -1052,8 +1020,8 @@ namespace Tests.Clipper {
                 }
             );
             
-            var biteShape0 = solution.biteList.Get(0, Allocator.Temp);
-            var biteShape1 = solution.biteList.Get(1, Allocator.Temp);
+            var biteShape0 = solution.partList.Get(0, Allocator.Temp);
+            var biteShape1 = solution.partList.Get(1, Allocator.Temp);
 
             Assert.AreEqual(biteShape0.layouts.ToArray(),
                 new[] {
@@ -1098,8 +1066,8 @@ namespace Tests.Clipper {
 
         [Test]
         public void Test_15() {
-            var data = BiteTestData.data[15].Allocate(allocator);
-            var solution = data.shape.Bite(data.path, allocator);
+            var data = ComplexTestData.data[15].AllocateSubtract(allocator);
+            var solution = data.shape.ComplexSubtract(data.path, allocator);
             data.Dispose();
 
             Assert.AreEqual(solution.isInteract, true);
@@ -1140,9 +1108,9 @@ namespace Tests.Clipper {
                 }
             );
 
-            var biteShape0 = solution.biteList.Get(0, Allocator.Temp);
-            var biteShape1 = solution.biteList.Get(1, Allocator.Temp);
-            var biteShape2 = solution.biteList.Get(2, Allocator.Temp);
+            var biteShape0 = solution.partList.Get(0, Allocator.Temp);
+            var biteShape1 = solution.partList.Get(1, Allocator.Temp);
+            var biteShape2 = solution.partList.Get(2, Allocator.Temp);
             
             Assert.AreEqual(biteShape0.layouts.ToArray(),
                 new[] {
@@ -1199,8 +1167,8 @@ namespace Tests.Clipper {
 
         [Test]
         public void Test_16() {
-            var data = BiteTestData.data[16].Allocate(allocator);
-            var solution = data.shape.Bite(data.path, allocator);
+            var data = ComplexTestData.data[16].AllocateSubtract(allocator);
+            var solution = data.shape.ComplexSubtract(data.path, allocator);
             data.Dispose();
 
             Assert.AreEqual(solution.isInteract, true);
@@ -1262,8 +1230,8 @@ namespace Tests.Clipper {
                     })
             );
             
-            var biteShape0 = solution.biteList.Get(0, Allocator.Temp);
-            var biteShape1 = solution.biteList.Get(1, Allocator.Temp);
+            var biteShape0 = solution.partList.Get(0, Allocator.Temp);
+            var biteShape1 = solution.partList.Get(1, Allocator.Temp);
             
             Assert.AreEqual(biteShape0.layouts.ToArray(),
                 new[] {
@@ -1308,8 +1276,8 @@ namespace Tests.Clipper {
 
         [Test]
         public void Test_17() {
-            var data = BiteTestData.data[17].Allocate(allocator);
-            var solution = data.shape.Bite(data.path, allocator);
+            var data = ComplexTestData.data[17].AllocateSubtract(allocator);
+            var solution = data.shape.ComplexSubtract(data.path, allocator);
             data.Dispose();
 
             Assert.AreEqual(solution.isInteract, true);
@@ -1345,8 +1313,8 @@ namespace Tests.Clipper {
                     })
             );
             
-            var biteShape0 = solution.biteList.Get(0, Allocator.Temp);
-            var biteShape1 = solution.biteList.Get(1, Allocator.Temp);
+            var biteShape0 = solution.partList.Get(0, Allocator.Temp);
+            var biteShape1 = solution.partList.Get(1, Allocator.Temp);
 
             Assert.AreEqual(biteShape0.layouts.ToArray(),
                 new[] {
@@ -1390,8 +1358,8 @@ namespace Tests.Clipper {
 
         [Test]
         public void Test_18() {
-            var data = BiteTestData.data[18].Allocate(allocator);
-            var solution = data.shape.Bite(data.path, allocator);
+            var data = ComplexTestData.data[18].AllocateSubtract(allocator);
+            var solution = data.shape.ComplexSubtract(data.path, allocator);
             data.Dispose();
 
             Assert.AreEqual(solution.isInteract, true);
@@ -1431,8 +1399,8 @@ namespace Tests.Clipper {
                     })
             );
 
-            var biteShape0 = solution.biteList.Get(0, Allocator.Temp);
-            var biteShape1 = solution.biteList.Get(1, Allocator.Temp);
+            var biteShape0 = solution.partList.Get(0, Allocator.Temp);
+            var biteShape1 = solution.partList.Get(1, Allocator.Temp);
             
             Assert.AreEqual(biteShape0.layouts.ToArray(),
                 new[] {
@@ -1485,8 +1453,8 @@ namespace Tests.Clipper {
 
         [Test]
         public void Test_19() {
-            var data = BiteTestData.data[19].Allocate(allocator);
-            var solution = data.shape.Bite(data.path, allocator);
+            var data = ComplexTestData.data[19].AllocateSubtract(allocator);
+            var solution = data.shape.ComplexSubtract(data.path, allocator);
             data.Dispose();
 
             Assert.AreEqual(solution.isInteract, true);
@@ -1543,7 +1511,7 @@ namespace Tests.Clipper {
                     })
             );
 
-            var biteShape = solution.biteList.Get(0, Allocator.Temp);
+            var biteShape = solution.partList.Get(0, Allocator.Temp);
             
             Assert.AreEqual(biteShape.layouts.ToArray(),
                 new[] {
@@ -1574,8 +1542,8 @@ namespace Tests.Clipper {
 
         [Test]
         public void Test_20() {
-            var data = BiteTestData.data[20].Allocate(allocator);
-            var solution = data.shape.Bite(data.path, allocator);
+            var data = ComplexTestData.data[20].AllocateSubtract(allocator);
+            var solution = data.shape.ComplexSubtract(data.path, allocator);
             data.Dispose();
 
             Assert.AreEqual(solution.isInteract, true);
@@ -1659,8 +1627,8 @@ namespace Tests.Clipper {
                     })
             );
 
-            var biteShape0 = solution.biteList.Get(0, Allocator.Temp);
-            var biteShape1 = solution.biteList.Get(1, Allocator.Temp);
+            var biteShape0 = solution.partList.Get(0, Allocator.Temp);
+            var biteShape1 = solution.partList.Get(1, Allocator.Temp);
             
             Assert.AreEqual(biteShape0.layouts.ToArray(),
                 new[] {
@@ -1714,8 +1682,8 @@ namespace Tests.Clipper {
 
         [Test]
         public void Test_21() {
-            var data = BiteTestData.data[21].Allocate(allocator);
-            var solution = data.shape.Bite(data.path, allocator);
+            var data = ComplexTestData.data[21].AllocateSubtract(allocator);
+            var solution = data.shape.ComplexSubtract(data.path, allocator);
             data.Dispose();
 
             Assert.AreEqual(solution.isInteract, true);
@@ -1745,8 +1713,8 @@ namespace Tests.Clipper {
                     })
             );
             
-            var biteShape0 = solution.biteList.Get(0, Allocator.Temp);
-            var biteShape1 = solution.biteList.Get(1, Allocator.Temp);
+            var biteShape0 = solution.partList.Get(0, Allocator.Temp);
+            var biteShape1 = solution.partList.Get(1, Allocator.Temp);
 
             Assert.AreEqual(biteShape0.layouts.ToArray(),
                 new[] {
@@ -1789,8 +1757,8 @@ namespace Tests.Clipper {
 
         [Test]
         public void Test_22() {
-            var data = BiteTestData.data[22].Allocate(allocator);
-            var solution = data.shape.Bite(data.path, allocator);
+            var data = ComplexTestData.data[22].AllocateSubtract(allocator);
+            var solution = data.shape.ComplexSubtract(data.path, allocator);
             data.Dispose();
 
             Assert.AreEqual(solution.isInteract, true);
@@ -1863,12 +1831,12 @@ namespace Tests.Clipper {
                     })
             );
             
-            var biteShape0 = solution.biteList.Get(0, Allocator.Temp);
-            var biteShape1 = solution.biteList.Get(1, Allocator.Temp);
-            var biteShape2 = solution.biteList.Get(2, Allocator.Temp);
-            var biteShape3 = solution.biteList.Get(3, Allocator.Temp);
-            var biteShape4 = solution.biteList.Get(4, Allocator.Temp);
-            var biteShape5 = solution.biteList.Get(5, Allocator.Temp);
+            var biteShape0 = solution.partList.Get(0, Allocator.Temp);
+            var biteShape1 = solution.partList.Get(1, Allocator.Temp);
+            var biteShape2 = solution.partList.Get(2, Allocator.Temp);
+            var biteShape3 = solution.partList.Get(3, Allocator.Temp);
+            var biteShape4 = solution.partList.Get(4, Allocator.Temp);
+            var biteShape5 = solution.partList.Get(5, Allocator.Temp);
             
             Assert.AreEqual(biteShape0.layouts.ToArray(),
                 new[] {
@@ -1980,8 +1948,8 @@ namespace Tests.Clipper {
 
         [Test]
         public void Test_23() {
-            var data = BiteTestData.data[23].Allocate(allocator);
-            var solution = data.shape.Bite(data.path, allocator);
+            var data = ComplexTestData.data[23].AllocateSubtract(allocator);
+            var solution = data.shape.ComplexSubtract(data.path, allocator);
             data.Dispose();
 
             Assert.AreEqual(solution.isInteract, true);
@@ -2073,14 +2041,14 @@ namespace Tests.Clipper {
                     })
             );
             
-            var biteShape0 = solution.biteList.Get(0, Allocator.Temp);
-            var biteShape1 = solution.biteList.Get(1, Allocator.Temp);
-            var biteShape2 = solution.biteList.Get(2, Allocator.Temp);
-            var biteShape3 = solution.biteList.Get(3, Allocator.Temp);
-            var biteShape4 = solution.biteList.Get(4, Allocator.Temp);
-            var biteShape5 = solution.biteList.Get(5, Allocator.Temp);
-            var biteShape6 = solution.biteList.Get(6, Allocator.Temp);
-            var biteShape7 = solution.biteList.Get(7, Allocator.Temp);
+            var biteShape0 = solution.partList.Get(0, Allocator.Temp);
+            var biteShape1 = solution.partList.Get(1, Allocator.Temp);
+            var biteShape2 = solution.partList.Get(2, Allocator.Temp);
+            var biteShape3 = solution.partList.Get(3, Allocator.Temp);
+            var biteShape4 = solution.partList.Get(4, Allocator.Temp);
+            var biteShape5 = solution.partList.Get(5, Allocator.Temp);
+            var biteShape6 = solution.partList.Get(6, Allocator.Temp);
+            var biteShape7 = solution.partList.Get(7, Allocator.Temp);
 
             Assert.AreEqual(biteShape0.layouts.ToArray(),
                 new[] {
@@ -2230,8 +2198,8 @@ namespace Tests.Clipper {
 
         [Test]
         public void Test_24() {
-            var data = BiteTestData.data[24].Allocate(allocator);
-            var solution = data.shape.Bite(data.path, allocator);
+            var data = ComplexTestData.data[24].AllocateSubtract(allocator);
+            var solution = data.shape.ComplexSubtract(data.path, allocator);
             data.Dispose();
 
             Assert.AreEqual(solution.isInteract, true);
@@ -2304,9 +2272,9 @@ namespace Tests.Clipper {
                     })
             );
 
-            var biteShape0 = solution.biteList.Get(0, Allocator.Temp);
-            var biteShape1 = solution.biteList.Get(1, Allocator.Temp);
-            var biteShape2 = solution.biteList.Get(2, Allocator.Temp);
+            var biteShape0 = solution.partList.Get(0, Allocator.Temp);
+            var biteShape1 = solution.partList.Get(1, Allocator.Temp);
+            var biteShape2 = solution.partList.Get(2, Allocator.Temp);
             
             Assert.AreEqual(biteShape0.layouts.ToArray(),
                 new[] {

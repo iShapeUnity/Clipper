@@ -8,7 +8,7 @@ using Unity.Collections;
 namespace iShape.Clipper.Solver {
 
     public static class RootSolver {
-        public static ComplexSolution Cut(this NativeArray<IntVector> master, NativeArray<IntVector> slave, Allocator allocator) {
+        public static DualSolution Cut(this NativeArray<IntVector> master, NativeArray<IntVector> slave, Allocator allocator) {
             var navigator = CrossDetector.FindPins(master, slave,  PinPoint.PinType.in_out, allocator);
             var filterNavigator = new FilterNavigator(navigator, PinPoint.PinType.inside, PinPoint.PinType.out_in, Allocator.Temp);
             var nature = filterNavigator.Nature(master, slave, false);
@@ -18,17 +18,17 @@ namespace iShape.Clipper.Solver {
                 case Solution.Nature.masterIncludeSlave:
                 case Solution.Nature.slaveIncludeMaster:
                     filterNavigator.Dispose();
-                    return new ComplexSolution(new PlainShape(allocator), new PlainShape(allocator), nature);
+                    return new DualSolution(new PlainShape(allocator), new PlainShape(allocator), nature);
                 case Solution.Nature.overlap:
                     var cursor = filterNavigator.First;
                     if (cursor.type == PinPoint.PinType.out_in && !filterNavigator.HasEdge) {
                         if (master.IsContain(slave)) {
                             filterNavigator.Dispose();
-                            return new ComplexSolution(new PlainShape(allocator), new PlainShape(allocator), Solution.Nature.masterIncludeSlave);
+                            return new DualSolution(new PlainShape(allocator), new PlainShape(allocator), Solution.Nature.masterIncludeSlave);
                         }
                         if (slave.IsContain(master)) {
                             filterNavigator.Dispose();
-                            return new ComplexSolution(new PlainShape(allocator), new PlainShape(allocator), Solution.Nature.slaveIncludeMaster);
+                            return new DualSolution(new PlainShape(allocator), new PlainShape(allocator), Solution.Nature.slaveIncludeMaster);
                         }
                     }
                     var restPathList = SubtractSolver.Subtract(filterNavigator, master, slave, allocator);
@@ -36,11 +36,11 @@ namespace iShape.Clipper.Solver {
                     var bitePathList = IntersectSolver.Intersect(filterNavigator, master, slave, allocator);
                     
                     filterNavigator.Dispose();
-                    return new ComplexSolution(restPathList, bitePathList, Solution.Nature.overlap);
+                    return new DualSolution(restPathList, bitePathList, Solution.Nature.overlap);
             }
             
             filterNavigator.Dispose();
-            return new ComplexSolution(new PlainShape(allocator), new PlainShape(allocator), Solution.Nature.notOverlap);
+            return new DualSolution(new PlainShape(allocator), new PlainShape(allocator), Solution.Nature.notOverlap);
         }
 
         public static Solution Intersect(this NativeArray<IntVector> master, NativeArray<IntVector> slave, Allocator allocator) {
